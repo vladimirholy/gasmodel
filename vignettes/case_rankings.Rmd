@@ -1,0 +1,38 @@
+---
+title: "Case Study: Rankings of Ice Hockey Teams"
+author: "Vladimír Holý"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Case Study: Rankings of Ice Hockey Teams}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(gasmodel)
+```
+
+``` {r data}
+t <- 22
+n <- ncol(ice_hockey_championships$host)
+y <- ice_hockey_championships$rankings[1:t, ]
+x <- lapply(1:n, function(i) { ice_hockey_championships$host[1:t, i] })
+```
+
+``` {r distr}
+distr(filter_type = "ranking")
+```
+
+``` {r pluce}
+pluce_est <- gas(y = y, x = x, distr = "pluce",
+                 coef_fix_special = c("zero_sum_intercept", "panel_structure"))
+pluce_est
+```

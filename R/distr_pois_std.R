@@ -1,0 +1,98 @@
+
+# POISSON DISTRIBUTION / STANDARD PARAMETRIZATION
+
+
+# Parameters Function ----------------------------------------------------------
+distr_pois_std_parameters <- function(n) {
+  group_of_par_names <- c("rate")
+  par_names <- c("rate")
+  par_support <- c("positive")
+  res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
+  return(res_parameters)
+}
+# ------------------------------------------------------------------------------
+
+
+# Density Function -------------------------------------------------------------
+distr_pois_std_density <- function(y, f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  res_density <- suppressWarnings(stats::dpois(y, lambda = m))
+  return(res_density)
+}
+# ------------------------------------------------------------------------------
+
+
+# Log-Likelihood Function ------------------------------------------------------
+distr_pois_std_loglik <- function(y, f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  res_loglik <- suppressWarnings(stats::dpois(y, lambda = m, log = TRUE))
+  return(res_loglik)
+}
+# ------------------------------------------------------------------------------
+
+
+# Mean Function ----------------------------------------------------------------
+distr_pois_std_mean <- function(f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  res_mean <- m
+  return(res_mean)
+}
+# ------------------------------------------------------------------------------
+
+
+# Variance Function ------------------------------------------------------------
+distr_pois_std_var <- function(f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  res_var <- m
+  res_var <- array(res_var, dim = c(t, 1, 1))
+  return(res_var)
+}
+# ------------------------------------------------------------------------------
+
+
+# Score Function ---------------------------------------------------------------
+distr_pois_std_score <- function(y, f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  res_score <- matrix(0, nrow = t, ncol = 1L)
+  res_score[, 1] <- (y - m) / m
+  return(res_score)
+}
+# ------------------------------------------------------------------------------
+
+
+# Fisher Information Function --------------------------------------------------
+distr_pois_std_fisher <- function(f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  res_fisher <- array(0, dim = c(t, 1L, 1L))
+  res_fisher[, 1, 1] <- 1 / m
+  return(res_fisher)
+}
+# ------------------------------------------------------------------------------
+
+
+# Random Generation Function ---------------------------------------------------
+distr_pois_std_random <- function(t, f) {
+  m <- f[1]
+  res_random <- suppressWarnings(stats::rpois(t, lambda = m))
+  res_random <- matrix(res_random, nrow = t, ncol = 1L)
+  return(res_random)
+}
+# ------------------------------------------------------------------------------
+
+
+# Starting Estimates Function --------------------------------------------------
+distr_pois_std_start <- function(y) {
+  y_mean <- mean(y, na.rm = TRUE)
+  m <- max(y_mean, 1e-6)
+  res_start <- m
+  return(res_start)
+}
+# ------------------------------------------------------------------------------
+
+

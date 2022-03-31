@@ -1,0 +1,61 @@
+---
+title: "Case Study: Durations Between Bookshop Orders"
+author: "Vladimír Holý"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Case Study: Durations Between Bookshop Orders}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r packages, warning = FALSE, message = FALSE, results = "hide"}
+library(tidyverse)
+library(ACDm)
+library(gasmodel)
+```
+
+``` {r data, fig.width = 6, fig.height = 4}
+data_dur <- bookshop_sales %>%
+  mutate(durations = as.numeric(time - lag(time)) / 60) %>%
+  mutate(durations = recode(durations, "0" = 0.5)) %>%
+  drop_na() %>%
+  diurnalAdj(method = 'cubicSpline', nodes = seq(0, 1440, 90)) %>%
+  mutate(adjDur = as.numeric(adjDur))
+```
+
+``` {r variables}
+y <- data_dur$adjDur
+```
+
+``` {r distr}
+distr(filter_type = "duration", filter_dim = "uni", filter_default = TRUE)[, 1:3]
+```
+
+``` {r exp}
+exp_est <- gas(y = y, distr = "exp")
+exp_est
+```
+
+``` {r weibull}
+weibull_est <- gas(y = y, distr = "weibull", par_static = c(FALSE, TRUE))
+weibull_est
+```
+
+``` {r gamma}
+gamma_est <- gas(y = y, distr = "gamma", par_static = c(FALSE, TRUE))
+gamma_est
+```
+
+``` {r gengamma}
+gengamma_est <- gas(y = y, distr = "gengamma", par_static = c(FALSE, TRUE, TRUE))
+gengamma_est
+```
+
+``` {r aic}
+AIC(exp_est, weibull_est, gamma_est, gengamma_est)
+```
