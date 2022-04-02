@@ -6,7 +6,7 @@
 #' @title Estimate GAS Model
 #'
 #' @description
-#' A versatile function for estimation of generalized autoregressive score (GAS) models
+#' A versatile function for estimation of generalized autoregressive score (GAS) models.
 #' Model specification allows for various conditional distributions, different parametrizations, exogenous variables, higher score and autoregressive orders, custom and unconditional initial values of time-varying parameters, fixed and bounded values of coefficients, and NA values.
 #' Model estimation is performed by the maximum likelihood method and the Hessian matrix.
 #' The function can be supplied with any optimization and Hessian functions.

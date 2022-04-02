@@ -105,8 +105,8 @@ A \code{list} with components:
 \item{filter$score_tv_ahead_quant}{The quantiles of the forecasted scores. Only when \code{t_ahead > 0}.}
 }
 \description{
-A function for obtaining filtered time-varying parameters of generalized autoregressive score (GAS) models under parameter uncertainty.
-Can be also used for forecasting.
+A function for obtaining filtered time-varying parameters of generalized autoregressive score (GAS) models.
+It captures parameter uncertainty and can also be used for forecasting.
 Method \code{"simulated_coefs"} computes a path of time-varying parameters for each simulated coefficient set under assumption of asymptotic normality with given variance-covariance matrix (see Blasques et al., 2016).
 Method \code{"given_coefs"} computes a path of time-varying parameters for each supplied coefficient set.
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.

@@ -1,0 +1,34 @@
+
+# DOCUMENTATION OF PACKAGE
+
+
+# Load LaTeX -------------------------------------------------------------------
+#' @import mathjaxr
+# ------------------------------------------------------------------------------
+
+
+# Package Documentation --------------------------------------------------------
+#' @title gasmodel: Generalized Autoregressive Score Models
+#'
+#' @description
+#' Generalized autoregressive score (GAS) models, also known as dynamic conditional score (DCS) models or score-driven (SD) models, were proposed by Creal et al. (2013) and Harvey (2013).
+#'
+#' The key function is \code{\link[gasmodel:gas]{gas()}} which estimates GAS models.
+#' Additional functions include \code{\link[gasmodel:gas_simulate]{gas_simulate()}} which simulates GAS models, \code{\link[gasmodel:gas_forecast]{gas_forecast()}} which forecasts GAS models, \code{\link[gasmodel:gas_filter]{gas_filter()}} which obtains filtered time-varying parameters of GAS models, and \code{\link[gasmodel:gas_bootstrap]{gas_bootstrap()}} which bootstraps coefficients of GAS models.
+#'
+#' The list of supported distributions can be obtained by \code{\link[gasmodel:distr]{distr()}}.
+#' The functions working with distributions are \code{\link[gasmodel:distr_density]{distr_density()}} which computes the density, \code{\link[gasmodel:distr_mean]{distr_mean()}} which computes the mean, \code{\link[gasmodel:distr_var]{distr_var()}} which computes the variance, \code{\link[gasmodel:distr_score]{distr_score()}} which computes the score, \code{\link[gasmodel:distr_fisher]{distr_fisher()}} which computes the Fisher information, and \code{\link[gasmodel:distr_random]{distr_random()}} which generates random observations.
+#'
+#' The included datasets are \code{\link[gasmodel:bookshop_sales]{bookshop_sales}} and \code{\link[gasmodel:ice_hockey_championships]{ice_hockey_championships}}.
+#'
+#' @references
+#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#'
+#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
+#'
+#' @docType package
+#' @name gasmodel
+NULL
+# ------------------------------------------------------------------------------
+
+

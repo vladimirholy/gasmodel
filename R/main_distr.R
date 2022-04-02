@@ -17,7 +17,8 @@
 #' @param filter_default An optional logical value indicating whether the parameterization is the default for the distribution by which the output is filtered.
 #'
 #' @return A \code{data.frame} with columns:
-#' \item{title}{The title of the distribution and parametrization.}
+#' \item{distr_title}{The title of the distribution.}
+#' \item{param_title}{The title of the parametrization.}
 #' \item{distr}{The distribution.}
 #' \item{param}{The parametrization.}
 #' \item{type}{The data type.}
