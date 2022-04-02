@@ -102,10 +102,12 @@ info_thetas <- function(coef_fix_value, coef_fix_other, coef_names) {
 
 # Get the Title of the GAS Model -----------------------------------------------
 info_title <- function(distr, param, scaling) {
+  this_table <- distr(filter_distr = distr, filter_param = param)[1, ]
   info <- list()
-  info$title_distr <- distr(filter_distr = distr, filter_param = param)$title[1]
+  info$title_distr <- paste(this_table$distr_title, "Distribution")
+  info$title_param <- paste(this_table$param_title, "Parametrization")
   info$title_scaling <- switch(scaling, "unit" = "Unit Scaling", "fisher_inv" = "Fisher Inverse Scaling", "fisher_inv_sqrt" = "Fisher Square Root Inverse Scaling")
-  info$title <- paste(info$title_distr, info$title_scaling, sep = " / ")
+  info$title <- paste(info$title_distr, info$title_param, info$title_scaling, sep = " / ")
   return(info)
 }
 # ------------------------------------------------------------------------------

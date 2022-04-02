@@ -22,7 +22,8 @@ distr(filter_distr = NULL, filter_param = NULL, filter_type = NULL,
 }
 \value{
 A \code{data.frame} with columns:
-\item{title}{The title of the distribution and parametrization.}
+\item{distr_title}{The title of the distribution.}
+\item{param_title}{The title of the parametrization.}
 \item{distr}{The distribution.}
 \item{param}{The parametrization.}
 \item{type}{The data type.}
