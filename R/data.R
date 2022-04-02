@@ -20,9 +20,11 @@
 #'
 #' @format
 #' A data frame with columns:
+#' \describe{
 #'   \item{order}{ID of the order.}
 #'   \item{time}{Time of the order.}
 #'   \item{quantity}{Number of purchased books. Zero value means the order was canceled.}
+#' }
 #'
 #' @references
 #' Tomanová, P. and Černý, M. (2022). Efficiency of Antiquarian Bookshops in Informationally Complete Markets. \emph{Central European Journal of Operations Research}, \strong{30}(2), 573–593. doi: \href{https://doi.org/10.1007/s10100-021-00780-3}{10.1007/s10100-021-00780-3}.
@@ -47,8 +49,10 @@
 #'
 #' @format
 #' A list with components:
+#' \describe{
 #'   \item{rankings}{A matrix of final rankings. Rows correspond to years, columns to teams. Value \code{Inf} means that the team did not advance to the championship. Value \code{NA} means that the championship did not take place.}
 #'   \item{hosts}{A matrix of dummy variables indicating whether the team hosted the championship. Rows correspond to years, columns to teams. Multiple hosts of one championship is possible. Value \code{NA} means that the championship did not take place.}
+#' }
 #'
 #' @references
 #' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: \href{https://arxiv.org/abs/2101.04040}{2101.04040}.

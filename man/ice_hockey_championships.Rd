@@ -6,8 +6,10 @@
 \title{Results of the Ice Hockey World Championships}
 \format{
 A list with components:
+\describe{
   \item{rankings}{A matrix of final rankings. Rows correspond to years, columns to teams. Value \code{Inf} means that the team did not advance to the championship. Value \code{NA} means that the championship did not take place.}
   \item{hosts}{A matrix of dummy variables indicating whether the team hosted the championship. Rows correspond to years, columns to teams. Multiple hosts of one championship is possible. Value \code{NA} means that the championship did not take place.}
+}
 }
 \source{
 International Ice Hockey Federation (\href{https://www.iihf.com/}{www.iihf.com}).

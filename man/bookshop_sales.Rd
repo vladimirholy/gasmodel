@@ -6,9 +6,11 @@
 \title{Antiquarian Bookshop Sales}
 \format{
 A data frame with columns:
+\describe{
   \item{order}{ID of the order.}
   \item{time}{Time of the order.}
   \item{quantity}{Number of purchased books. Zero value means the order was canceled.}
+}
 }
 \source{
 Petra Tomanová (\email{petra.tomanova@vse.cz}).
