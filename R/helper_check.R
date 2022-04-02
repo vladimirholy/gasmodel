@@ -29,13 +29,15 @@ check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
     stop("Invalid type of argument y.")
   }
   y[rowSums(is.na(y)) > 0L, ] <- NA_real_
-  if (!is.null(type) && type == "ranking" && is.numeric(y) && all(y > 0) && all(apply(y, 1, function(e) { all(is.na(e)) || all(1:sum(is.finite(e)) %in% e) }))) {
+  if (!is.null(type) && type == "binary" && is.numeric(y) && all(y == 0 | y == 1, na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "count" && is.numeric(y) && all(!is.infinite(y)) && all(y >= 0)) {
+  } else if (!is.null(type) && type == "ranking" && is.numeric(y) && all(y > 0, na.rm = TRUE) && all(apply(y, 1, function(e) { all(is.na(e)) || all(1:sum(is.finite(e)) %in% e) }))) {
     y <- y
-  } else if (!is.null(type) && type == "duration" && is.numeric(y) && all(!is.infinite(y)) && all(y >= 0)) {
+  } else if (!is.null(type) && type == "count" && is.numeric(y) && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "real" && is.numeric(y) && all(!is.infinite(y))) {
+  } else if (!is.null(type) && type == "duration" && is.numeric(y) && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE)) {
+    y <- y
+  } else if (!is.null(type) && type == "real" && is.numeric(y) && all(!is.infinite(y, na.rm = TRUE))) {
     y <- y
   } else if (!is.null(type)) {
     stop("Invalid values of the time series y.")
