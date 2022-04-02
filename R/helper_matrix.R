@@ -5,7 +5,7 @@
 # Compute Matrix Inverse -------------------------------------------------------
 matrix_inv <- function(mat) {
   mat_inv <- suppressWarnings(try(pracma::pinv(mat), silent = TRUE))
-  if (class(mat_inv) == "try-error") {
+  if ("try-error" %in% class(mat_inv)) {
     mat_inv <- matrix(NA_real_, nrow = nrow(mat), ncol = ncol(mat))
   }
   return(mat_inv)
@@ -18,7 +18,7 @@ matrix_inv_sqrt <- function(mat) {
   mat_eigen <- base::eigen(mat, symmetric = TRUE)
   mat_eigen$values[mat_eigen$values < 1e-6] <- 0
   mat_inv_sqrt <- suppressWarnings(try(mat_eigen$vectors %*% pracma::pinv(mat_eigen$vectors %*% diag(sqrt(mat_eigen$values))), silent = TRUE))
-  if (class(mat_inv_sqrt) == "try-error") {
+  if ("try-error" %in% class(mat_inv)) {
     mat_inv_sqrt <- matrix(NA_real_, nrow = nrow(mat), ncol = ncol(mat))
   }
   return(mat_inv_sqrt)
