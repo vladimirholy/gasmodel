@@ -20,28 +20,39 @@ check_my_method <- function(method, values) {
 # Check Time Series ------------------------------------------------------------
 check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
   if (is.vector(y) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "uni") {
-    y <- matrix(y, ncol = 1)
-  } else   if (is.vector(y) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "multi") {
-    y <- matrix(y, nrow = 1)
+    y <- matrix(as.numeric(y), ncol = 1)
+  } else if (is.vector(y) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "multi") {
+    y <- matrix(as.numeric(y), nrow = 1)
   } else if (is.matrix(y) && nrow(y) > 0L && ncol(y) > 0L) {
-    y <- y
+    y <- matrix(as.numeric(y), nrow = nrow(y), ncol = ncol(y))
   } else {
     stop("Invalid type of argument y.")
   }
   y[rowSums(is.na(y)) > 0L, ] <- NA_real_
-  if (!is.null(type) && type == "binary" && is.numeric(y) && all(y == 0 | y == 1, na.rm = TRUE)) {
+  if (!is.null(type) && type == "binary" && all(y == 0L | y == 1L, na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "ranking" && is.numeric(y) && all(y > 0, na.rm = TRUE) && all(apply(y, 1, function(e) { all(is.na(e)) || all(1:sum(is.finite(e)) %in% e) }))) {
+  } else if (!is.null(type) && type == "categorical" && all(y == 0L | y == 1L, na.rm = TRUE) && all(rowSums(y) == 1L, na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "count" && is.numeric(y) && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE)) {
+  } else if (!is.null(type) && type == "ranking" && all(y > 0, na.rm = TRUE) && all(apply(y, 1, function(e) { all(is.na(e)) || all(1:sum(is.finite(e)) %in% e) }))) {
     y <- y
-  } else if (!is.null(type) && type == "duration" && is.numeric(y) && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE)) {
+  } else if (!is.null(type) && type == "count" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE) && all(as.vector(y) == as.integer(y), na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "real" && is.numeric(y) && all(!is.infinite(y, na.rm = TRUE))) {
+  } else if (!is.null(type) && type == "integer" && all(!is.infinite(y), na.rm = TRUE) && all(as.vector(y) == as.integer(y), na.rm = TRUE)) {
+    y <- y
+  } else if (!is.null(type) && type == "directional" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0 | y <= 2 * pi, na.rm = TRUE)) {
+    y <- y
+  } else if (!is.null(type) && type == "interval" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0 | y <= 1, na.rm = TRUE)) {
+    y <- y
+  } else if (!is.null(type) && type == "compositional" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE) && all(abs(rowSums(y) - 1) < 1e-6, na.rm = TRUE)) {
+    y <- y
+  } else if (!is.null(type) && type == "duration" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE)) {
+    y <- y
+  } else if (!is.null(type) && type == "real" && all(!is.infinite(y), na.rm = TRUE)) {
     y <- y
   } else if (!is.null(type)) {
     stop("Invalid values of the time series y.")
   }
+
   if (!is.null(t) && nrow(y) != t) {
     stop("Invalid length of the time series y.")
   }
