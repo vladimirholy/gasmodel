@@ -1,11 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Package gasmodel
+# gasmodel
 
 <!-- badges: start -->
 
 <!-- badges: end -->
+
+# Overview
 
 A package for estimation, forecasting, and simulation of generalized
 autoregressive score (GAS) models of Creal et al. (2013) and Harvey
@@ -19,6 +21,31 @@ time-varying parameters, fixed and bounded values of coefficients, and
 NA values. Model estimation is performed by the maximum likelihood
 method and the Hessian matrix.
 
+The package offers the following functions for working with GAS models:
+
+  - `gas()` estimates GAS models.
+  - `gas_simulate()` simulates GAS models.
+  - `gas_forecast()` forecasts GAS models.
+  - `gas_filter()` obtains filtered time-varying parameters of GAS
+    models.
+  - `gas_bootstrap()` bootstraps coefficients of GAS models.
+
+Probability distributions are handled by the following functions:
+
+  - `distr()` provides table of supported distributions.
+  - `distr_density()` computes the density.
+  - `distr_mean()` computes the mean.
+  - `distr_var()` computes the variance.
+  - `distr_score()` computes the score.
+  - `distr_fisher()` computes the Fisher information.
+  - `distr_random()` generates random observations.
+
+In addition, the package contains the following datasets used in
+examples:
+
+  - `bookshop_sales` ???.
+  - `ice_hockey_championships` ???.
+
 ## Installation
 
 You can install the development version of gasmodel from
@@ -29,25 +56,9 @@ You can install the development version of gasmodel from
 devtools::install_github("vladimirholy/gasmodel")
 ```
 
-## Functions and Datasets
+## Supported Distributions
 
-The key function is `gas()` which estimates GAS models. Additional
-functions include `gas_simulate()` which simulates GAS models,
-`gas_forecast()` which forecasts GAS models, `gas_filter()` which
-obtains filtered time-varying parameters of GAS models, and
-`gas_bootstrap()` which bootstraps coefficients of GAS models.
-
-The list of supported distributions can be obtained by `distr()`. The
-functions working with distributions are `distr_density()` which
-computes the density, `distr_mean()` which computes the mean,
-`distr_var()` which computes the variance, `distr_score()` which
-computes the score, `distr_fisher()` which computes the Fisher
-information, and `distr_random()` which generates random observations.
-
-The included datasets are `bookshop_sales` and
-`ice_hockey_championships`.
-
-## List of Supported Distributions
+???
 
 ``` r
 library(gasmodel)
@@ -97,13 +108,11 @@ log-likelihood function. Exogenous variables can also be included.
 Specifically, time-varying parameters
 ![f\_{t}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D
 "f_{t}") follow the recursion   
-![&#10;f\_{t} = \\omega + \\sum\_{i=1}^M \\beta\_i x\_{ti} +
-\\sum\_{j=1}^P \\alpha\_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j})
-+ \\sum\_{k=1}^Q \\varphi\_k
-f\_{t-k},&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0Af_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C%0A
-"
-f_{t} = \\omega + \\sum_{i=1}^M \\beta_i x_{ti} + \\sum_{j=1}^P \\alpha_j S(f_{t - j}) \\nabla(y_{t - j}, f_{t - j}) + \\sum_{k=1}^Q \\varphi_k f_{t-k},
-")  
+![f\_{t} = \\omega + \\sum\_{i=1}^M \\beta\_i x\_{ti} + \\sum\_{j=1}^P
+\\alpha\_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j}) +
+\\sum\_{k=1}^Q \\varphi\_k
+f\_{t-k},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C
+"f_{t} = \\omega + \\sum_{i=1}^M \\beta_i x_{ti} + \\sum_{j=1}^P \\alpha_j S(f_{t - j}) \\nabla(y_{t - j}, f_{t - j}) + \\sum_{k=1}^Q \\varphi_k f_{t-k},")  
 where
 ![\\omega](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Comega
 "\\omega") is a vector of constants,
@@ -119,12 +128,9 @@ where
 "S(f_t)") is a scaling function for the score, and ![\\nabla(y\_t,
 f\_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29
 "\\nabla(y_t, f_t)") is the score given by   
-![&#10;\\nabla(y\_t, f\_t) = \\frac{\\partial \\ln p(y\_t |
-f\_t)}{\\partial
-f\_t}.&#10;](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0A%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D.%0A
-"
-\\nabla(y_t, f_t) = \\frac{\\partial \\ln p(y_t | f_t)}{\\partial f_t}.
-")  
+![\\nabla(y\_t, f\_t) = \\frac{\\partial \\ln p(y\_t | f\_t)}{\\partial
+f\_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D.
+"\\nabla(y_t, f_t) = \\frac{\\partial \\ln p(y_t | f_t)}{\\partial f_t}.")  
 
 The GAS models can be straightforwardly estimated by the maximum
 likelihood method. For the asymptotic theory regarding the GAS models

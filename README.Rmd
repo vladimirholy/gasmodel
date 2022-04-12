@@ -14,15 +14,40 @@ knitr::opts_chunk$set(
 options(width = 100, max.print = 1e6)
 ```
 
-# Package gasmodel
+# gasmodel
 
 <!-- badges: start -->
 <!-- badges: end -->
+
+# Overview
 
 A package for estimation, forecasting, and simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models.
 
 Model specification allows for various conditional distributions, different parametrizations, exogenous variables, higher score and autoregressive orders, custom and unconditional initial values of time-varying parameters, fixed and bounded values of coefficients, and NA values.
 Model estimation is performed by the maximum likelihood method and the Hessian matrix.
+
+The package offers the following functions for working with GAS models:
+
+- `gas()` estimates GAS models.
+- `gas_simulate()` simulates GAS models.
+- `gas_forecast()` forecasts GAS models.
+- `gas_filter()` obtains filtered time-varying parameters of GAS models.
+- `gas_bootstrap()` bootstraps coefficients of GAS models.
+
+Probability distributions are handled by the following functions:
+
+- `distr()` provides table of supported distributions.
+- `distr_density()` computes the density.
+- `distr_mean()` computes the mean.
+- `distr_var()` computes the variance.
+- `distr_score()` computes the score.
+- `distr_fisher()` computes the Fisher information.
+- `distr_random()` generates random observations.
+
+In addition, the package contains the following datasets used in examples:
+
+- `bookshop_sales` ???.
+- `ice_hockey_championships` ???.
 
 ## Installation
 
@@ -33,17 +58,9 @@ You can install the development version of gasmodel from [GitHub](https://github
 devtools::install_github("vladimirholy/gasmodel")
 ```
 
-## Functions and Datasets
+## Supported Distributions
 
-The key function is `gas()` which estimates GAS models.
-Additional functions include `gas_simulate()` which simulates GAS models, `gas_forecast()` which forecasts GAS models, `gas_filter()` which obtains filtered time-varying parameters of GAS models, and `gas_bootstrap()` which bootstraps coefficients of GAS models.
-
-The list of supported distributions can be obtained by `distr()`.
-The functions working with distributions are `distr_density()` which computes the density, `distr_mean()` which computes the mean, `distr_var()` which computes the variance, `distr_score()` which computes the score, `distr_fisher()` which computes the Fisher information, and `distr_random()` which generates random observations.
-
-The included datasets are `bookshop_sales` and `ice_hockey_championships`.
-
-## List of Supported Distributions
+???
 
 ``` {r distr}
 library(gasmodel)
@@ -58,13 +75,9 @@ The GAS models are observation-driven models allowing for any underlying probabi
 They capture the dynamics of time-varying parameters using the autoregressive term and the lagged score, i.e. the gradient of the log-likelihood function.
 Exogenous variables can also be included.
 Specifically, time-varying parameters $f_{t}$ follow the recursion
-$$
-f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},
-$$
+$$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},$$
 where $\omega$ is a vector of constants, $\beta_i$ are regression parameters, $\alpha_j$ are score parameters, $\varphi_k$ are autoregressive parameters, $x_{ti}$ are exogenous variables, $S(f_t)$ is a scaling function for the score, and $\nabla(y_t, f_t)$ is the score given by
-$$
-\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.
-$$
+$$\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.$$
 
 The GAS models can be straightforwardly estimated by the maximum likelihood method.
 For the asymptotic theory regarding the GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).
