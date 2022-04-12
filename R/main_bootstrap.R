@@ -6,7 +6,7 @@
 #' @title Bootstrap GAS Model
 #'
 #' @description
-#' A function for bootsrapping coefficients of generalized autoregressive score (GAS) models.
+#' A function for bootsrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 #' Method \code{"parametric"} repeatedly simulates time series using the parametric model and re-estimates coefficients.
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 #'
@@ -44,6 +44,12 @@
 #' \item{bootstrap$coef_vcov}{The variance-covariance matrix of boostrapped coefficients.}
 #' \item{bootstrap$coef_sd}{The standard deviation of boostrapped coefficients.}
 #' \item{bootstrap$coef_quant}{The quantiles of boostrapped coefficients.}
+#'
+#' @references
+#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#'
+#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
+#'
 #'
 #' @seealso
 #' \code{\link[gasmodel:gas]{gas()}}

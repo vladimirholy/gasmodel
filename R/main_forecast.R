@@ -6,7 +6,7 @@
 #' @title Forecast GAS Model
 #'
 #' @description
-#' A function for forecasting of generalized autoregressive score (GAS) models.
+#' A function for forecasting of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 #' Method \code{"mean_path"} filters time-varying parameters based on zero score and then generates mean of time series.
 #' Method \code{"simulated_paths"} repeatedly simulates time series, simultaneously filters time-varying parameters, and then estimates mean, standard deviation, and quantiles (see Blasques et al., 2016).
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
@@ -50,6 +50,10 @@
 #'
 #' @references
 #' Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. doi: \href{https://doi.org/10.1016/j.ijforecast.2015.11.018}{10.1016/j.ijforecast.2015.11.018}.
+#'
+#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#'
+#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
 #'
 #' @seealso
 #' \code{\link[gasmodel:gas]{gas()}}

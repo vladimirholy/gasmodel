@@ -6,7 +6,7 @@
 #' @title Estimate GAS Model
 #'
 #' @description
-#' A versatile function for estimation of generalized autoregressive score (GAS) models.
+#' A versatile function for estimation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 #' Model specification allows for various conditional distributions, different parametrizations, exogenous variables, higher score and autoregressive orders, custom and unconditional initial values of time-varying parameters, fixed and bounded values of coefficients, and NA values.
 #' Model estimation is performed by the maximum likelihood method and the Hessian matrix.
 #' The function can be supplied with any optimization and Hessian functions.
@@ -36,19 +36,32 @@
 #'
 #' @details
 #' \loadmathjax
-#' Generalized autoregressive score (GAS) models, also known as dynamic conditional score (DCS) models or score-driven (SD) models, were proposed by Creal et al. (2013) and Harvey (2013).
 #'
-#' Time-varying parameters \mjseqn{f_{t}} follow the recursion
+#'
+#' The generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models, have established themselves as a useful modern framework for time series modeling.
+#'
+#' The GAS models are observation-driven models allowing for any underlying probability distribution \mjseqn{p(y_t|f_t)} with any time-varying parameters \mjseqn{f_t} for time series \mjseqn{y_t}.
+#' They capture the dynamics of time-varying parameters using the autoregressive term and the lagged score, i.e. the gradient of the log-likelihood function.
+#' Exogenous variables can also be included.
+#' Specifically, time-varying parameters \mjseqn{f_{t}} follow the recursion
 #' \mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},}
 #' where \mjseqn{\omega} is a vector of constants, \mjseqn{\beta_i} are regression parameters, \mjseqn{\alpha_j} are score parameters, \mjseqn{\varphi_k} are autoregressive parameters, \mjseqn{x_{ti}} are exogenous variables, \mjseqn{S(f_t)} is a scaling function for the score, and \mjseqn{\nabla(y_t, f_t)} is the score given by
 #' \mjsdeqn{\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.}
-#' Note that the \code{gas()} function allows for more flexible models with individual \mjseqn{M}, \mjseqn{P}, \mjseqn{Q}, and \mjseqn{x_{ti}} for each time-varying parameter.
+#'
+#' The GAS models can be straightforwardly estimated by the maximum likelihood method.
+#' For the asymptotic theory regarding the GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).
+#'
+#' The use of the score for updating time-varying parameters is optimal in an information theoretic sense.
+#' For an investigation of the optimality properties of GAS models, see Blasques et al. (2015) and Blasques et al. (2021).
+#'
+#' Generally, the GAS models perform quite well when compared to alternatives, including parameter-driven models.
+#' For a comparison of the GAS models to alternative models, see Koopman et al. (2016) and Blazsek and Licht (2020).
+#'
+#' The GAS class includes many well-known econometric models, such as the generalized autoregressive conditional heteroskedasticity (GARCH) model of Bollerslev (1986), the autoregressive conditional duration (ACD) model of Engle and Russel (1998), and the Poisson count model of Davis et al. (2003).
+#' More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the directional model of Harvey (2019), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2021).
+#' For an overview of various GAS models, see Harvey (2022).
 #'
 #' The extensive GAS literature is listed on \href{http://www.gasmodel.com}{www.gasmodel.com}.
-#' For an asymptotic theory regarding GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).
-#' For an investigation of optimality properties of GAS models, see Blasques et al. (2015) and Blasques et al. (2021).
-#' For a comparison of GAS models to alternative models, see Koopman et al. (2016) and Blazsek and Licht (2020).
-#' For an overview of various GAS models, see Harvey (2022).
 #'
 #' @return A \code{list} of S3 class \code{gas} with components:
 #' \item{data$y}{The time series.}
@@ -111,11 +124,27 @@
 #'
 #' Blazsek, S. and Licht, A. (2020). Dynamic Conditional Score Models: A Review of Their Applications. \emph{Applied Economics}, \strong{52}(11), 1181–1199. doi: \href{https://doi.org/10.1080/00036846.2019.1659498}{10.1080/00036846.2019.1659498}.
 #'
+#' Bollerslev, T. (1986). Generalized Autoregressive Conditional Heteroskedasticity. \emph{Journal of Econometrics}, \strong{31}(3), 307–327. doi: \href{https://doi.org/10.1016/0304-4076(86)90063-1}{10.1016/0304-4076(86)90063-1}.
+#'
 #' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#'
+#' Davis, R. A., Dunsmuir, W. T. M., and Street, S. B. (2003). Observation-Driven Models for Poisson Counts. \emph{Biometrika}, \strong{90}(4), 777–790. doi: \href{https://doi.org/10.1093/biomet/90.4.777}{10.1093/biomet/90.4.777}.
+#'
+#' Engle, R. F. and Russell, J. R. (1998). Autoregressive Conditional Duration: A New Model for Irregularly Spaced Transaction Data. \emph{Econometrica}, \strong{66}(5), 1127–1162. doi: \href{https://doi.org/10.2307/2999632}{10.2307/2999632}.
 #'
 #' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
 #'
 #' Harvey, A. C. (2022). Score-Driven Time Series Models. \emph{Annual Review of Statistics and Its Application}, \strong{9}(1), 321–342. doi: \href{https://doi.org/10.1146/annurev-statistics-040120-021023}{10.1146/annurev-statistics-040120-021023}.
+#'
+#' Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. \emph{Cambridge Working Papers in Economics}, CWPE 0840. doi: \href{https://doi.org/10.17863/cam.5286}{10.17863/cam.5286}.
+#'
+#' Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. \emph{Cambridge Working Papers in Economics}. doi: \href{https://doi.org/10.17863/cam.43915}{10.17863/cam.43915}.
+#'
+#' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: \href{https://arxiv.org/abs/2101.04040}{2101.04040}.
+#'
+#' Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in National League Competitions Using Score-Driven Time Series Models. \emph{International Journal of Forecasting}, \strong{35}(2), 797–809. doi: \href{https://doi.org/10.1016/j.ijforecast.2018.10.011}{10.1016/j.ijforecast.2018.10.011}.
+#'
+#' Koopman, S. J., Lit, R., Lucas, A., and Opschoor, A. (2018). Dynamic Discrete Copula Models for High-Frequency Stock Price Changes. \emph{Journal of Applied Econometrics}, \strong{33}(7), 966–985. doi: \href{https://doi.org/10.1002/jae.2645}{10.1002/jae.2645}.
 #'
 #' Koopman, S. J., Lucas, A., and Scharth, M. (2016). Predicting Time-Varying Parameters with Parameter-Driven and Observation-Driven Models. \emph{Review of Economics and Statistics}, \strong{98}(1), 97–110. doi: \href{https://doi.org/10.1162/rest_a_00533}{10.1162/rest_a_00533}.
 #'

@@ -105,7 +105,7 @@ A \code{list} with components:
 \item{filter$score_tv_ahead_quant}{The quantiles of the forecasted scores. Only when \code{t_ahead > 0}.}
 }
 \description{
-A function for obtaining filtered time-varying parameters of generalized autoregressive score (GAS) models.
+A function for obtaining filtered time-varying parameters of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 It captures parameter uncertainty and can also be used for forecasting.
 Method \code{"simulated_coefs"} computes a path of time-varying parameters for each simulated coefficient set under assumption of asymptotic normality with given variance-covariance matrix (see Blasques et al., 2016).
 Method \code{"given_coefs"} computes a path of time-varying parameters for each supplied coefficient set.
@@ -132,6 +132,10 @@ norm_fil
 }
 \references{
 Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. doi: \href{https://doi.org/10.1016/j.ijforecast.2015.11.018}{10.1016/j.ijforecast.2015.11.018}.
+
+Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+
+Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
 }
 \seealso{
 \code{\link[gasmodel:gas]{gas()}}

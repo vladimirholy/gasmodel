@@ -5,7 +5,7 @@
 \alias{gasmodel}
 \title{gasmodel: Generalized Autoregressive Score Models}
 \description{
-Generalized autoregressive score (GAS) models, also known as dynamic conditional score (DCS) models or score-driven (SD) models, were proposed by Creal et al. (2013) and Harvey (2013).
+This package offers tools for estimation, forecasting, and simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models.
 
 The key function is \code{\link[gasmodel:gas]{gas()}} which estimates GAS models.
 Additional functions include \code{\link[gasmodel:gas_simulate]{gas_simulate()}} which simulates GAS models, \code{\link[gasmodel:gas_forecast]{gas_forecast()}} which forecasts GAS models, \code{\link[gasmodel:gas_filter]{gas_filter()}} which obtains filtered time-varying parameters of GAS models, and \code{\link[gasmodel:gas_bootstrap]{gas_bootstrap()}} which bootstraps coefficients of GAS models.
