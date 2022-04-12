@@ -138,7 +138,7 @@
 #'
 #' Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. \emph{Cambridge Working Papers in Economics}, CWPE 0840. doi: \href{https://doi.org/10.17863/cam.5286}{10.17863/cam.5286}.
 #'
-#' Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. \emph{Cambridge Working Papers in Economics}. doi: \href{https://doi.org/10.17863/cam.43915}{10.17863/cam.43915}.
+#' Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. \emph{Cambridge Working Papers in Economics}, CWPE 1971. doi: \href{https://doi.org/10.17863/cam.43915}{10.17863/cam.43915}.
 #'
 #' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: \href{https://arxiv.org/abs/2101.04040}{2101.04040}.
 #'
