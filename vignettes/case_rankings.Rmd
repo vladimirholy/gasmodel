@@ -1,10 +1,10 @@
 ---
-title: "Case Study: Rankings of Ice Hockey Teams"
+title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Case Study: Rankings of Ice Hockey Teams}
+  %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

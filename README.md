@@ -4,7 +4,6 @@
 # gasmodel
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 # Overview
@@ -23,28 +22,28 @@ method and the Hessian matrix.
 
 The package offers the following functions for working with GAS models:
 
-  - `gas()` estimates GAS models.
-  - `gas_simulate()` simulates GAS models.
-  - `gas_forecast()` forecasts GAS models.
-  - `gas_filter()` obtains filtered time-varying parameters of GAS
+-   `gas()` estimates GAS models.
+-   `gas_simulate()` simulates GAS models.
+-   `gas_forecast()` forecasts GAS models.
+-   `gas_filter()` obtains filtered time-varying parameters of GAS
     models.
-  - `gas_bootstrap()` bootstraps coefficients of GAS models.
+-   `gas_bootstrap()` bootstraps coefficients of GAS models.
 
 Probability distributions are handled by the following functions:
 
-  - `distr()` provides table of supported distributions.
-  - `distr_density()` computes the density.
-  - `distr_mean()` computes the mean.
-  - `distr_var()` computes the variance.
-  - `distr_score()` computes the score.
-  - `distr_fisher()` computes the Fisher information.
-  - `distr_random()` generates random observations.
+-   `distr()` provides table of supported distributions.
+-   `distr_density()` computes the density.
+-   `distr_mean()` computes the mean.
+-   `distr_var()` computes the variance.
+-   `distr_score()` computes the score.
+-   `distr_fisher()` computes the Fisher information.
+-   `distr_random()` generates random observations.
 
 In addition, the package contains the following datasets used in
 examples:
 
-  - `bookshop_sales` ???.
-  - `ice_hockey_championships` ???.
+-   `bookshop_sales` ???
+-   `ice_hockey_championships` ???
 
 ## Installation
 
@@ -58,7 +57,7 @@ devtools::install_github("vladimirholy/gasmodel")
 
 ## Supported Distributions
 
-???
+Currently, there are 17 distributions available.
 
 ``` r
 library(gasmodel)
@@ -81,6 +80,7 @@ print(distr(), right = FALSE, row.names = FALSE)
 #>  Normal                          Standard      norm      std   real        uni    TRUE   TRUE  
 #>  Plackett-Luce                   Standard      pluce     std   ranking     multi FALSE   TRUE  
 #>  Poisson                         Standard      pois      std   count       uni    TRUE   TRUE  
+#>  Student‘s t                     Standard      t         std   real        uni   FALSE   TRUE  
 #>  Weibull                         Rate          weibull   rate  duration    uni   FALSE  FALSE  
 #>  Weibull                         Scale         weibull   scale duration    uni   FALSE   TRUE  
 #>  Zero-Inflated Geometric         Mean          zigeom    mean  count       uni   FALSE   TRUE  
@@ -97,40 +97,37 @@ modern framework for time series modeling.
 
 The GAS models are observation-driven models allowing for any underlying
 probability distribution
-![p(y\_t|f\_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;p%28y_t%7Cf_t%29
-"p(y_t|f_t)") with any time-varying parameters
-![f\_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_t
-"f_t") for time series
-![y\_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_t
-"y_t"). They capture the dynamics of time-varying parameters using the
+![p(y_t\|f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;p%28y_t%7Cf_t%29 "p(y_t|f_t)")
+with any time-varying parameters
+![f_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_t "f_t")
+for time series
+![y_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_t "y_t").
+They capture the dynamics of time-varying parameters using the
 autoregressive term and the lagged score, i.e. the gradient of the
 log-likelihood function. Exogenous variables can also be included.
 Specifically, time-varying parameters
-![f\_{t}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D
-"f_{t}") follow the recursion   
-![f\_{t} = \\omega + \\sum\_{i=1}^M \\beta\_i x\_{ti} + \\sum\_{j=1}^P
-\\alpha\_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j}) +
-\\sum\_{k=1}^Q \\varphi\_k
-f\_{t-k},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C
-"f_{t} = \\omega + \\sum_{i=1}^M \\beta_i x_{ti} + \\sum_{j=1}^P \\alpha_j S(f_{t - j}) \\nabla(y_{t - j}, f_{t - j}) + \\sum_{k=1}^Q \\varphi_k f_{t-k},")  
+![f\_{t}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D "f_{t}")
+follow the recursion
+
+![f\_{t} = \\omega + \\sum\_{i=1}^M \\beta_i x\_{ti} + \\sum\_{j=1}^P \\alpha_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j}) + \\sum\_{k=1}^Q \\varphi_k f\_{t-k},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},")
+
 where
-![\\omega](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Comega
-"\\omega") is a vector of constants,
-![\\beta\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_i
-"\\beta_i") are regression parameters,
-![\\alpha\_j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_j
-"\\alpha_j") are score parameters,
-![\\varphi\_k](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cvarphi_k
-"\\varphi_k") are autoregressive parameters,
-![x\_{ti}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;x_%7Bti%7D
-"x_{ti}") are exogenous variables,
-![S(f\_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;S%28f_t%29
-"S(f_t)") is a scaling function for the score, and ![\\nabla(y\_t,
-f\_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29
-"\\nabla(y_t, f_t)") is the score given by   
-![\\nabla(y\_t, f\_t) = \\frac{\\partial \\ln p(y\_t | f\_t)}{\\partial
-f\_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D.
-"\\nabla(y_t, f_t) = \\frac{\\partial \\ln p(y_t | f_t)}{\\partial f_t}.")  
+![\\omega](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Comega "\omega")
+is a vector of constants,
+![\\beta_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_i "\beta_i")
+are regression parameters,
+![\\alpha_j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_j "\alpha_j")
+are score parameters,
+![\\varphi_k](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cvarphi_k "\varphi_k")
+are autoregressive parameters,
+![x\_{ti}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;x_%7Bti%7D "x_{ti}")
+are exogenous variables,
+![S(f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;S%28f_t%29 "S(f_t)")
+is a scaling function for the score, and
+![\\nabla(y_t, f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29 "\nabla(y_t, f_t)")
+is the score given by
+
+![\\nabla(y_t, f_t) = \\frac{\\partial \\ln p(y_t \| f_t)}{\\partial f_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D. "\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.")
 
 The GAS models can be straightforwardly estimated by the maximum
 likelihood method. For the asymptotic theory regarding the GAS models
@@ -197,7 +194,7 @@ Review of Their Applications. *Applied Economics*, **52**(11),
 
 Bollerslev, T. (1986). Generalized Autoregressive Conditional
 Heteroskedasticity. *Journal of Econometrics*, **31**(3), 307–327. doi:
-[10.1016/0304-4076(86)90063-1](https://doi.org/10.1016/0304-4076\(86\)90063-1).
+[10.1016/0304-4076(86)90063-1](https://doi.org/10.1016/0304-4076(86)90063-1).
 
 Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized
 Autoregressive Score Models with Applications. *Journal of Applied
@@ -248,4 +245,4 @@ of Applied Econometrics*, **33**(7), 966–985. doi:
 Koopman, S. J., Lucas, A., and Scharth, M. (2016). Predicting
 Time-Varying Parameters with Parameter-Driven and Observation-Driven
 Models. *Review of Economics and Statistics*, **98**(1), 97–110. doi:
-[10.1162/rest\_a\_00533](https://doi.org/10.1162/rest_a_00533).
+[10.1162/rest_a\_00533](https://doi.org/10.1162/rest_a_00533).

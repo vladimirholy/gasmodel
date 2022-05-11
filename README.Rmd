@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 options(width = 100, max.print = 1e6)
+library(gasmodel)
 ```
 
 # gasmodel
@@ -46,8 +47,8 @@ Probability distributions are handled by the following functions:
 
 In addition, the package contains the following datasets used in examples:
 
-- `bookshop_sales` ???.
-- `ice_hockey_championships` ???.
+- `bookshop_sales` ???
+- `ice_hockey_championships` ???
 
 ## Installation
 
@@ -60,7 +61,7 @@ devtools::install_github("vladimirholy/gasmodel")
 
 ## Supported Distributions
 
-???
+Currently, there are `r length(unique(distr()$distr))` distributions available.
 
 ``` {r distr}
 library(gasmodel)
