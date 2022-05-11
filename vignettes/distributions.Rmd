@@ -1,0 +1,278 @@
+---
+title: "Probability Distributions"
+author: "Vladimír Holý"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Binary Data
+
+## Bernoulli Distribution
+
+# Categorical Data
+
+## Categorical Distribution
+
+# Ranking Data
+
+## Plackett-Luce Distribution
+
+# Count Data
+
+## Double Poisson Distribution
+
+## Geometric Distribution
+
+## Negative Binomial Distribution
+
+### NB2 Parametrization
+
+#### Parameters
+
+- Location parameter $m \in (0, \infty)$
+- Dispersion parameter $s \in (0, \infty)$
+
+#### Probability Mass Function
+
+$$
+\mathrm{P} [Y = y | m, s] = \frac{\Gamma (y + s^{-1})}{\Gamma (y + 1) \Gamma (s^{-1})} \left( \frac{1}{1 + s m} \right)^{s^{-1}} \left( \frac{s m}{1 + s m} \right)^{y}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= m (1 + s m) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{y - m}{m (1 + s m) } \\
+\nabla_{s} (y; m, s) &= \frac{ y - m}{s (1 + s m)} + \frac{ \ln(1 + s m) + \psi_0 \left( s^{-1} \right) - \psi_0 \left( y + s^{-1} \right)  }{s^2} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{1}{m (1 + s m)} \\
+\mathcal{I}_{m, s} (m, s) &= 0 \\
+\mathcal{I}_{s, s} (m, s) &\approx \frac{2}{s^3} \ln(1 + s m) - \frac{m}{s^2 + s^3 m} + \frac{2}{s^3} \psi_0 \left( s^{-1} \right) + \frac{1}{s^4} \psi_1 \left( s^{-1} \right) \\
+& \qquad - \frac{2}{s^3} \psi_0 \left( m + s^{-1} \right) - \frac{1}{s^4} \psi_1 \left( m + s^{-1} \right) \\
+\end{aligned}
+$$
+
+### Note
+
+- The Fisher information for the dispersion parameter, $\mathcal{I}_{s, s} (m, s)$, is not available in a closed form. To speed up calculations, we use an approximation by replacing $y$ with its expected value.
+
+### Further Reading
+
+- Cameron, A. C. and Trivedi, P. K. (1986). Econometric Models Based on Count Data: Comparisons and Applications of Some Estimators and Tests. *Journal of Applied Econometrics*, **1**(1), 29–53. doi: [10.1002/jae.3950010104](https://doi.org/10.1002/jae.3950010104).
+
+- Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
+
+- Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
+
+## Poisson Distribution
+
+## Zero-Inflated Geometric Distribution
+
+## Zero-Inflated Negative Binomial Distribution
+
+### NB2 Parametrization
+
+#### Parameters
+
+- Location parameter $m \in (0, \infty)$
+- Dispersion parameter $s \in (0, \infty)$
+- Inflation parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\begin{aligned}
+\mathrm{P} [Y = y | m, s, p] &= \begin{cases}
+p + (1 - p)  \left( \frac{1}{1 + s m} \right)^{s^{-1}} & \text{ for } y = 0 \\
+(1 - p) \frac{\Gamma (y + s^{-1})}{\Gamma (y + 1) \Gamma (s^{-1})} \left( \frac{1}{1 + s m} \right)^{s^{-1}} \left( \frac{s m}{1 + s m} \right)^{y} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m (1 - p) \\
+\mathrm{var}[Y] &= m(1 - p) (1 + p m + s m) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, p) &= \begin{cases}
+\frac{p - 1}{(1 + s m) \left( 1 + p (1 + s m)^{s^{-1}} - p \right)} & \text{ for } y = 0 \\
+\frac{y - m}{m (1 + s m) } & \text{ for } y \geq 1 \\
+\end{cases} \\
+\nabla_{s} (y; m, s, p) &= \begin{cases}
+\frac{(1 - p) \left( (1 +  s m) \ln(1 + s m) -s m \right) }{  s^2 (1 + s m) \left( 1 + p (1 + s m)^{s^{-1}}- p \right) } & \text{ for } y = 0 \\
+\frac{ s (y - m) + (1 + s m) \left( \ln(1 + s m) + \psi_0 \left( s^{-1} \right) - \psi_0 \left( y + s^{-1} \right) \right) }{s^2 (1 + s m)} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\nabla_{p} (y; m, s, p) &= \begin{cases}
+\frac{(1 + s m)^{s^{-1}} - 1}{1 + p (1 + s m)^{s^{-1}}- p} & \text{ for } y = 0 \\
+\frac{1}{p - 1} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s, p) &= \frac{p(p - 1)}{(1 + s m)^2 \left( 1 +  p (1 + s m)^{s^{-1}} - p \right)} + \frac{1 -p}{m(1 + s m)} \\
+\mathcal{I}_{m, s} (m, s, p) &= \frac{\left( p - p^2 \right) \left( (1 + s m) \ln(1 + s m) - s m \right) }{s^2 (1 + s m)^2 \left( 1 + p (1 + s m)^{s^{-1}} -p \right)} \\
+\mathcal{I}_{m, p} (m, s, p) &= \frac{-1}{ (1 + s m) \left( 1 + p (1 + s m)^{s^{-1}} - p \right) }\\
+\mathcal{I}_{s, s} (m, s, p) &\approx \frac{2}{s^3} \ln (1 + s m) - \frac{2 m^2 p s + m^2 s + m p + m}{m^2 s^4 + 2 m s^3 + s^2} \\
+& \qquad + \frac{2 s^2 m^2 + 4 s m + 2}{m^2 s^5 + 2 m s^4 + s^3} \left( \psi_0 \left( s^{-1} \right) - \psi_0 \left( s^{-1} + m (1 - p) \right) \right) \\
+& \qquad + \frac{s^2 m^2 + 2 s m + 1}{m^2 s^6 + 2 m s^5 + s^4} \left( \psi_1 \left( s^{-1} \right) - \psi_1 \left( s^{-1} + m (1 - p) \right) \right) \\
+\mathcal{I}_{s, p} (m, s, p) &= \frac{(1 + s m) \ln(1 + s m) - s m}{s^2 (1 + s m) \left( 1 + p (1 + s m)^{s^{-1}} - p \right)} \\
+\mathcal{I}_{p, p} (m, s, p) &= \frac{1 - (1 + s m)^{s^{-1}}}{(p - 1) \left( 1 + p (1 + s m)^{s^{-1}} - p \right)}
+\end{aligned}
+$$
+
+### Note
+
+- The Fisher information for the dispersion parameter, $\mathcal{I}_{s, s} (m, s, p)$, is not available in a closed form. To speed up calculations, we use an approximation by replacing $y$ with its expected value.
+
+### Further Reading
+
+## Zero-Inflated Poisson Distribution
+
+# Duration Data
+
+## Exponential Distribution
+
+## Gamma Distribution
+
+## Generalized Gamma Distribution
+
+## Weibull Distribution
+
+# Real Data
+
+## Normal Distribution
+
+### Standard Parametrization
+
+#### Parameters
+
+- Location parameter $m \in \mathbb{R}$
+- Scale parameter $s \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s) = \frac{1}{\sqrt{2 \pi s}} \exp \left( -\frac{(y - m)^2}{2 s} \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= s \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{y - m}{s} \\
+\nabla_{s} (y; m, s) &= \frac{(y - m)^2 - s}{2 s^2} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{1}{s} \\
+\mathcal{I}_{m, s} (m, s) &= 0 \\
+\mathcal{I}_{s, s} (m, s) &= \frac{1}{2 s^2} \\
+\end{aligned}
+$$
+
+## Student's t Distribution
+
+### Standard Parametrization
+
+#### Parameters
+
+- Location parameter $m \in \mathbb{R}$
+- Scale parameter $s \in (0, \infty)$
+- Degrees of freedom parameter $v \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s, v) = \frac{\Gamma \left( \frac{v + 1}{2} \right)}{\Gamma \left( \frac{v}{2} \right) \sqrt{\pi s v}} \left( 1 + \frac{(y - m)^2}{s v} \right)^{-\frac{v + 1}{2}}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m, & \quad \text{for } v &> 1 \\
+\mathrm{var}[Y] &= s \frac{v}{v - 2}, & \quad \text{for } v &> 2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, v) &= \frac{(v + 1) (y - m) }{(y - m)^2 + s v} \\
+\nabla_{s} (y; m, s, v) &= \frac{v}{2s} \frac{(y - m)^2 - s}{(y - m)^2 + s v} \\
+\nabla_{v} (y; m, s, v) &= \frac{1}{2} \frac{(y - m)^2 - s}{(y - m)^2 + s v} + \frac{1}{2} \ln \left(\frac{s v}{(y - m)^2 + s v} \right) - \frac{1}{2} \psi_0 \left( \frac{v}{2} \right) + \frac{1}{2} \psi_0 \left( \frac{v + 1}{2} \right) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s, v) &= \frac{v + 1}{s (v + 3)} \\
+\mathcal{I}_{m, s} (m, s, v) &= 0 \\
+\mathcal{I}_{m, v} (m, s, v) &= 0 \\
+\mathcal{I}_{s, s} (m, s, v) &= \frac{v}{2 s^2 (v + 3)} \\
+\mathcal{I}_{s, v} (m, s, v) &= \frac{-1}{s (v + 1) (v + 3)} \\
+\mathcal{I}_{v, v} (m, s, v) &= - \frac{v + 5}{2 v (v + 1) (v + 3)} + \frac{1}{4} \psi_1 \left( \frac{v}{2} \right) - \frac{1}{4} \psi_1 \left( \frac{v + 1}{2} \right)\\
+\end{aligned}
+$$
+
+### Further Reading
+
+- Lange, K. L., Little, R. J. A., and Taylor, J. M. G. (1989). Robust Statistical Modeling Using the t Distribution. *Journal of the American Statistical Association*, **84**(408), 881–896. doi: [10.1080/01621459.1989.10478852](https://doi.org/10.1080/01621459.1989.10478852).
+
+# Multivariate Data
+
+## Multivariate Normal Distribution
+
+### Standard Parametrization
+
+
