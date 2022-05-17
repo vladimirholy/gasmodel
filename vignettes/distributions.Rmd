@@ -219,6 +219,7 @@ $$
 
 ## Student's t Distribution
 
+
 ### Standard Parametrization
 
 #### Parameters
@@ -264,6 +265,8 @@ $$
 \mathcal{I}_{v, v} (m, s, v) &= - \frac{v + 5}{2 v (v + 1) (v + 3)} + \frac{1}{4} \psi_1 \left( \frac{v}{2} \right) - \frac{1}{4} \psi_1 \left( \frac{v + 1}{2} \right)\\
 \end{aligned}
 $$
+
+=======
 
 ### Further Reading
 
