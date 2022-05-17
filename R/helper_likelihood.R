@@ -35,8 +35,7 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
   }
   tv_f[idx_ok, ] <- matrix(omega_vector, nrow = length(idx_ok), ncol = info_par$par_num, byrow = TRUE)
   if (any(model$m > 0L)) {
-  #   tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
-    tv_f[idx_ok, 2] <- tv_f[idx_ok, 2] + beta_list[[2]][1] / (1 + exp(-data$x[[2]][idx_ok, 2] * beta_list[[2]][2])) + beta_list[[2]][3] / (1 + data$x[[2]][idx_ok, 2]^beta_list[[2]][4])
+    tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
   }
   if (any(model$p + model$q > 0L)) {
     cur_f <- rep(NA_real_, info_par$par_num)
