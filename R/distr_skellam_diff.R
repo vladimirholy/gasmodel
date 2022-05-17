@@ -1,12 +1,12 @@
 
-# POISSON DISTRIBUTION / STANDARD PARAMETRIZATION
+# POISSON DISTRIBUTION / DIFFERENCE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_pois_std_parameters <- function(n) {
-  group_of_par_names <- c("rate")
-  par_names <- c("rate")
-  par_support <- c("positive")
+distr_skellam_diff_parameters <- function(n) {
+  group_of_par_names <- c("pois.mean", "pois.mean")
+  par_names <- c("pois.mean1", "pois.mean2")
+  par_support <- c("positive", "positive")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
 }
@@ -14,40 +14,44 @@ distr_pois_std_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_pois_std_density <- function(y, f) {
+distr_skellam_diff_density <- function(y, f) {
   t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  res_density <- suppressWarnings(stats::dpois(y, lambda = m))
+  r1 <- f[, 1, drop = FALSE]
+  r2 <- f[, 2, drop = FALSE]
+  res_density <- suppressWarnings(exp(-(r1 + r2)) * (r1 / r2)^(y / 2) * besselI(x = 2 * sqrt(r1 * r2), nu = y))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_pois_std_loglik <- function(y, f) {
+distr_skellam_diff_loglik <- function(y, f) {
   t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dpois(y, lambda = m, log = TRUE))
+  r1 <- f[, 1, drop = FALSE]
+  r2 <- f[, 2, drop = FALSE]
+  res_loglik <- suppressWarnings(y / 2 * log(r1 / r2) - r1 - r2 + log(besselI(x = 2 * sqrt(r1 * r2), nu = y)))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
 
 
 # Mean Function ----------------------------------------------------------------
-distr_pois_std_mean <- function(f) {
+distr_skellam_diff_mean <- function(f) {
   t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  res_mean <- m
+  r1 <- f[, 1, drop = FALSE]
+  r2 <- f[, 2, drop = FALSE]
+  res_mean <- r1 - r2
   return(res_mean)
 }
 # ------------------------------------------------------------------------------
 
 
 # Variance Function ------------------------------------------------------------
-distr_pois_std_var <- function(f) {
+distr_skellam_diff_var <- function(f) {
   t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  res_var <- m
+  r1 <- f[, 1, drop = FALSE]
+  r2 <- f[, 2, drop = FALSE]
+  res_var <- r1 + r2
   res_var <- array(res_var, dim = c(t, 1, 1))
   return(res_var)
 }
@@ -55,31 +59,38 @@ distr_pois_std_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_pois_std_score <- function(y, f) {
+distr_skellam_diff_score <- function(y, f) {
   t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  res_score <- matrix(0, nrow = t, ncol = 1L)
-  res_score[, 1] <- (y - m) / m
+  r1 <- f[, 1, drop = FALSE]
+  r2 <- f[, 2, drop = FALSE]
+  res_score <- matrix(0, nrow = t, ncol = 2L)
+  res_score[, 1] <- sqrt(r2 / r1) * besselI(x = 2 * sqrt(r1 * r2), nu = y - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = y) - 1
+  res_score[, 2] <- sqrt(r1 / r2) * besselI(x = 2 * sqrt(r1 * r2), nu = y - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = y) - y / r2 - 1
   return(res_score)
 }
 # ------------------------------------------------------------------------------
 
 
 # Fisher Information Function --------------------------------------------------
-distr_pois_std_fisher <- function(f) {
+distr_skellam_diff_fisher <- function(f) {
   t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  res_fisher <- array(0, dim = c(t, 1L, 1L))
-  res_fisher[, 1, 1] <- 1 / m
+  r1 <- f[, 1, drop = FALSE]
+  r2 <- f[, 2, drop = FALSE]
+  res_fisher <- array(0, dim = c(t, 2L, 2L))
+  res_fisher[, 1, 1] <- NA
+  res_fisher[, 1, 2] <- NA
+  res_fisher[, 2, 1] <- NA
+  res_fisher[, 2, 2] <- NA
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
 
 
 # Random Generation Function ---------------------------------------------------
-distr_pois_std_random <- function(t, f) {
-  m <- f[1]
-  res_random <- suppressWarnings(stats::rpois(t, lambda = m))
+distr_skellam_diff_random <- function(t, f) {
+  r1 <- f[1]
+  r2 <- f[2]
+  res_random <- suppressWarnings(stats::rpois(t, lambda = r1) - stats::rpois(t, lambda = r2))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }
@@ -87,10 +98,12 @@ distr_pois_std_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_pois_std_start <- function(y) {
+distr_skellam_diff_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
-  m <- max(y_mean, 1e-6)
-  res_start <- m
+  y_var <- stats::var(y, na.rm = TRUE)
+  r1 <- max((y_var + y_mean) / 2, 1e-6)
+  r2 <- max((y_var - y_mean) / 2, 1e-6)
+  res_start <- c(r1, r2)
   return(res_start)
 }
 # ------------------------------------------------------------------------------

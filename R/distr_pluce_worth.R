@@ -1,9 +1,9 @@
 
-# PLACKETT-LUCE DISTRIBUTION / STANDARD PARAMETRIZATION
+# PLACKETT-LUCE DISTRIBUTION / WORTH PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_pluce_std_parameters <- function(n) {
+distr_pluce_worth_parameters <- function(n) {
   group_of_par_names <- rep("worth", times = n)
   par_names <- paste0("worth", 1:n)
   par_support <- rep("positive", times = n)
@@ -14,15 +14,15 @@ distr_pluce_std_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_pluce_std_density <- function(y, f) {
-  res_density <- exp(distr_pluce_std_loglik(y = y, f = f))
+distr_pluce_worth_density <- function(y, f) {
+  res_density <- exp(distr_pluce_worth_loglik(y = y, f = f))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_pluce_std_loglik <- function(y, f) {
+distr_pluce_worth_loglik <- function(y, f) {
   t <- nrow(f)
   n <- ncol(f)
   res_loglik <- matrix(0, nrow = t, ncol = 1L)
@@ -45,7 +45,7 @@ distr_pluce_std_loglik <- function(y, f) {
 
 
 # Mean Function ----------------------------------------------------------------
-distr_pluce_std_mean <- function(f) {
+distr_pluce_worth_mean <- function(f) {
   t <- nrow(f)
   n <- ncol(f)
   res_mean <- matrix(0, nrow = t, ncol = n)
@@ -53,13 +53,13 @@ distr_pluce_std_mean <- function(f) {
     y_all <- arrangements::permutations(n)
     for (i in 1:t) {
       for (j in 1:nrow(y_all)) {
-        prob <- distr_pluce_std_density(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
+        prob <- distr_pluce_worth_density(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
         res_mean[i, ] <- res_mean[i, ] + y_all[j, ] * as.vector(prob)
       }
     }
   } else {
     for (i in 1:t) {
-      y_rand <- distr_pluce_std_random(t = 1e6, f = f[i, , drop = FALSE])
+      y_rand <- distr_pluce_worth_random(t = 1e6, f = f[i, , drop = FALSE])
       res_mean[i, ] <- colMeans(y_rand)
     }
   }
@@ -69,7 +69,7 @@ distr_pluce_std_mean <- function(f) {
 
 
 # Variance Function ------------------------------------------------------------
-distr_pluce_std_var <- function(f) {
+distr_pluce_worth_var <- function(f) {
   t <- nrow(f)
   n <- ncol(f)
   res_var <- array(0, dim = c(t, n, n))
@@ -79,7 +79,7 @@ distr_pluce_std_var <- function(f) {
     y_all <- arrangements::permutations(n)
     for (i in 1:t) {
       for (j in 1:nrow(y_all)) {
-        prob <- distr_pluce_std_density(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
+        prob <- distr_pluce_worth_density(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
         supp_mean[i, ] <- supp_mean[i, ] + y_all[j, ] * as.vector(prob)
         supp_square[i, , ] <- supp_square[i, , ] + t(y_all[j, , drop = FALSE]) %*% y_all[j, , drop = FALSE] * as.vector(prob)
       }
@@ -87,7 +87,7 @@ distr_pluce_std_var <- function(f) {
     }
   } else {
     for (i in 1:t) {
-      y_rand <- distr_pluce_std_random(t = 1e6, f = f[i, , drop = FALSE])
+      y_rand <- distr_pluce_worth_random(t = 1e6, f = f[i, , drop = FALSE])
       res_var[i, , ] <- stats::cov(y_rand)
     }
   }
@@ -97,7 +97,7 @@ distr_pluce_std_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_pluce_std_score <- function(y, f) {
+distr_pluce_worth_score <- function(y, f) {
   t <- nrow(f)
   n <- ncol(f)
   res_score <- matrix(0, nrow = t, ncol = n)
@@ -122,7 +122,7 @@ distr_pluce_std_score <- function(y, f) {
 
 
 # Fisher Information Function --------------------------------------------------
-distr_pluce_std_fisher <- function(f) {
+distr_pluce_worth_fisher <- function(f) {
   t <- nrow(f)
   n <- ncol(f)
   res_fisher <- array(0, dim = c(t, n, n))
@@ -130,16 +130,16 @@ distr_pluce_std_fisher <- function(f) {
     y_all <- arrangements::permutations(n)
     for (i in 1:t) {
       for (j in 1:nrow(y_all)) {
-        prob <- distr_pluce_std_density(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
-        score <- distr_pluce_std_score(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
+        prob <- distr_pluce_worth_density(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
+        score <- distr_pluce_worth_score(y = y_all[j, , drop = FALSE], f = f[i, , drop = FALSE])
         res_fisher[i, , ] <- res_fisher[i, , ] + t(score) %*% score * as.vector(prob)
       }
     }
   } else {
     for (i in 1:t) {
-      y_rand <- distr_pluce_std_random(t = 1e6, f = f[i, , drop = FALSE])
+      y_rand <- distr_pluce_worth_random(t = 1e6, f = f[i, , drop = FALSE])
       for (j in 1:nrow(y_rand)) {
-        score <- distr_pluce_std_score(y = y_rand[j, , drop = FALSE], f = f[i, , drop = FALSE])
+        score <- distr_pluce_worth_score(y = y_rand[j, , drop = FALSE], f = f[i, , drop = FALSE])
         res_fisher[i, , ] <- res_fisher[i, , ] + t(score) %*% score / nrow(y_rand)
       }
     }
@@ -150,7 +150,7 @@ distr_pluce_std_fisher <- function(f) {
 
 
 # Random Generation Function ---------------------------------------------------
-distr_pluce_std_random <- function(t, f) {
+distr_pluce_worth_random <- function(t, f) {
   n <- length(f)
   w <- f / prod(f)^(1 / n)
   res_random <- t(replicate(Matrix::invPerm(sample(1:n, replace = FALSE, prob = w)), n = t))
@@ -160,12 +160,12 @@ distr_pluce_std_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_pluce_std_start <- function(y) {
+distr_pluce_worth_start <- function(y) {
   y <- y[stats::complete.cases(y), ]
   t <- nrow(y)
   n <- ncol(y)
-  my_fn <- function(f_tilde) { mean(as.vector(distr_pluce_std_loglik(y = y, f = matrix(exp(c(f_tilde, 0)), nrow = t, ncol = n, byrow = TRUE)))) }
-  my_gr <- function(f_tilde) { colMeans(distr_pluce_std_score(y = y, f = matrix(exp(c(f_tilde, 0)), nrow = t, ncol = n, byrow = TRUE)))[1:(n - 1)] * exp(f_tilde) }
+  my_fn <- function(f_tilde) { mean(as.vector(distr_pluce_worth_loglik(y = y, f = matrix(exp(c(f_tilde, 0)), nrow = t, ncol = n, byrow = TRUE)))) }
+  my_gr <- function(f_tilde) { colMeans(distr_pluce_worth_score(y = y, f = matrix(exp(c(f_tilde, 0)), nrow = t, ncol = n, byrow = TRUE)))[1:(n - 1)] * exp(f_tilde) }
   my_par <- rep(0, n - 1)
   my_optim <- stats::optim(par = my_par, fn = my_fn, gr = my_gr, method = "BFGS", control = list(fnscale = -1, maxit = 100))
   res_start <- exp(c(my_optim$par, 0) - mean(c(my_optim$par, 0)))

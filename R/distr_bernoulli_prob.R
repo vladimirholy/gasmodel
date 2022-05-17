@@ -1,9 +1,9 @@
 
-# BERNOULLI DISTRIBUTION / STANDARD PARAMETRIZATION
+# BERNOULLI DISTRIBUTION / PROBABILISTIC PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_bernoulli_std_parameters <- function(n) {
+distr_bernoulli_prob_parameters <- function(n) {
   group_of_par_names <- c("probability")
   par_names <- c("probability")
   par_support <- c("probability")
@@ -14,7 +14,7 @@ distr_bernoulli_std_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_bernoulli_std_density <- function(y, f) {
+distr_bernoulli_prob_density <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   res_density <- (y == 0) * (1 - p) + (y == 1) * p
@@ -24,7 +24,7 @@ distr_bernoulli_std_density <- function(y, f) {
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_bernoulli_std_loglik <- function(y, f) {
+distr_bernoulli_prob_loglik <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   res_loglik <- (y == 0) * log(1 - p) + (y == 1) * log(p)
@@ -34,7 +34,7 @@ distr_bernoulli_std_loglik <- function(y, f) {
 
 
 # Mean Function ----------------------------------------------------------------
-distr_bernoulli_std_mean <- function(f) {
+distr_bernoulli_prob_mean <- function(f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   res_mean <- p
@@ -44,7 +44,7 @@ distr_bernoulli_std_mean <- function(f) {
 
 
 # Variance Function ------------------------------------------------------------
-distr_bernoulli_std_var <- function(f) {
+distr_bernoulli_prob_var <- function(f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   res_var <- p * (1 - p)
@@ -55,7 +55,7 @@ distr_bernoulli_std_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_bernoulli_std_score <- function(y, f) {
+distr_bernoulli_prob_score <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   res_score <- matrix(0, nrow = t, ncol = 1L)
@@ -66,7 +66,7 @@ distr_bernoulli_std_score <- function(y, f) {
 
 
 # Fisher Information Function --------------------------------------------------
-distr_bernoulli_std_fisher <- function(f) {
+distr_bernoulli_prob_fisher <- function(f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 1L, 1L))
@@ -77,7 +77,7 @@ distr_bernoulli_std_fisher <- function(f) {
 
 
 # Random Generation Function ---------------------------------------------------
-distr_bernoulli_std_random <- function(t, f) {
+distr_bernoulli_prob_random <- function(t, f) {
   p <- f[1]
   res_random <- sample(c(0, 1), size = t, prob = c(1 - p, p))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
@@ -87,7 +87,7 @@ distr_bernoulli_std_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_bernoulli_std_start <- function(y) {
+distr_bernoulli_prob_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
   p <- max(y_mean, 1e-6)
   res_start <- p

@@ -1,12 +1,12 @@
 
-# STUDENTS T DISTRIBUTION / STANDARD PARAMETRIZATION
+# DOUBLE POISSON DISTRIBUTION / MEAN PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_t_std_parameters <- function(n) {
-  group_of_par_names <- c("location", "scale", "df")
-  par_names <- c("location", "scale", "df")
-  par_support <- c("real", "positive", "positive")
+distr_dpois_mean_parameters <- function(n) {
+  group_of_par_names <- c("mean", "dispersion")
+  par_names <- c("mean", "dispersion")
+  par_support <- c("positive", "positive")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
 }
@@ -14,50 +14,44 @@ distr_t_std_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_t_std_density <- function(y, f) {
-  t <- nrow(f)
-  m <- f[, 1, drop = FALSE]
-  s <- f[, 2, drop = FALSE]
-  v <- f[, 3, drop = FALSE]
-  res_density <- suppressWarnings(stats::dt((y - m) / sqrt(s), df = v) / sqrt(s))
+distr_dpois_mean_density <- function(y, f) {
+  res_loglik <- distr_dpois_mean_loglik(y = y, f = f)
+  res_density <- exp(res_loglik)
   return(res_density)
 }
 # ------------------------------------------------------------------------------
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_t_std_loglik <- function(y, f) {
+distr_dpois_mean_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  v <- f[, 3, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dt((y - m) / sqrt(s), df = v, log = TRUE) - log(s) / 2)
+  c <- 1 + (1 - s) / (12 * s * m) * (1 + 1 / (s * m))
+  res_loglik <- log(s) / 2 - s * m - log(c)
+  res_loglik[y > 0] <- res_loglik[y > 0] - y + s * y + y * log(y) - lfactorial(y) + y * s * log(m / y)
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
 
 
 # Mean Function ----------------------------------------------------------------
-distr_t_std_mean <- function(f) {
+distr_dpois_mean_mean <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  v <- f[, 3, drop = FALSE]
   res_mean <- m
-  res_mean[v <= 1] <- NA_real_
   return(res_mean)
 }
 # ------------------------------------------------------------------------------
 
 
 # Variance Function ------------------------------------------------------------
-distr_t_std_var <- function(f) {
+distr_dpois_mean_var <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  v <- f[, 3, drop = FALSE]
-  res_var <- s * v / (v - 2)
-  res_var[v <= 2] <- NA_real_
+  res_var <- m / s
   res_var <- array(res_var, dim = c(t, 1, 1))
   return(res_var)
 }
@@ -65,43 +59,42 @@ distr_t_std_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_t_std_score <- function(y, f) {
+distr_dpois_mean_score <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  v <- f[, 3, drop = FALSE]
-  res_score <- matrix(0, nrow = t, ncol = 3L)
-  res_score[, 1] <- (v + 1) * (y - m) / (m^2 - 2 * m * y + v * s + y^2)
-  res_score[, 2] <- v * (m^2 - 2 * m * y - s + y^2) / (2 * s * (m^2 - 2 * m * y + v * s + y^2))
-  res_score[, 3] <- ((y - m)^2 - s) / ((y - m)^2 + s * v) / 2 - log((y - m)^2 / (v * s) + 1) / 2 - digamma(v / 2) / 2 + digamma((v + 1) / 2) / 2
+  res_score <- matrix(0, nrow = t, ncol = 2L)
+  res_score[, 1] <- s / m * (y - m)
+  res_score[, 2] <- 1 / (2 * s) - m
+  res_score[y > 0, 2] <- res_score[y > 0, 2] + y * (1 + log(m) - log(y))
   return(res_score)
 }
 # ------------------------------------------------------------------------------
 
 
 # Fisher Information Function --------------------------------------------------
-distr_t_std_fisher <- function(f) {
+distr_dpois_mean_fisher <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  v <- f[, 3, drop = FALSE]
-  res_fisher[, 1, 1] <- (v + 1) / ((v + 3) * s)
-  res_fisher[, 2, 2] <- v / (2 * (v + 3) * s^2)
-  res_fisher[, 2, 3] <- -1 / ((v + 1) * (v + 3) * s)
-  res_fisher[, 3, 2] <- res_fisher[, 2, 3]
-  res_fisher[, 3, 3] <-  1 / 4 * trigamma(v / 2) - 1 / 4 * trigamma((v + 1) / 2) - (v + 5) / (2 * v * (v + 1) * (v + 3))
-  res_fisher <- array(0, dim = c(t, 3L, 3L))
+  res_fisher <- array(0, dim = c(t, 2L, 2L))
+  res_fisher[, 1, 1] <- s / m
+  res_fisher[, 2, 2] <- 1 / (2 * s^2)
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
 
 
 # Random Generation Function ---------------------------------------------------
-distr_t_std_random <- function(t, f) {
+distr_dpois_mean_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
-  v <- f[3]
-  res_random <- suppressWarnings(m + sqrt(s) * stats::rt(t, df = v))
+  c <- 1 + (1 - s) / (12 * s * m) * (1 + 1 / (s * m))
+  y <- 0:max(1000, 10 * m, 100 * sqrt(m / s))
+  l <- log(s) / 2 - s * m - log(c) - y + s * y
+  l[-1] <- l[-1] + y[-1] * log(y[-1]) - lfactorial(y[-1]) + y[-1] * s * log(m / y[-1])
+  p <- exp(l)
+  res_random <- sample(y, size = t, replace = TRUE, prob = p)
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }
@@ -109,14 +102,12 @@ distr_t_std_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_t_std_start <- function(y) {
+distr_dpois_mean_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
   y_var <- stats::var(y, na.rm = TRUE)
-  y_kurt <- mean((y - y_mean)^4) / y_var^2 - 3
-  m <- y_mean
-  s <- max(y_var * (3 + y_kurt) / (3 + 2 * y_kurt), 1e-6)
-  v <- max(6 / y_kurt + 4, 2.1)
-  res_start <- c(m, s, v)
+  m <- max(y_mean, 1e-6)
+  s <- max(y_mean / y_var, 1e-6)
+  res_start <- c(m, s)
   return(res_start)
 }
 # ------------------------------------------------------------------------------

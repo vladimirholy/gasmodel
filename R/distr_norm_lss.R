@@ -1,11 +1,11 @@
 
-# NORMAL DISTRIBUTION / STANDARD PARAMETRIZATION
+# NORMAL DISTRIBUTION / LOCATION-SQ-SCALE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_norm_std_parameters <- function(n) {
-  group_of_par_names <- c("location", "scale")
-  par_names <- c("location", "scale")
+distr_norm_lss_parameters <- function(n) {
+  group_of_par_names <- c("location", "sq.scale")
+  par_names <- c("location", "sq.scale")
   par_support <- c("real", "positive")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
@@ -14,7 +14,7 @@ distr_norm_std_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_norm_std_density <- function(y, f) {
+distr_norm_lss_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
@@ -25,7 +25,7 @@ distr_norm_std_density <- function(y, f) {
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_norm_std_loglik <- function(y, f) {
+distr_norm_lss_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
@@ -36,7 +36,7 @@ distr_norm_std_loglik <- function(y, f) {
 
 
 # Mean Function ----------------------------------------------------------------
-distr_norm_std_mean <- function(f) {
+distr_norm_lss_mean <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
@@ -47,7 +47,7 @@ distr_norm_std_mean <- function(f) {
 
 
 # Variance Function ------------------------------------------------------------
-distr_norm_std_var <- function(f) {
+distr_norm_lss_var <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
@@ -59,7 +59,7 @@ distr_norm_std_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_norm_std_score <- function(y, f) {
+distr_norm_lss_score <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
@@ -72,7 +72,7 @@ distr_norm_std_score <- function(y, f) {
 
 
 # Fisher Information Function --------------------------------------------------
-distr_norm_std_fisher <- function(f) {
+distr_norm_lss_fisher <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
@@ -85,7 +85,7 @@ distr_norm_std_fisher <- function(f) {
 
 
 # Random Generation Function ---------------------------------------------------
-distr_norm_std_random <- function(t, f) {
+distr_norm_lss_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
   res_random <- suppressWarnings(stats::rnorm(t, mean = m, sd = sqrt(s)))
@@ -96,7 +96,7 @@ distr_norm_std_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_norm_std_start <- function(y) {
+distr_norm_lss_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
   y_var <- stats::var(y, na.rm = TRUE)
   m <- y_mean

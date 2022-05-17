@@ -1,9 +1,9 @@
 
-# ZERO-INFLATED POISSON DISTRIBUTION / STANDARD PARAMETRIZATION
+# ZERO-INFLATED POISSON DISTRIBUTION / MEAN PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_zipois_std_parameters <- function(n) {
+distr_zipois_mean_parameters <- function(n) {
   group_of_par_names <- c("rate", "inflation")
   par_names <- c("rate", "inflation")
   par_support <- c("positive", "probability")
@@ -14,7 +14,7 @@ distr_zipois_std_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_zipois_std_density <- function(y, f) {
+distr_zipois_mean_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
@@ -25,7 +25,7 @@ distr_zipois_std_density <- function(y, f) {
 
 
 # Log-Likelihood Function -------------------------------------------------------------
-distr_zipois_std_loglik <- function(y, f) {
+distr_zipois_mean_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
@@ -38,7 +38,7 @@ distr_zipois_std_loglik <- function(y, f) {
 
 
 # Mean Function ----------------------------------------------------------------
-distr_zipois_std_mean <- function(f) {
+distr_zipois_mean_mean <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
@@ -49,7 +49,7 @@ distr_zipois_std_mean <- function(f) {
 
 
 # Variance Function ------------------------------------------------------------
-distr_zipois_std_var <- function(f) {
+distr_zipois_mean_var <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
@@ -61,7 +61,7 @@ distr_zipois_std_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_zipois_std_score <- function(y, f) {
+distr_zipois_mean_score <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
@@ -74,7 +74,7 @@ distr_zipois_std_score <- function(y, f) {
 
 
 # Fisher Information Function --------------------------------------------------
-distr_zipois_std_fisher <- function(f) {
+distr_zipois_mean_fisher <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
@@ -89,7 +89,7 @@ distr_zipois_std_fisher <- function(f) {
 
 
 # Random Generation Function ---------------------------------------------------
-distr_zipois_std_random <- function(t, f) {
+distr_zipois_mean_random <- function(t, f) {
   m <- f[1]
   p <- f[2]
   res_random <- sample(c(0L, NA_real_), size = t, replace = TRUE, prob = c(p, 1 - p))
@@ -101,7 +101,7 @@ distr_zipois_std_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_zipois_std_start <- function(y) {
+distr_zipois_mean_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
   y_zero <- mean(y == 0L, na.rm = TRUE)
   p <- 0
