@@ -92,7 +92,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
     fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans)
     fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
     comp <- list()
-    comp$pre_num <- max(c(model$p, model$q))
+    comp$pre_num <- max(c(model$p, model$q, 1L))
     comp$burn_num <- 10L + max(model$p) + max(model$q)
     comp$full_num <- comp$pre_num + comp$burn_num + model$t_sim
     comp$average_x <- lapply(1:info_par$par_num, function(i) { colMeans(data$x_sim[[i]], na.rm = TRUE) })

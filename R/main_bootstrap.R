@@ -135,7 +135,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     comp$theta_bound_upper <- convert_coef_vector_to_theta_vector(model$coef_bound_upper, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
     comp$est_details <- list(data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef)
     if (bootstrap$method == "parametric") {
-      comp$pre_num <- max(c(model$p, model$q))
+      comp$pre_num <- max(c(model$p, model$q, 1L))
       comp$burn_num <- 10L + max(model$p) + max(model$q)
       comp$full_num <- comp$pre_num + comp$burn_num + model$t
       comp$average_x <- lapply(1:info_par$par_num, function(i) { colMeans(data$x[[i]], na.rm = TRUE) })

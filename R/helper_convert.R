@@ -34,7 +34,7 @@ convert_coef_vector_to_theta_vector <- function(coef_vec, coef_fix_value, coef_f
 
 # Convert Optimization Vector to Coefficient Vector ----------------------------
 convert_theta_vector_to_coef_vector <- function(theta_vec, coef_fix_value, coef_fix_other) {
-  coef_vec <- coef_fix_value + as.vector(coef_fix_other[, is.na(coef_fix_value)] %*% theta_vec)
+  coef_vec <- coef_fix_value + as.vector(coef_fix_other[, is.na(coef_fix_value), drop = FALSE] %*% theta_vec)
   coef_vec[is.na(coef_fix_value)] <- theta_vec
   return(coef_vec)
 }
@@ -42,7 +42,7 @@ convert_theta_vector_to_coef_vector <- function(theta_vec, coef_fix_value, coef_
 
 # Convert Coefficient Matrix to Optimization Matrix ----------------------------
 convert_coef_matrix_to_theta_matrix <- function(coef_mat, coef_fix_value, coef_fix_other) {
-  theta_mat <- coef_mat[is.na(coef_fix_value), is.na(coef_fix_value)]
+  theta_mat <- coef_mat[is.na(coef_fix_value), is.na(coef_fix_value), drop = FALSE]
   return(theta_mat)
 }
 # ------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ convert_coef_matrix_to_theta_matrix <- function(coef_mat, coef_fix_value, coef_f
 convert_theta_matrix_to_coef_matrix <- function(theta_mat, coef_fix_value, coef_fix_other) {
   cnv <- coef_fix_other
   cnv[is.na(coef_fix_value), is.na(coef_fix_value)] <- diag(sum(is.na(coef_fix_value)))
-  cnv <- cnv[, is.na(coef_fix_value)]
+  cnv <- cnv[, is.na(coef_fix_value), drop = FALSE]
   coef_mat <- cnv %*% theta_mat %*% t(cnv)
   return(coef_mat)
 }

@@ -23,7 +23,7 @@ starting_theta <- function(theta_start, theta_bound_lower, theta_bound_upper, da
     try_theta[i, ] <- pmin(try_theta[i, ], pmax(theta_bound_upper - (theta_bound_upper - theta_bound_lower) / 1e3, theta_bound_upper - 1e-9, na.rm = TRUE), na.rm = TRUE)
     try_theta[i, ] <- pmax(try_theta[i, ], pmin(theta_bound_lower + (theta_bound_upper - theta_bound_lower) / 1e3, theta_bound_lower + 1e-9, na.rm = TRUE), na.rm = TRUE)
   }
-  try_theta <- try_theta[!duplicated(try_theta), ]
+  try_theta <- try_theta[!duplicated(try_theta), , drop = FALSE]
   try_num <- nrow(try_theta)
   try_obj <- rep(NA_real_, length = try_num)
   est_details <- list(data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, info_theta = info_theta)

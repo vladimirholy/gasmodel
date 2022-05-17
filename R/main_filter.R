@@ -159,7 +159,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
         model$coef_set[i, ] <- convert_theta_vector_to_coef_vector(pmax(pmin(comp$theta_set[i, ], comp$theta_bound_upper), comp$theta_bound_lower), coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
       }
     }
-    comp$pre_num <- max(c(model$p, model$q))
+    comp$pre_num <- max(c(model$p, model$q, 1L))
     comp$full_num <- comp$pre_num + model$t + model$t_ahead
     comp$average_x <- lapply(1:info_par$par_num, function(i) { colMeans(data$x[[i]], na.rm = TRUE) })
     comp$y <- rbind(matrix(NA_real_, nrow = comp$pre_num, ncol = model$n), data$y, matrix(NA_real_, nrow = model$t_ahead, ncol = model$n))
