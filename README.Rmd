@@ -49,6 +49,7 @@ In addition, the package contains the following datasets used in examples:
 
 - `bookshop_sales` ???
 - `ice_hockey_championships` ???
+- `sp500_daily` ???
 
 ## Installation
 

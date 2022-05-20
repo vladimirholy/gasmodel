@@ -44,6 +44,7 @@ examples:
 
 -   `bookshop_sales` ???
 -   `ice_hockey_championships` ???
+-   `sp500_daily` ???
 
 ## Installation
 
@@ -57,35 +58,37 @@ devtools::install_github("vladimirholy/gasmodel")
 
 ## Supported Distributions
 
-Currently, there are 17 distributions available.
+Currently, there are 18 distributions available.
 
 ``` r
 library(gasmodel)
 print(distr(), right = FALSE, row.names = FALSE)
-#>  distr_title                     param_title   distr     param type        dim   orthog default
-#>  Bernoulli                       Standard      bernoulli std   binary      uni    TRUE   TRUE  
-#>  Categorical                     Worth         cat       worth categorical multi FALSE   TRUE  
-#>  Double Poisson                  Standard      dpois     std   count       uni    TRUE   TRUE  
-#>  Exponential                     Rate          exp       rate  duration    uni    TRUE  FALSE  
-#>  Exponential                     Scale         exp       scale duration    uni    TRUE   TRUE  
-#>  Gamma                           Rate          gamma     rate  duration    uni   FALSE  FALSE  
-#>  Gamma                           Scale         gamma     scale duration    uni   FALSE   TRUE  
-#>  Generalized Gamma               Rate          gengamma  rate  duration    uni   FALSE  FALSE  
-#>  Generalized Gamma               Scale         gengamma  scale duration    uni   FALSE   TRUE  
-#>  Geometric                       Mean          geom      mean  count       uni    TRUE   TRUE  
-#>  Geometric                       Probabilistic geom      prob  count       uni    TRUE  FALSE  
-#>  Multivariate Normal             Standard      mnorm     std   real        multi FALSE   TRUE  
-#>  Negative Binomial               NB2           negbin    nb2   count       uni    TRUE   TRUE  
-#>  Negative Binomial               Probabilistic negbin    prob  count       uni   FALSE  FALSE  
-#>  Normal                          Standard      norm      std   real        uni    TRUE   TRUE  
-#>  Plackett-Luce                   Standard      pluce     std   ranking     multi FALSE   TRUE  
-#>  Poisson                         Standard      pois      std   count       uni    TRUE   TRUE  
-#>  Student‘s t                     Standard      t         std   real        uni   FALSE   TRUE  
-#>  Weibull                         Rate          weibull   rate  duration    uni   FALSE  FALSE  
-#>  Weibull                         Scale         weibull   scale duration    uni   FALSE   TRUE  
-#>  Zero-Inflated Geometric         Mean          zigeom    mean  count       uni   FALSE   TRUE  
-#>  Zero-Inflated Negative Binomial NB2           zinegbin  nb2   count       uni   FALSE   TRUE  
-#>  Zero-Inflated Poisson           Standard      zipois    std   count       uni   FALSE   TRUE
+#>  distr_title                     param_title   distr     param    type        dim   orthog default
+#>  Bernoulli                       Probabilistic bernoulli prob     binary      uni    TRUE   TRUE  
+#>  Categorical                     Worth         cat       worth    categorical multi FALSE   TRUE  
+#>  Double Poisson                  Mean          dpois     mean     count       uni    TRUE   TRUE  
+#>  Exponential                     Rate          exp       rate     duration    uni    TRUE  FALSE  
+#>  Exponential                     Scale         exp       scale    duration    uni    TRUE   TRUE  
+#>  Gamma                           Rate          gamma     rate     duration    uni   FALSE  FALSE  
+#>  Gamma                           Scale         gamma     scale    duration    uni   FALSE   TRUE  
+#>  Generalized Gamma               Rate          gengamma  rate     duration    uni   FALSE  FALSE  
+#>  Generalized Gamma               Scale         gengamma  scale    duration    uni   FALSE   TRUE  
+#>  Geometric                       Mean          geom      mean     count       uni    TRUE   TRUE  
+#>  Geometric                       Probabilistic geom      prob     count       uni    TRUE  FALSE  
+#>  Multivariate Normal             Mean-Variance mnorm     mean_var real        multi FALSE   TRUE  
+#>  Negative Binomial               NB2           negbin    nb2      count       uni    TRUE   TRUE  
+#>  Negative Binomial               Probabilistic negbin    prob     count       uni   FALSE  FALSE  
+#>  Normal                          Mean-Variance norm      mean_var real        uni    TRUE   TRUE  
+#>  Plackett-Luce                   Worth         pluce     worth    ranking     multi FALSE   TRUE  
+#>  Poisson                         Mean          pois      mean     count       uni    TRUE   TRUE  
+#>  Skellam                         Difference    skellam   diff     integer     uni   FALSE  FALSE  
+#>  Skellam                         Mean-Variance skellam   mean_var integer     uni   FALSE   TRUE  
+#>  Student‘s t                     Mean-Variance t         mean_var real        uni   FALSE   TRUE  
+#>  Weibull                         Rate          weibull   rate     duration    uni   FALSE  FALSE  
+#>  Weibull                         Scale         weibull   scale    duration    uni   FALSE   TRUE  
+#>  Zero-Inflated Geometric         Mean          zigeom    mean     count       uni   FALSE   TRUE  
+#>  Zero-Inflated Negative Binomial NB2           zinegbin  nb2      count       uni   FALSE   TRUE  
+#>  Zero-Inflated Poisson           Mean          zipois    mean     count       uni   FALSE   TRUE
 ```
 
 ## Generalized Autoregressive Score Models

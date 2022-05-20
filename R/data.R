@@ -56,3 +56,26 @@
 # ------------------------------------------------------------------------------
 
 
+# Dataset sp500_daily ----------------------------------------------------------
+#' @title Results of the Ice Hockey World Championships
+#'
+#' @description
+#' Daily opening, highest, lowest, and closing prices of the Standard and Poor's 500 stock market index (SPX) from 2013.
+#'
+#' @source
+#' Nasdaq (\href{https://www.nasdaq.com/market-activity/index/spx}{www.nasdaq.com/market-activity/index/spx}).
+#'
+#' @format
+#' A data frame with columns:
+#' \describe{
+#'   \item{date}{Trading day.}
+#'   \item{open}{Opening price of the day.}
+#'   \item{high}{Highest price of the day.}
+#'   \item{low}{Lowest price of the day.}
+#'   \item{close}{Closing price of the day.}
+#' }
+#'
+"sp500_daily"
+# ------------------------------------------------------------------------------
+
+
