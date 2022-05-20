@@ -4,8 +4,8 @@
 
 # Parameters Function ----------------------------------------------------------
 distr_bernoulli_prob_parameters <- function(n) {
-  group_of_par_names <- c("probability")
-  par_names <- c("probability")
+  group_of_par_names <- c("prob")
+  par_names <- c("prob")
   par_support <- c("probability")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)

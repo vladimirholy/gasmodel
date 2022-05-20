@@ -19,6 +19,7 @@ distr_skellam_diff_density <- function(y, f) {
   r1 <- f[, 1, drop = FALSE]
   r2 <- f[, 2, drop = FALSE]
   res_density <- suppressWarnings(exp(-(r1 + r2)) * (r1 / r2)^(y / 2) * besselI(x = 2 * sqrt(r1 * r2), nu = y))
+  res_density[!is.finite(res_density)] <- -Inf
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -30,6 +31,7 @@ distr_skellam_diff_loglik <- function(y, f) {
   r1 <- f[, 1, drop = FALSE]
   r2 <- f[, 2, drop = FALSE]
   res_loglik <- suppressWarnings(y / 2 * log(r1 / r2) - r1 - r2 + log(besselI(x = 2 * sqrt(r1 * r2), nu = y)))
+  res_loglik[!is.finite(res_loglik)] <- -Inf
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------

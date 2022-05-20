@@ -1,11 +1,11 @@
 
-# MULTIVARIATE NORMAL DISTRIBUTION / LOCATION-SQ-SCALE PARAMETRIZATION
+# MULTIVARIATE NORMAL DISTRIBUTION / MEAN-VARIANCE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_mnorm_lss_parameters <- function(n) {
-  group_of_par_names <- c(rep("location", n), rep("sq.scale", n), rep("cor", n * (n - 1) / 2))
-  par_names <- c(paste0("location", 1:n), paste0("sq.scale", 1:n), paste0("cor", unlist(lapply(1:(n - 1), function(i) { return(paste0(i, ".", (i + 1):n)) }))))
+distr_mnorm_mean_var_parameters <- function(n) {
+  group_of_par_names <- c(rep("mean", n), rep("var", n), rep("cor", n * (n - 1) / 2))
+  par_names <- c(paste0("mean", 1:n), paste0("var", 1:n), paste0("cor", unlist(lapply(1:(n - 1), function(i) { return(paste0(i, ".", (i + 1):n)) }))))
   par_support <- c(rep("real", n), rep("positive", n), rep("probability", n * (n - 1) / 2))
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
@@ -14,7 +14,7 @@ distr_mnorm_lss_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_mnorm_lss_density <- function(y, f) {
+distr_mnorm_mean_var_density <- function(y, f) {
   t <- nrow(f)
   n <- sqrt(9 / 4 + 2 * ncol(f)) - 3 / 2
   m <- f[, 1:n, drop = FALSE]
@@ -29,7 +29,7 @@ distr_mnorm_lss_density <- function(y, f) {
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_mnorm_lss_loglik <- function(y, f) {
+distr_mnorm_mean_var_loglik <- function(y, f) {
   t <- nrow(f)
   n <- sqrt(9 / 4 + 2 * ncol(f)) - 3 / 2
   m <- f[, 1:n, drop = FALSE]
@@ -44,7 +44,7 @@ distr_mnorm_lss_loglik <- function(y, f) {
 
 
 # Mean Function ----------------------------------------------------------------
-distr_mnorm_lss_mean <- function(f) {
+distr_mnorm_mean_var_mean <- function(f) {
   t <- nrow(f)
   n <- sqrt(9 / 4 + 2 * ncol(f)) - 3 / 2
   m <- f[, 1:n, drop = FALSE]
@@ -56,7 +56,7 @@ distr_mnorm_lss_mean <- function(f) {
 
 
 # Variance Function ------------------------------------------------------------
-distr_mnorm_lss_var <- function(f) {
+distr_mnorm_mean_var_var <- function(f) {
   t <- nrow(f)
   n <- sqrt(9 / 4 + 2 * ncol(f)) - 3 / 2
   m <- f[, 1:n, drop = FALSE]
@@ -71,7 +71,7 @@ distr_mnorm_lss_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_mnorm_lss_score <- function(y, f) {
+distr_mnorm_mean_var_score <- function(y, f) {
   t <- nrow(f)
   n <- sqrt(9 / 4 + 2 * ncol(f)) - 3 / 2
   m <- f[, 1:n, drop = FALSE]
@@ -90,7 +90,7 @@ distr_mnorm_lss_score <- function(y, f) {
 
 
 # Fisher Information Function --------------------------------------------------
-distr_mnorm_lss_fisher <- function(f) {
+distr_mnorm_mean_var_fisher <- function(f) {
   t <- nrow(f)
   n <- sqrt(9 / 4 + 2 * ncol(f)) - 3 / 2
   m <- f[, 1:n, drop = FALSE]
@@ -109,7 +109,7 @@ distr_mnorm_lss_fisher <- function(f) {
 
 
 # Random Generation Function ---------------------------------------------------
-distr_mnorm_lss_random <- function(t, f) {
+distr_mnorm_mean_var_random <- function(t, f) {
   n <- sqrt(9 / 4 + 2 * length(f)) - 3 / 2
   m <- f[1:n]
   sc <- f[(n + 1):(2 * n + n * (n - 1) / 2)]
@@ -120,7 +120,7 @@ distr_mnorm_lss_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_mnorm_lss_start <- function(y) {
+distr_mnorm_mean_var_start <- function(y) {
   y_mean <- colMeans(y, na.rm = TRUE)
   y_var <- stats::cov(y, use = "na.or.complete")
   m <- y_mean

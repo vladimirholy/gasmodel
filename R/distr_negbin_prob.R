@@ -4,8 +4,8 @@
 
 # Parameters Function ----------------------------------------------------------
 distr_negbin_prob_parameters <- function(n) {
-  group_of_par_names <- c("probability", "size")
-  par_names <- c("probability", "size")
+  group_of_par_names <- c("prob", "size")
+  par_names <- c("prob", "size")
   par_support <- c("probability", "positive")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
