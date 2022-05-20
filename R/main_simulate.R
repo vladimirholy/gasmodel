@@ -126,7 +126,9 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
       for (j in comp$idx_ok) {
         comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
       }
-      comp$score_tv[comp$idx_ok, ] <- fun$score(y = comp$y[comp$idx_ok, , drop = FALSE], f = comp$par_tv[comp$idx_ok, , drop = FALSE])
+      for (j in comp$idx_ok) {
+        comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+      }
     } else if (model$spec == "joint") {
       comp$par_init <- model$par_init
       if (any(is.na(comp$par_init))) {

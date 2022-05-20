@@ -38,7 +38,9 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
     if (any(model$m > 0L)) {
       tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
     }
-    tv_s[idx_ok, ] <- fun$score(y = data$y[idx_ok, , drop = FALSE], f = tv_f[idx_ok, , drop = FALSE])
+    for (j in idx_ok) {
+      tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
+    }
   } else if (model$spec == "joint") {
     par_init <- model$par_init
     if (any(is.na(model$par_init))) {

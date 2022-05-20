@@ -167,11 +167,10 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           if (any(model$m > 0L)) {
             comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
           }
-          cur_e <- rep(NA_real_, info_par$par_num)
           for (j in comp$idx_ok) {
             comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+            comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
           }
-          comp$score_tv[comp$idx_ok, ] <- fun$score(y = comp$y[comp$idx_ok, , drop = FALSE], f = comp$par_tv[comp$idx_ok, , drop = FALSE])
           comp$est_details$data$y <- comp$y[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE]
           comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
           bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)

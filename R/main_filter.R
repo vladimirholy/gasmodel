@@ -197,7 +197,9 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
         if (any(model$m > 0L)) {
           comp$par_tv[comp$idx_ok_regular, ] <- comp$par_tv[comp$idx_ok_regular, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_regular, , drop = FALSE] %*% comp$beta_list[[i]] })
         }
-        comp$score_tv[comp$idx_ok_regular, ] <- fun$score(y = comp$y[comp$idx_ok_regular, , drop = FALSE], f = comp$par_tv[comp$idx_ok_regular, , drop = FALSE])
+        for (j in comp$idx_ok_regular) {
+          comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+        }
         if (model$t_ahead > 0L) {
           comp$par_tv[comp$idx_ok_ahead, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_ahead), ncol = info_par$par_num, byrow = TRUE)
           if (any(model$m > 0L)) {
@@ -206,8 +208,8 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
           for (a in 1:comp$rep_ahead) {
             for (j in comp$idx_ok_ahead) {
               comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+              comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
             }
-            comp$score_tv[comp$idx_ok_ahead, ] <- fun$score(y = comp$y[comp$idx_ok_ahead, , drop = FALSE], f = comp$par_tv[comp$idx_ok_ahead, , drop = FALSE])
             comp$y_ahead_path[(b - 1L) * comp$rep_ahead + a, , ] <- comp$y[(comp$pre_num + model$t + 1L):comp$full_num, ]
             comp$par_tv_ahead_path[(b - 1L) * comp$rep_ahead + a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
             comp$score_tv_ahead_path[(b - 1L) * comp$rep_ahead + a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
