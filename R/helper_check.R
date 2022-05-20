@@ -199,15 +199,15 @@ check_my_scaling <- function(scaling = NULL) {
 # Check Equation ---------------------------------------------------------------
 check_my_spec <- function(spec = NULL) {
   if (is.null(spec)) {
-    scaling <- "joint"
+    spec <- "joint"
   } else if (is.vector(spec) && !is.list(spec) && length(spec) == 1L && spec == "joint") {
     spec <- "joint"
   } else if (is.vector(spec) && !is.list(spec) && length(spec) == 1L && (spec == "reg_err")) {
-    scaling <- "reg_err"
+    spec <- "reg_err"
   } else {
     stop("Unknown specification of the dynamic equation given by argument spec.")
   }
-  return(scaling)
+  return(spec)
 }
 # ------------------------------------------------------------------------------
 
