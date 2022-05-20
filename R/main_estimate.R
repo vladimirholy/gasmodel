@@ -16,13 +16,14 @@
 #' @param distr A conditional distribution. See \code{\link[gasmodel:distr]{distr()}} for available distributions.
 #' @param param A parametrization of the conditional distribution. If \code{NULL}, default parametrization is used. See \code{\link[gasmodel:distr]{distr()}} for available parametrizations.
 #' @param scaling A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}).
+#' @param spec A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). Without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.
 #' @param p A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.
 #' @param q An autoregressive order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.
 #' @param par_static An optional logical vector indicating static parameters. Overrides \code{x}, \code{p}, and \code{q}.
 #' @param par_link An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.
-#' @param par_init An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.
+#' @param par_init An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{spec = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.
 #' @param lik_skip A numeric value specifying the number of skipped observations at the beginning of the time series or after \code{NA} values in the likelihood computation. Defaults to \code{0L}, i.e. the full likelihood. If \code{NULL}, it is selected as \code{max(p,q)}, i.e. the conditional likelihood.
-#' @param coef_fix_value An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent coefficients to be estimated.
+#' @param coef_fix_value An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent oecfficients to be estimated.
 #' @param coef_fix_other An optional square numeric matrix of multiples of the estimated coefficients, which are to be added to the fixed coefficients. This allows the fixed coefficients to be linear combinations of the estimated coefficients. A coefficient given by row is fixed on coefficient given by column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Furthermore, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.
 #' @param coef_fix_special An optional character vector of predefined structures of \code{coef_fix_value} and \code{coef_fix_other}. Useful mainly for multidimensional models. Value \code{"panel_structure"} forces all regression, autoregression, and score coefficients to be the same for all time-varying parameters within their group. Value \code{"zero_sum_intercept"} forces all constant parameters to sum up to zero within their group. Value \code{"random_walk"} forces all autoregressive coefficients to be equal to one (should be used with caution due to nonstationarity; \code{par_init} must be specified). Multiple predefined structures can be used together. Also can be used in combination with custom \code{coef_fix_value} and \code{coef_fix_other}.
 #' @param coef_bound_lower An optional numeric vector of lower bounds on coefficients.
@@ -47,6 +48,8 @@
 #' \mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},}
 #' where \mjseqn{\omega} is a vector of constants, \mjseqn{\beta_i} are regression parameters, \mjseqn{\alpha_j} are score parameters, \mjseqn{\varphi_k} are autoregressive parameters, \mjseqn{x_{ti}} are exogenous variables, \mjseqn{S(f_t)} is a scaling function for the score, and \mjseqn{\nabla(y_t, f_t)} is the score given by
 #' \mjsdeqn{\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.}
+#' Alternatively, a different model can be obtained by defining the recursion in the fashion of regression models with dynamic errors as
+#' \mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.}
 #'
 #' The GAS models can be straightforwardly estimated by the maximum likelihood method.
 #' For the asymptotic theory regarding the GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).
@@ -69,6 +72,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
+#' \item{model$spec}{The specification of the dynamic equation.}
 #' \item{model$t}{The length of the time series.}
 #' \item{model$n}{The dimension of the model.}
 #' \item{model$m}{The number of exogenous variables.}
@@ -189,11 +193,12 @@
 #' abline(h = exp_est$fit$par_unc, lty = 2)
 #'
 #' @export
-gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
+gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
   model <- list()
   model$distr <- check_my_distr(distr = distr)
   model$param <- check_my_param(param = param, distr = model$distr)
   model$scaling <- check_my_scaling(scaling = scaling)
+  model$spec <- check_my_spec(spec = spec)
   info_distr <- info_distribution(distr = model$distr, param = model$param)
   data <- list()
   data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
@@ -298,7 +303,11 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", p = 1L, q = 
   fit$coef_sd <- suppressWarnings(sqrt(diag(fit$coef_vcov)))
   fit$coef_zstat <- fit$coef_est / fit$coef_sd
   fit$coef_pval <- 2 * stats::pnorm(-abs(fit$coef_zstat))
-  fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega / (1 - sum(e$phi)) }), info_par$par_names)
+  if (model$spec == "joint") {
+    fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega / (1 - sum(e$phi)) }), info_par$par_names)
+  } else if (model$spec == "reg_err") {
+    fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega }), info_par$par_names)
+  }
   fit$par_tv <- name_matrix(comp$eval_tv$par, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$score_tv <- name_matrix(comp$eval_tv$score, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$loglik_tv <- name_vector(comp$eval_tv$lik, info_data$index_time)

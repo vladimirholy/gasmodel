@@ -4,11 +4,11 @@
 \alias{gas}
 \title{Estimate GAS Model}
 \usage{
-gas(y, x = NULL, distr, param = NULL, scaling = "unit", p = 1L,
-  q = 1L, par_static = NULL, par_link = NULL, par_init = NULL,
-  lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL,
-  coef_fix_special = NULL, coef_bound_lower = NULL,
-  coef_bound_upper = NULL, coef_start = NULL,
+gas(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint",
+  p = 1L, q = 1L, par_static = NULL, par_link = NULL,
+  par_init = NULL, lik_skip = 0L, coef_fix_value = NULL,
+  coef_fix_other = NULL, coef_fix_special = NULL,
+  coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL,
   optim_function = wrapper_optim_nloptr, optim_arguments = list(opts =
   list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0, maxeval = 1e+06)),
   hessian_function = wrapper_hessian_stats, hessian_arguments = list(),
@@ -25,6 +25,8 @@ gas(y, x = NULL, distr, param = NULL, scaling = "unit", p = 1L,
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}).}
 
+\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). Without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+
 \item{p}{A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
 
 \item{q}{An autoregressive order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
@@ -33,11 +35,11 @@ gas(y, x = NULL, distr, param = NULL, scaling = "unit", p = 1L,
 
 \item{par_link}{An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.}
 
-\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
+\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{spec = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
 
 \item{lik_skip}{A numeric value specifying the number of skipped observations at the beginning of the time series or after \code{NA} values in the likelihood computation. Defaults to \code{0L}, i.e. the full likelihood. If \code{NULL}, it is selected as \code{max(p,q)}, i.e. the conditional likelihood.}
 
-\item{coef_fix_value}{An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent coefficients to be estimated.}
+\item{coef_fix_value}{An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent oecfficients to be estimated.}
 
 \item{coef_fix_other}{An optional square numeric matrix of multiples of the estimated coefficients, which are to be added to the fixed coefficients. This allows the fixed coefficients to be linear combinations of the estimated coefficients. A coefficient given by row is fixed on coefficient given by column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Furthermore, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.}
 
@@ -66,6 +68,7 @@ A \code{list} of S3 class \code{gas} with components:
 \item{model$distr}{The conditional distribution.}
 \item{model$param}{The parametrization of the conditional distribution.}
 \item{model$scaling}{The scaling function.}
+\item{model$spec}{The specification of the dynamic equation.}
 \item{model$t}{The length of the time series.}
 \item{model$n}{The dimension of the model.}
 \item{model$m}{The number of exogenous variables.}
@@ -124,6 +127,8 @@ Specifically, time-varying parameters \mjseqn{f_{t}} follow the recursion
 \mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},}
 where \mjseqn{\omega} is a vector of constants, \mjseqn{\beta_i} are regression parameters, \mjseqn{\alpha_j} are score parameters, \mjseqn{\varphi_k} are autoregressive parameters, \mjseqn{x_{ti}} are exogenous variables, \mjseqn{S(f_t)} is a scaling function for the score, and \mjseqn{\nabla(y_t, f_t)} is the score given by
 \mjsdeqn{\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.}
+Alternatively, a different model can be obtained by defining the recursion in the fashion of regression models with dynamic errors as
+\mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.}
 
 The GAS models can be straightforwardly estimated by the maximum likelihood method.
 For the asymptotic theory regarding the GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).

@@ -5,8 +5,9 @@
 \title{Simulate GAS Model}
 \usage{
 gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
-  param = NULL, scaling = "unit", n = NULL, p = 1L, q = 1L,
-  par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL)
+  param = NULL, scaling = "unit", spec = "joint", n = NULL, p = 1L,
+  q = 1L, par_static = NULL, par_link = NULL, par_init = NULL,
+  coef_est = NULL)
 }
 \arguments{
 \item{gas_object}{An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.}
@@ -21,6 +22,8 @@ gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}).}
 
+\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). Without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+
 \item{n}{A dimension of the model. Required only for multivariate models.}
 
 \item{p}{A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
@@ -31,7 +34,7 @@ gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
 
 \item{par_link}{An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.}
 
-\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
+\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{spec = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
 
 \item{coef_est}{A numeric vector of estimated coefficients.}
 }
@@ -41,6 +44,7 @@ A \code{list} with components:
 \item{model$distr}{The conditional distribution.}
 \item{model$param}{The parametrization of the conditional distribution.}
 \item{model$scaling}{The scaling function.}
+\item{model$spec}{The specification of the dynamic equation.}
 \item{model$t_sim}{The length of the simulated time series.}
 \item{model$n}{The dimension of the model.}
 \item{model$m}{The number of exogenous variables.}

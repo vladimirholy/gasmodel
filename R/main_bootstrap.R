@@ -23,6 +23,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
+#' \item{model$spec}{The specification of the dynamic equation.}
 #' \item{model$t}{The length of the time series.}
 #' \item{model$n}{The dimension of the model.}
 #' \item{model$m}{The number of exogenous variables.}
@@ -73,9 +74,9 @@
 #' negbin_boot
 #'
 #' @export
-gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6))) {
+gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6))) {
   if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
-    gas_bootstrap(gas_object = NULL, method = method, rep_boot = rep_boot, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, lik_skip = gas_object$model$lik_skip, coef_fix_value = gas_object$model$coef_fix_value, coef_fix_other = gas_object$model$coef_fix_other, coef_fix_special = gas_object$model$coef_fix_special, coef_bound_lower = gas_object$model$coef_bound_lower, coef_bound_upper = gas_object$model$coef_bound_upper, coef_est = gas_object$fit$coef_est, optim_function = gas_object$control$optim_function, optim_arguments = gas_object$control$optim_arguments)
+    gas_bootstrap(gas_object = NULL, method = method, rep_boot = rep_boot, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, spec = gas_object$model$spec, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, lik_skip = gas_object$model$lik_skip, coef_fix_value = gas_object$model$coef_fix_value, coef_fix_other = gas_object$model$coef_fix_other, coef_fix_special = gas_object$model$coef_fix_special, coef_bound_lower = gas_object$model$coef_bound_lower, coef_bound_upper = gas_object$model$coef_bound_upper, coef_est = gas_object$fit$coef_est, optim_function = gas_object$control$optim_function, optim_arguments = gas_object$control$optim_arguments)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
@@ -83,6 +84,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     model$distr <- check_my_distr(distr = distr)
     model$param <- check_my_param(param = param, distr = model$distr)
     model$scaling <- check_my_scaling(scaling = scaling)
+    model$spec <- check_my_spec(spec = spec)
     info_distr <- info_distribution(distr = model$distr, param = model$param)
     data <- list()
     data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
@@ -150,32 +152,91 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
       comp$beta_list <- lapply(comp$struc, function(e) { e$beta })
       comp$alpha_list <- lapply(comp$struc, function(e) { e$alpha })
       comp$phi_list <- lapply(comp$struc, function(e) { e$phi })
-      comp$par_init <- model$par_init
-      if (any(is.na(comp$par_init))) {
-        comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
-        comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
-      }
-      if (length(comp$idx_na) > 0L) {
-        comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
-        comp$score_tv[comp$idx_na, ] <- 0
-      }
-      for (b in 1:comp$rep_boot) {
-        comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
-        if (any(model$m > 0L)) {
-          comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
+      if (all(model$p + model$q == 0L)) {
+        comp$par_init <- model$par_init
+        if (any(is.na(comp$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
         }
-        cur_f <- rep(NA_real_, info_par$par_num)
-        for (j in comp$idx_ok) {
-          for (i in 1:info_par$par_num) {
-            cur_f[i] <- comp$par_tv[j, i] + sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+        if (length(comp$idx_na) > 0L) {
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        for (b in 1:comp$rep_boot) {
+          comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+          if (any(model$m > 0L)) {
+            comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
           }
-          comp$par_tv[j, ] <- cur_f
-          comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
-          comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+          cur_e <- rep(NA_real_, info_par$par_num)
+          for (j in comp$idx_ok) {
+            comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+          }
+          comp$score_tv[comp$idx_ok, ] <- fun$score(y = comp$y[comp$idx_ok, , drop = FALSE], f = comp$par_tv[comp$idx_ok, , drop = FALSE])
+          comp$est_details$data$y <- comp$y[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE]
+          comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
+          bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         }
-        comp$est_details$data$y <- comp$y[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE]
-        comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
-        bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
+      } else if (model$spec == "joint") {
+        comp$par_init <- model$par_init
+        if (any(is.na(comp$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
+        }
+        if (length(comp$idx_na) > 0L) {
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        for (b in 1:comp$rep_boot) {
+          comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+          if (any(model$m > 0L)) {
+            comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
+          }
+          cur_e <- rep(NA_real_, info_par$par_num)
+          for (j in comp$idx_ok) {
+            for (i in 1:info_par$par_num) {
+              cur_e[i] <- sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+            }
+            comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+            comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+            comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+          }
+          comp$est_details$data$y <- comp$y[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE]
+          comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
+          bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
+        }
+      } else if (model$spec == "reg_err") {
+        comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
+        comp$err_init <- model$par_init
+        comp$par_init <- model$par_init
+        if (any(is.na(model$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
+          comp$err_init[is.na(comp$err_init)] <- 0
+        }
+        if (length(comp$idx_na) > 0L) {
+          comp$err_tv[comp$idx_na, ] <- matrix(comp$err_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        for (b in 1:comp$rep_boot) {
+          comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+          if (any(model$m > 0L)) {
+            comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
+          }
+          cur_e <- rep(NA_real_, info_par$par_num)
+          for (j in comp$idx_ok) {
+            for (i in 1:info_par$par_num) {
+              cur_e[i] <- sum(comp$err_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+            }
+            comp$err_tv[j, ] <- cur_e
+            comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+            comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+            comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+          }
+          comp$est_details$data$y <- comp$y[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE]
+          comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
+          bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
+        }
       }
     }
     info_data <- info_data(y = data$y, x = data$x)

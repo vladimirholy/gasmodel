@@ -27,6 +27,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
+#' \item{model$spec}{The specification of the dynamic equation.}
 #' \item{model$t}{The length of the time series.}
 #' \item{model$t_ahead}{The length of the out-of-sample time series.}
 #' \item{model$n}{The dimension of the model.}
@@ -82,9 +83,9 @@
 #' lines(81:100, weibull_for$forecast$y_ahead_quant[, 2], col = "blue")
 #'
 #' @export
-gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
+gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
   if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
-    gas_forecast(gas_object = NULL, method = method, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
+    gas_forecast(gas_object = NULL, method = method, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, spec = gas_object$model$spec, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
@@ -92,6 +93,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
     model$distr <- check_my_distr(distr = distr)
     model$param <- check_my_param(param = param, distr = model$distr)
     model$scaling <- check_my_scaling(scaling = scaling)
+    model$spec <- check_my_spec(spec = spec)
     info_distr <- info_distribution(distr = model$distr, param = model$param)
     data <- list()
     data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
@@ -141,36 +143,89 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
     comp$beta_list <- lapply(comp$struc, function(e) { e$beta })
     comp$alpha_list <- lapply(comp$struc, function(e) { e$alpha })
     comp$phi_list <- lapply(comp$struc, function(e) { e$phi })
-    comp$par_init <- model$par_init
-    if (any(is.na(comp$par_init))) {
-      comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
-      comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
-    }
     forecast <- list()
     forecast$method <- check_my_method(method = method, values = c("mean_path", "simulated_paths"))
     if (forecast$method == "mean_path") {
-      if (length(comp$idx_na) > 0L) {
-        comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
-        comp$score_tv[comp$idx_na, ] <- 0
-      }
-      comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
-      if (any(model$m > 0L)) {
-        comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
-      }
-      cur_f <- rep(NA_real_, info_par$par_num)
-      for (j in comp$idx_ok_regular) {
-        for (i in 1:info_par$par_num) {
-          cur_f[i] <- comp$par_tv[j, i] + sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+      if (all(model$p + model$q == 0L)) {
+        comp$par_init <- model$par_init
+        if (any(is.na(comp$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
         }
-        comp$par_tv[j, ] <- cur_f
-        comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
-      }
-      comp$score_tv[comp$idx_ok_ahead, ] <- 0
-      for (j in comp$idx_ok_ahead) {
-        for (i in 1:info_par$par_num) {
-          cur_f[i] <- comp$par_tv[j, i] + sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+        if (length(comp$idx_na) > 0L) {
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
         }
-        comp$par_tv[j, ] <- cur_f
+        comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+        if (any(model$m > 0L)) {
+          comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
+        }
+        comp$score_tv[comp$idx_ok_regular, ] <- fun$score(y = comp$y[comp$idx_ok_regular, , drop = FALSE], f = comp$par_tv[comp$idx_ok_regular, , drop = FALSE])
+        comp$score_tv[comp$idx_ok_ahead, ] <- 0
+      } else if (model$spec == "joint") {
+        comp$par_init <- model$par_init
+        if (any(is.na(comp$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
+        }
+        if (length(comp$idx_na) > 0L) {
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+        if (any(model$m > 0L)) {
+          comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
+        }
+        cur_e <- rep(NA_real_, info_par$par_num)
+        for (j in comp$idx_ok_regular) {
+          for (i in 1:info_par$par_num) {
+            cur_e[i] <- sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+          }
+          comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+          comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+        }
+        comp$score_tv[comp$idx_ok_ahead, ] <- 0
+        for (j in comp$idx_ok_ahead) {
+          for (i in 1:info_par$par_num) {
+            cur_e[i] <- sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+          }
+          comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+        }
+      } else if (model$spec == "reg_err") {
+        comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
+        comp$err_init <- model$par_init
+        comp$par_init <- model$par_init
+        if (any(is.na(model$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
+          comp$err_init[is.na(comp$err_init)] <- 0
+        }
+        if (length(comp$idx_na) > 0L) {
+          comp$err_tv[comp$idx_na, ] <- matrix(comp$err_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+        if (any(model$m > 0L)) {
+          comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
+        }
+        cur_e <- rep(NA_real_, info_par$par_num)
+        for (j in comp$idx_ok_regular) {
+          for (i in 1:info_par$par_num) {
+            cur_e[i] <- sum(comp$err_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+          }
+          comp$err_tv[j, ] <- cur_e
+          comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+          comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+        }
+        comp$score_tv[comp$idx_ok_ahead, ] <- 0
+        for (j in comp$idx_ok_ahead) {
+          for (i in 1:info_par$par_num) {
+            cur_e[i] <- sum(comp$err_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+          }
+          comp$err_tv[j, ] <- cur_e
+        }
+        comp$par_tv[comp$idx_ok_ahead, ] <- comp$par_tv[comp$idx_ok_ahead, ] + comp$err_tv[comp$idx_ok_ahead, ]
       }
       comp$y[comp$idx_ok_ahead, ] <- fun$mean(f = comp$par_tv[comp$idx_ok_ahead, ])
       info_data <- info_data(y = data$y, x = data$x)
@@ -184,42 +239,119 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
     } else if (forecast$method == "simulated_paths") {
       comp$rep_ahead <- check_generic_positive_integer_scalar(arg = rep_ahead, arg_name = "rep_ahead")
       comp$quant <- check_generic_probability_vector(arg = quant, arg_name = "quant")
-      if (length(comp$idx_na) > 0L) {
-        comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
-        comp$score_tv[comp$idx_na, ] <- 0
-      }
-      comp$par_tv[comp$idx_ok_regular, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_regular), ncol = info_par$par_num, byrow = TRUE)
-      if (any(model$m > 0L)) {
-        comp$par_tv[comp$idx_ok_regular, ] <- comp$par_tv[comp$idx_ok_regular, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_regular, , drop = FALSE] %*% comp$beta_list[[i]] })
-      }
-      cur_f <- rep(NA_real_, info_par$par_num)
-      for (j in comp$idx_ok_regular) {
-        for (i in 1:info_par$par_num) {
-          cur_f[i] <- comp$par_tv[j, i] + sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
-        }
-        comp$par_tv[j, ] <- cur_f
-        comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
-      }
       comp$y_ahead_path <- array(NA_real_, dim = c(comp$rep_ahead, model$t_ahead, model$n))
       comp$par_tv_ahead_path <- array(NA_real_, dim = c(comp$rep_ahead, model$t_ahead, info_par$par_num))
       comp$score_tv_ahead_path <- array(NA_real_, dim = c(comp$rep_ahead, model$t_ahead, info_par$par_num))
-      for (a in 1:comp$rep_ahead) {
-        comp$par_tv[comp$idx_ok_ahead, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_ahead), ncol = info_par$par_num, byrow = TRUE)
-        if (any(model$m > 0L)) {
-          comp$par_tv[comp$idx_ok_ahead, ] <- comp$par_tv[comp$idx_ok_ahead, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_ahead, , drop = FALSE] %*% comp$beta_list[[i]] })
+      if (all(model$p + model$q == 0L)) {
+        comp$par_init <- model$par_init
+        if (any(is.na(comp$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
         }
-        cur_f <- rep(NA_real_, info_par$par_num)
-        for (j in comp$idx_ok_ahead) {
-          for (i in 1:info_par$par_num) {
-            cur_f[i] <- comp$par_tv[j, i] + sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+        if (length(comp$idx_na) > 0L) {
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
+        if (any(model$m > 0L)) {
+          comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_regular, , drop = FALSE] %*% comp$beta_list[[i]] })
+        }
+        comp$score_tv[comp$idx_ok_regular, ] <- fun$score(y = comp$y[comp$idx_ok_regular, , drop = FALSE], f = comp$par_tv[comp$idx_ok_regular, , drop = FALSE])
+        for (a in 1:comp$rep_ahead) {
+          for (j in comp$idx_ok_ahead) {
+            comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
           }
-          comp$par_tv[j, ] <- cur_f
-          comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+          comp$score_tv[comp$idx_ok_ahead, ] <- fun$score(y = comp$y[comp$idx_ok_ahead, , drop = FALSE], f = comp$par_tv[comp$idx_ok_ahead, , drop = FALSE])
+          comp$y_ahead_path[a, , ] <- comp$y[(comp$pre_num + model$t + 1L):comp$full_num, ]
+          comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+          comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+        }
+      } else if (model$spec == "joint") {
+        comp$par_init <- model$par_init
+        if (any(is.na(comp$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
+        }
+        if (length(comp$idx_na) > 0L) {
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        comp$par_tv[comp$idx_ok_regular, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_regular), ncol = info_par$par_num, byrow = TRUE)
+        if (any(model$m > 0L)) {
+          comp$par_tv[comp$idx_ok_regular, ] <- comp$par_tv[comp$idx_ok_regular, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_regular, , drop = FALSE] %*% comp$beta_list[[i]] })
+        }
+        cur_e <- rep(NA_real_, info_par$par_num)
+        for (j in comp$idx_ok_regular) {
+          for (i in 1:info_par$par_num) {
+            cur_e[i] <- sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+          }
+          comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
           comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
         }
-        comp$y_ahead_path[a, , ] <- comp$y[(comp$pre_num + model$t + 1L):comp$full_num, ]
-        comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
-        comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+        for (a in 1:comp$rep_ahead) {
+          comp$par_tv[comp$idx_ok_ahead, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_ahead), ncol = info_par$par_num, byrow = TRUE)
+          if (any(model$m > 0L)) {
+            comp$par_tv[comp$idx_ok_ahead, ] <- comp$par_tv[comp$idx_ok_ahead, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_ahead, , drop = FALSE] %*% comp$beta_list[[i]] })
+          }
+          cur_e <- rep(NA_real_, info_par$par_num)
+          for (j in comp$idx_ok_ahead) {
+            for (i in 1:info_par$par_num) {
+              cur_e[i] <- sum(comp$par_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+            }
+            comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+            comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+            comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+          }
+          comp$y_ahead_path[a, , ] <- comp$y[(comp$pre_num + model$t + 1L):comp$full_num, ]
+          comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+          comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+        }
+      } else if (model$spec == "reg_err") {
+        comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
+        comp$err_init <- model$par_init
+        comp$par_init <- model$par_init
+        if (any(is.na(model$par_init))) {
+          comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) })
+          comp$par_init[is.na(comp$par_init)] <- comp$par_unc[is.na(comp$par_init)]
+          comp$err_init[is.na(comp$err_init)] <- 0
+        }
+        if (length(comp$idx_na) > 0L) {
+          comp$err_tv[comp$idx_na, ] <- matrix(comp$err_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$par_tv[comp$idx_na, ] <- matrix(comp$par_init, nrow = length(comp$idx_na), ncol = info_par$par_num, byrow = TRUE)
+          comp$score_tv[comp$idx_na, ] <- 0
+        }
+        comp$par_tv[comp$idx_ok_regular, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_regular), ncol = info_par$par_num, byrow = TRUE)
+        if (any(model$m > 0L)) {
+          comp$par_tv[comp$idx_ok_regular, ] <- comp$par_tv[comp$idx_ok_regular, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_regular, , drop = FALSE] %*% comp$beta_list[[i]] })
+        }
+        cur_e <- rep(NA_real_, info_par$par_num)
+        for (j in comp$idx_ok_regular) {
+          for (i in 1:info_par$par_num) {
+            cur_e[i] <- sum(comp$err_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+          }
+          comp$err_tv[j, ] <- cur_e
+          comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+          comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+        }
+        for (a in 1:comp$rep_ahead) {
+          comp$par_tv[comp$idx_ok_ahead, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok_ahead), ncol = info_par$par_num, byrow = TRUE)
+          if (any(model$m > 0L)) {
+            comp$par_tv[comp$idx_ok_ahead, ] <- comp$par_tv[comp$idx_ok_ahead, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok_ahead, , drop = FALSE] %*% comp$beta_list[[i]] })
+          }
+          cur_e <- rep(NA_real_, info_par$par_num)
+          for (j in comp$idx_ok_ahead) {
+            for (i in 1:info_par$par_num) {
+              cur_e[i] <- sum(comp$err_tv[j - seq_along(comp$phi_list[[i]]), i] * comp$phi_list[[i]]) + sum(comp$score_tv[j - seq_along(comp$alpha_list[[i]]), i] * comp$alpha_list[[i]])
+            }
+            comp$err_tv[j, ] <- cur_e
+            comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
+            comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
+            comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
+          }
+          comp$y_ahead_path[a, , ] <- comp$y[(comp$pre_num + model$t + 1L):comp$full_num, ]
+          comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+          comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
+        }
       }
       info_data <- info_data(y = data$y, x = data$x)
       data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))

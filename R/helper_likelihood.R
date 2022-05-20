@@ -21,29 +21,77 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
   beta_list <- lapply(struc, function(e) { e$beta })
   alpha_list <- lapply(struc, function(e) { e$alpha })
   phi_list <- lapply(struc, function(e) { e$phi })
-  par_init <- model$par_init
-  if (any(is.na(model$par_init))) {
-    par_unc <- sapply(1:info_par$par_num, function(i) { (omega_vector[i] + colMeans(data$x[[i]], na.rm = TRUE) %*% beta_list[[i]]) / (1 - sum(phi_list[[i]])) })
-    par_init[is.na(par_init)] <- par_unc[is.na(par_init)]
-  }
-  tv_l <- rep(NA_real_, model$t + pre_num)
-  tv_f <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
-  tv_s <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
-  if (length(idx_na) > 0L) {
-    tv_f[idx_na, ] <- matrix(par_init, nrow = length(idx_na), ncol = info_par$par_num, byrow = TRUE)
-    tv_s[idx_na, ] <- 0
-  }
-  tv_f[idx_ok, ] <- matrix(omega_vector, nrow = length(idx_ok), ncol = info_par$par_num, byrow = TRUE)
-  if (any(model$m > 0L)) {
-    tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
-  }
-  if (any(model$p + model$q > 0L)) {
-    cur_f <- rep(NA_real_, info_par$par_num)
+  if (all(model$p + model$q == 0L)) {
+    par_init <- model$par_init
+    if (any(is.na(model$par_init))) {
+      par_unc <- sapply(1:info_par$par_num, function(i) { (omega_vector[i] + colMeans(data$x[[i]], na.rm = TRUE) %*% beta_list[[i]]) })
+      par_init[is.na(par_init)] <- par_unc[is.na(par_init)]
+    }
+    tv_l <- rep(NA_real_, model$t + pre_num)
+    tv_f <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    tv_s <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    if (length(idx_na) > 0L) {
+      tv_f[idx_na, ] <- matrix(par_init, nrow = length(idx_na), ncol = info_par$par_num, byrow = TRUE)
+      tv_s[idx_na, ] <- 0
+    }
+    tv_f[idx_ok, ] <- matrix(omega_vector, nrow = length(idx_ok), ncol = info_par$par_num, byrow = TRUE)
+    if (any(model$m > 0L)) {
+      tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
+    }
+    tv_s[idx_ok, ] <- fun$score(y = data$y[idx_ok, , drop = FALSE], f = tv_f[idx_ok, , drop = FALSE])
+  } else if (model$spec == "joint") {
+    par_init <- model$par_init
+    if (any(is.na(model$par_init))) {
+      par_unc <- sapply(1:info_par$par_num, function(i) { (omega_vector[i] + colMeans(data$x[[i]], na.rm = TRUE) %*% beta_list[[i]]) / (1 - sum(phi_list[[i]])) })
+      par_init[is.na(par_init)] <- par_unc[is.na(par_init)]
+    }
+    tv_l <- rep(NA_real_, model$t + pre_num)
+    tv_f <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    tv_s <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    if (length(idx_na) > 0L) {
+      tv_f[idx_na, ] <- matrix(par_init, nrow = length(idx_na), ncol = info_par$par_num, byrow = TRUE)
+      tv_s[idx_na, ] <- 0
+    }
+    tv_f[idx_ok, ] <- matrix(omega_vector, nrow = length(idx_ok), ncol = info_par$par_num, byrow = TRUE)
+    if (any(model$m > 0L)) {
+      tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
+    }
+    cur_e <- rep(NA_real_, info_par$par_num)
     for (j in idx_ok) {
       for (i in 1:info_par$par_num) {
-        cur_f[i] <- tv_f[j, i] + sum(tv_f[j - seq_along(phi_list[[i]]), i] * phi_list[[i]]) + sum(tv_s[j - seq_along(alpha_list[[i]]), i] * alpha_list[[i]])
+        cur_e[i] <- sum(tv_f[j - seq_along(phi_list[[i]]), i] * phi_list[[i]]) + sum(tv_s[j - seq_along(alpha_list[[i]]), i] * alpha_list[[i]])
       }
-      tv_f[j, ] <- cur_f
+      tv_f[j, ] <- tv_f[j, ] + cur_e
+      tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
+    }
+  } else if (model$spec == "reg_err") {
+    err_init <- model$par_init
+    par_init <- model$par_init
+    if (any(is.na(model$par_init))) {
+      par_unc <- sapply(1:info_par$par_num, function(i) { (omega_vector[i] + colMeans(data$x[[i]], na.rm = TRUE) %*% beta_list[[i]]) })
+      par_init[is.na(par_init)] <- par_unc[is.na(par_init)]
+      err_init[is.na(err_init)] <- 0
+    }
+    tv_l <- rep(NA_real_, model$t + pre_num)
+    tv_e <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    tv_f <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    tv_s <- matrix(NA_real_, nrow = model$t + pre_num, ncol = info_par$par_num)
+    if (length(idx_na) > 0L) {
+      tv_e[idx_na, ] <- matrix(err_init, nrow = length(idx_na), ncol = info_par$par_num, byrow = TRUE)
+      tv_f[idx_na, ] <- matrix(par_init, nrow = length(idx_na), ncol = info_par$par_num, byrow = TRUE)
+      tv_s[idx_na, ] <- 0
+    }
+    tv_f[idx_ok, ] <- matrix(omega_vector, nrow = length(idx_ok), ncol = info_par$par_num, byrow = TRUE)
+    if (any(model$m > 0L)) {
+      tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
+    }
+    cur_e <- rep(NA_real_, info_par$par_num)
+    for (j in idx_ok) {
+      for (i in 1:info_par$par_num) {
+        cur_e[i] <- sum(tv_e[j - seq_along(phi_list[[i]]), i] * phi_list[[i]]) + sum(tv_s[j - seq_along(alpha_list[[i]]), i] * alpha_list[[i]])
+      }
+      tv_e[j, ] <- cur_e
+      tv_f[j, ] <- tv_f[j, ] + cur_e
       tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
     }
   }
