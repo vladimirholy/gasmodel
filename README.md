@@ -193,7 +193,7 @@ Econometrics*, **227**(2), 325–346. doi:
 Blazsek, S. and Licht, A. (2020). Dynamic Conditional Score Models: A
 Review of Their Applications. *Applied Economics*, **52**(11),
 1181–1199. doi:
-\[10.1080/00036846.2019.1659498}(<https://doi.org/10.1080/00036846.2019.1659498>).
+[10.1080/00036846.2019.1659498](https://doi.org/10.1080/00036846.2019.1659498).
 
 Bollerslev, T. (1986). Generalized Autoregressive Conditional
 Heteroskedasticity. *Journal of Econometrics*, **31**(3), 307–327. doi:

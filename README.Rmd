@@ -107,7 +107,7 @@ Blasques, F., Lucas, A., and van Vlodrop, A. C. (2021). Finite Sample Optimality
 
 Blasques, F., van Brummelen, J., Koopman, S. J., and Lucas, A. (2022). Maximum Likelihood Estimation for Score-Driven Models. *Journal of Econometrics*, **227**(2), 325–346. doi: [10.1016/j.jeconom.2021.06.003](https://doi.org/10.1016/j.jeconom.2021.06.003).
 
-Blazsek, S. and Licht, A. (2020). Dynamic Conditional Score Models: A Review of Their Applications. *Applied Economics*, **52**(11), 1181–1199. doi: [10.1080/00036846.2019.1659498}(https://doi.org/10.1080/00036846.2019.1659498).
+Blazsek, S. and Licht, A. (2020). Dynamic Conditional Score Models: A Review of Their Applications. *Applied Economics*, **52**(11), 1181–1199. doi: [10.1080/00036846.2019.1659498](https://doi.org/10.1080/00036846.2019.1659498).
 
 Bollerslev, T. (1986). Generalized Autoregressive Conditional Heteroskedasticity. *Journal of Econometrics*, **31**(3), 307–327. doi: [10.1016/0304-4076(86)90063-1](https://doi.org/10.1016/0304-4076(86)90063-1).
 
