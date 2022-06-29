@@ -57,7 +57,7 @@
 
 
 # Dataset sp500_daily ----------------------------------------------------------
-#' @title Results of the Ice Hockey World Championships
+#' @title Daily S&P 500 Prices
 #'
 #' @description
 #' Daily opening, highest, lowest, and closing prices of the Standard and Poor's 500 stock market index (SPX) from 2013.

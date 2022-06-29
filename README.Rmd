@@ -9,10 +9,14 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  fig.align = "center",
+  out.width = "66%"
 )
+
 options(width = 100, max.print = 1e6)
-library(gasmodel)
+
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+
 ```
 
 # gasmodel
@@ -20,11 +24,11 @@ library(gasmodel)
 <!-- badges: start -->
 <!-- badges: end -->
 
-# Overview
+## Overview
 
 A package for estimation, forecasting, and simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models.
 
-Model specification allows for various conditional distributions, different parametrizations, exogenous variables, higher score and autoregressive orders, custom and unconditional initial values of time-varying parameters, fixed and bounded values of coefficients, and NA values.
+Model specification allows for various conditional distributions, different parametrizations, exogenous variables, higher score and autoregressive orders, custom and unconditional initial values of time-varying parameters, fixed and bounded values of coefficients, and missing values.
 Model estimation is performed by the maximum likelihood method and the Hessian matrix.
 
 The package offers the following functions for working with GAS models:
@@ -38,18 +42,18 @@ The package offers the following functions for working with GAS models:
 Probability distributions are handled by the following functions:
 
 - `distr()` provides table of supported distributions.
-- `distr_density()` computes the density.
-- `distr_mean()` computes the mean.
-- `distr_var()` computes the variance.
-- `distr_score()` computes the score.
-- `distr_fisher()` computes the Fisher information.
-- `distr_random()` generates random observations.
+- `distr_density()` computes the density of a given distribution.
+- `distr_mean()` computes the mean of a given distribution.
+- `distr_var()` computes the variance of a given distribution.
+- `distr_score()` computes the score of a given distribution.
+- `distr_fisher()` computes the Fisher information of a given distribution.
+- `distr_random()` generates random observations from a given distribution.
 
-In addition, the package contains the following datasets used in examples:
+In addition, the package provides the following datasets used in examples:
 
-- `bookshop_sales` ???
-- `ice_hockey_championships` ???
-- `sp500_daily` ???
+- `bookshop_sales` contains times of antiquarian bookshop sales.
+- `ice_hockey_championships` contains the results of the Ice Hockey World Championships.
+- `sp500_daily` contains daily S&P 500 prices.
 
 ## Installation
 
@@ -60,14 +64,44 @@ You can install the development version of gasmodel from [GitHub](https://github
 devtools::install_github("vladimirholy/gasmodel")
 ```
 
+## Example
+
+As a simple example, let us model volatility of daily S&P prices in 2021 in the fashion of GARCH models. We estimate the GAS model based on the Student's t-distribution with time-varying volatility and plot the filtered time-varying parameters:
+
+``` {r example, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(gasmodel)
+
+data <- sp500_daily %>%
+  mutate(return = log(close) - log(lag(close))) %>%
+  filter(format(sp500_daily$date, "%Y") == "2021") %>%
+  select(date, return)
+
+model_garch <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
+
+model_garch
+
+ggplot(mapping = aes(x = data$date, y = model_garch$fit$par_tv[, 2])) +
+  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(Sigma)") +
+  geom_line(color = "#771468") +
+  theme_bw()
+```
+
+## Case Studies
+
+To further illustrate...
+
 ## Supported Distributions
 
 Currently, there are `r length(unique(distr()$distr))` distributions available.
 
+The list of supported distribution can be obtained by the `distr()` function:
+
 ``` {r distr}
-library(gasmodel)
 print(distr(), right = FALSE, row.names = FALSE)
 ```
+
+Details of each distribution, including its density function, expected value, variance, score, and Fisher information, can be found in vignette 'distributions'.
 
 ## Generalized Autoregressive Score Models
 
@@ -80,6 +114,8 @@ Specifically, time-varying parameters $f_{t}$ follow the recursion
 $$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},$$
 where $\omega$ is a vector of constants, $\beta_i$ are regression parameters, $\alpha_j$ are score parameters, $\varphi_k$ are autoregressive parameters, $x_{ti}$ are exogenous variables, $S(f_t)$ is a scaling function for the score, and $\nabla(y_t, f_t)$ is the score given by
 $$\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.$$
+Alternatively, a different model can be obtained by defining the recursion in the fashion of regression models with dynamic errors as
+$$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.$$
 
 The GAS models can be straightforwardly estimated by the maximum likelihood method.
 For the asymptotic theory regarding the GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).

@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-# Overview
+## Overview
 
 A package for estimation, forecasting, and simulation of generalized
 autoregressive score (GAS) models of Creal et al. (2013) and Harvey
@@ -17,7 +17,7 @@ Model specification allows for various conditional distributions,
 different parametrizations, exogenous variables, higher score and
 autoregressive orders, custom and unconditional initial values of
 time-varying parameters, fixed and bounded values of coefficients, and
-NA values. Model estimation is performed by the maximum likelihood
+missing values. Model estimation is performed by the maximum likelihood
 method and the Hessian matrix.
 
 The package offers the following functions for working with GAS models:
@@ -32,19 +32,22 @@ The package offers the following functions for working with GAS models:
 Probability distributions are handled by the following functions:
 
 -   `distr()` provides table of supported distributions.
--   `distr_density()` computes the density.
--   `distr_mean()` computes the mean.
--   `distr_var()` computes the variance.
--   `distr_score()` computes the score.
--   `distr_fisher()` computes the Fisher information.
--   `distr_random()` generates random observations.
+-   `distr_density()` computes the density of a given distribution.
+-   `distr_mean()` computes the mean of a given distribution.
+-   `distr_var()` computes the variance of a given distribution.
+-   `distr_score()` computes the score of a given distribution.
+-   `distr_fisher()` computes the Fisher information of a given
+    distribution.
+-   `distr_random()` generates random observations from a given
+    distribution.
 
-In addition, the package contains the following datasets used in
+In addition, the package provides the following datasets used in
 examples:
 
--   `bookshop_sales` ???
--   `ice_hockey_championships` ???
--   `sp500_daily` ???
+-   `bookshop_sales` contains times of antiquarian bookshop sales.
+-   `ice_hockey_championships` contains the results of the Ice Hockey
+    World Championships.
+-   `sp500_daily` contains daily S&P 500 prices.
 
 ## Installation
 
@@ -56,12 +59,59 @@ You can install the development version of gasmodel from
 devtools::install_github("vladimirholy/gasmodel")
 ```
 
+## Example
+
+As a simple example, let us model volatility of daily S&P prices in 2021
+in the fashion of GARCH models. We estimate the GAS model based on the
+Student’s t-distribution with time-varying volatility and plot the
+filtered time-varying parameters:
+
+``` r
+library(tidyverse)
+library(gasmodel)
+
+data <- sp500_daily %>%
+  mutate(return = log(close) - log(lag(close))) %>%
+  filter(format(sp500_daily$date, "%Y") == "2021") %>%
+  select(date, return)
+
+model_garch <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
+
+model_garch
+#> GAS Model: Student‘s t Distribution / Mean-Variance Parametrization / Unit Scaling 
+#> 
+#> Coefficients: 
+#>                    Estimate  Std. Error  Z-Test  Pr(>|Z|)    
+#> mean            -0.00145631  0.00042388 -3.4357 0.0005911 ***
+#> log(var)_omega  -2.16158419  0.76650952 -2.8200 0.0048018 ** 
+#> log(var)_alpha1  0.54442475  0.15216805  3.5778 0.0003465 ***
+#> log(var)_phi1    0.78322463  0.07644654 10.2454 < 2.2e-16 ***
+#> df              10.11802479  6.59431541  1.5344 0.1249422    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Log-Likelihood: 870.9712, AIC: -1731.942, BIC: -1714.295
+
+ggplot(mapping = aes(x = data$date, y = model_garch$fit$par_tv[, 2])) +
+  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(Sigma)") +
+  geom_line(color = "#771468") +
+  theme_bw()
+```
+
+<img src="man/figures/README-example-1.png" width="66%" style="display: block; margin: auto;" />
+
+## Case Studies
+
+To further illustrate…
+
 ## Supported Distributions
 
 Currently, there are 18 distributions available.
 
+The list of supported distribution can be obtained by the `distr()`
+function:
+
 ``` r
-library(gasmodel)
 print(distr(), right = FALSE, row.names = FALSE)
 #>  distr_title                     param_title   distr     param    type        dim   orthog default
 #>  Bernoulli                       Probabilistic bernoulli prob     binary      uni    TRUE   TRUE  
@@ -90,6 +140,10 @@ print(distr(), right = FALSE, row.names = FALSE)
 #>  Zero-Inflated Negative Binomial NB2           zinegbin  nb2      count       uni   FALSE   TRUE  
 #>  Zero-Inflated Poisson           Mean          zipois    mean     count       uni   FALSE   TRUE
 ```
+
+Details of each distribution, including its density function, expected
+value, variance, score, and Fisher information, can be found in vignette
+‘distributions’.
 
 ## Generalized Autoregressive Score Models
 
@@ -131,6 +185,11 @@ is a scaling function for the score, and
 is the score given by
 
 ![\\nabla(y_t, f_t) = \\frac{\\partial \\ln p(y_t \| f_t)}{\\partial f_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D. "\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.")
+
+Alternatively, a different model can be obtained by defining the
+recursion in the fashion of regression models with dynamic errors as
+
+![f\_{t} = \\omega + \\sum\_{i=1}^M \\beta_i x\_{ti} + e\_{t}, \\quad e_t = \\sum\_{j=1}^P \\alpha_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j}) + \\sum\_{k=1}^Q \\varphi_k e\_{t-k}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20e_%7Bt%7D%2C%20%5Cquad%20e_t%20%3D%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20e_%7Bt-k%7D. "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.")
 
 The GAS models can be straightforwardly estimated by the maximum
 likelihood method. For the asymptotic theory regarding the GAS models
