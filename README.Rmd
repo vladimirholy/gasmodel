@@ -92,8 +92,8 @@ ggplot(mapping = aes(x = data$date, y = model_gas$fit$par_tv[, 2])) +
 
 To further illustrate the usability of GAS models, the package includes the following case studies in the form of vignettes:
 
-- `case_durations` ???.
-- `case_rankings` analyzes.
+- `case_durations` analyzes the timing of online antiquarian bookshop orders.
+- `case_rankings` analyzes the strength of national ice hockey teams using the annual Ice Hockey World Championships rankings.
 
 ## Supported Distributions
 
