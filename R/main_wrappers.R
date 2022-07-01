@@ -38,13 +38,15 @@ wrapper_optim_stats <- function(obj_fun, theta_start, theta_bound_lower, theta_b
     optim_res <- stats::optim(par = theta_start, fn = obj_fun, lower = theta_bound_lower, upper = theta_bound_upper, ...)
   }
   if (inherits(optim_res, 'try-error')) {
-    status_hessian <- "failure"
-    theta_hessian <- matrix(NA_real_, nrow = length(theta_start))
+    status_optim <- "failure"
+    obj_optim <- NA_real_
+    theta_optim <- rep(NA_real_, times = length(theta_start))
   } else {
     status_optim <- switch(as.character(optim_res$convergence), "0" = "success", "1" = "iteration_limit_reached",  "10" = "degeneracy_reached", "unknown_status")
+    obj_optim <- optim_res$value
     theta_optim <- optim_res$par
   }
-  return(list(status_optim = status_optim, theta_optim = theta_optim))
+  return(list(status_optim = status_optim, obj_optim = obj_optim, theta_optim = theta_optim))
 }
 # ------------------------------------------------------------------------------
 
@@ -59,13 +61,15 @@ wrapper_optim_nloptr <- function(obj_fun, theta_start, theta_bound_lower, theta_
     optim_res <- nloptr::nloptr(x0 = theta_start, eval_f = obj_fun, lb = theta_bound_lower, ub = theta_bound_upper, ...)
   }
   if (inherits(optim_res, 'try-error')) {
-    status_hessian <- "failure"
-    theta_hessian <- matrix(NA_real_, nrow = length(theta_start))
+    status_optim <- "failure"
+    obj_optim <- NA_real_
+    theta_optim <- rep(NA_real_, times = length(theta_start))
   } else {
     status_optim <- switch(as.character(optim_res$status), "1" = "success", "2" = "desired_objective_reached",  "3" = "objective_tolerance_reached", "4" = "variables_tolerance_reached", "5" = "iteration_limit_reached", "6" = "maximum_time_reached", "unknown_status")
+    obj_optim <- optim_res$objective
     theta_optim <- optim_res$solution
   }
-  return(list(status_optim = status_optim, theta_optim = theta_optim))
+  return(list(status_optim = status_optim, obj_optim = obj_optim, theta_optim = theta_optim))
 }
 # ------------------------------------------------------------------------------
 

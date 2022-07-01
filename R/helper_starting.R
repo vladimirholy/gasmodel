@@ -30,8 +30,11 @@ starting_theta <- function(theta_start, theta_bound_lower, theta_bound_upper, da
   for (i in 1:try_num) {
     try_obj[i] <- likelihood_objective(theta = try_theta[i, ], est_details = est_details, print_progress = print_progress)
   }
-  if (any(!is.na(try_obj))) {
+  if (any(try_obj < 1e100)) {
     status_start <- "success"
+    theta_start <- try_theta[which.min(try_obj), ]
+  } else if (any(!is.na(try_obj))) {
+    status_start <- "zero_likelihood"
     theta_start <- try_theta[which.min(try_obj), ]
   } else {
     status_start <- "failure"
