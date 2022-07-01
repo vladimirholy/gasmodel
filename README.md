@@ -29,7 +29,8 @@ The package offers the following functions for working with GAS models:
     models.
 -   `gas_bootstrap()` bootstraps coefficients of GAS models.
 
-Probability distributions are handled by the following functions:
+The package handles probability distributions by the following
+functions:
 
 -   `distr()` provides table of supported distributions.
 -   `distr_density()` computes the density of a given distribution.
@@ -51,19 +52,18 @@ examples:
 
 ## Installation
 
-You can install the development version of gasmodel from
-[GitHub](https://github.com/) with:
+You can install the development version of `gasmodel` from GitHub using
+package `devtools` as:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("vladimirholy/gasmodel")
+install_github("vladimirholy/gasmodel")
 ```
 
 ## Example
 
-As a simple example, let us model volatility of daily S&P prices in 2021
-in the fashion of GARCH models. We estimate the GAS model based on the
-Student’s t-distribution with time-varying volatility and plot the
+As a simple example, let us model volatility of daily S&P 500 prices in
+2021 in the fashion of GARCH models. We estimate the GAS model based on
+the Student’s t-distribution with time-varying volatility and plot the
 filtered time-varying parameters:
 
 ``` r
@@ -75,9 +75,18 @@ data <- sp500_daily %>%
   filter(format(sp500_daily$date, "%Y") == "2021") %>%
   select(date, return)
 
-model_garch <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
+summary(data)
+#>       date                return         
+#>  Min.   :2021-01-04   Min.   :-0.023512  
+#>  1st Qu.:2021-04-05   1st Qu.:-0.006242  
+#>  Median :2021-07-04   Median :-0.001423  
+#>  Mean   :2021-07-03   Mean   :-0.001029  
+#>  3rd Qu.:2021-10-01   3rd Qu.: 0.003219  
+#>  Max.   :2021-12-31   Max.   : 0.026013
 
-model_garch
+model_gas <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
+
+model_gas
 #> GAS Model: Student‘s t Distribution / Mean-Variance Parametrization / Unit Scaling 
 #> 
 #> Coefficients: 
@@ -92,8 +101,8 @@ model_garch
 #> 
 #> Log-Likelihood: 870.9712, AIC: -1731.942, BIC: -1714.295
 
-ggplot(mapping = aes(x = data$date, y = model_garch$fit$par_tv[, 2])) +
-  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(Sigma)") +
+ggplot(mapping = aes(x = data$date, y = model_gas$fit$par_tv[, 2])) +
+  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(var)") +
   geom_line(color = "#771468") +
   theme_bw()
 ```
@@ -102,7 +111,11 @@ ggplot(mapping = aes(x = data$date, y = model_garch$fit$par_tv[, 2])) +
 
 ## Case Studies
 
-To further illustrate…
+To further illustrate the usability of GAS models, the package includes
+the following case studies in the form of vignettes:
+
+-   `case_durations` ???.
+-   `case_rankings` analyzes.
 
 ## Supported Distributions
 
@@ -143,7 +156,7 @@ print(distr(), right = FALSE, row.names = FALSE)
 
 Details of each distribution, including its density function, expected
 value, variance, score, and Fisher information, can be found in vignette
-‘distributions’.
+`distributions`.
 
 ## Generalized Autoregressive Score Models
 

@@ -9,8 +9,8 @@ Description: A package for estimation, forecasting, and simulation of
     for various conditional distributions, different parametrizations,
     exogenous variables, higher score and autoregressive orders, custom and
     unconditional initial values of time-varying parameters, fixed and bounded
-    values of coefficients, and NA values. Model estimation is performed by
-    the maximum likelihood method and the Hessian matrix.   
+    values of coefficients, and missing values. Model estimation is performed
+    by the maximum likelihood method and the Hessian matrix.   
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -24,8 +24,7 @@ Imports:
     numDeriv,
     pracma,
     stats
-Suggests: 
-    ACDm,
+Suggests:
     knitr,
     rmarkdown,
     testthat,

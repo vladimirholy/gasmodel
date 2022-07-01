@@ -39,7 +39,7 @@ The package offers the following functions for working with GAS models:
 - `gas_filter()` obtains filtered time-varying parameters of GAS models.
 - `gas_bootstrap()` bootstraps coefficients of GAS models.
 
-Probability distributions are handled by the following functions:
+The package handles probability distributions by the following functions:
 
 - `distr()` provides table of supported distributions.
 - `distr_density()` computes the density of a given distribution.
@@ -57,16 +57,15 @@ In addition, the package provides the following datasets used in examples:
 
 ## Installation
 
-You can install the development version of gasmodel from [GitHub](https://github.com/) with:
+You can install the development version of `gasmodel` from GitHub using package `devtools` as:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("vladimirholy/gasmodel")
+install_github("vladimirholy/gasmodel")
 ```
 
 ## Example
 
-As a simple example, let us model volatility of daily S&P prices in 2021 in the fashion of GARCH models. We estimate the GAS model based on the Student's t-distribution with time-varying volatility and plot the filtered time-varying parameters:
+As a simple example, let us model volatility of daily S&P 500 prices in 2021 in the fashion of GARCH models. We estimate the GAS model based on the Student's t-distribution with time-varying volatility and plot the filtered time-varying parameters:
 
 ``` {r example, warning = FALSE, message = FALSE}
 library(tidyverse)
@@ -77,19 +76,24 @@ data <- sp500_daily %>%
   filter(format(sp500_daily$date, "%Y") == "2021") %>%
   select(date, return)
 
-model_garch <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
+summary(data)
 
-model_garch
+model_gas <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
 
-ggplot(mapping = aes(x = data$date, y = model_garch$fit$par_tv[, 2])) +
-  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(Sigma)") +
+model_gas
+
+ggplot(mapping = aes(x = data$date, y = model_gas$fit$par_tv[, 2])) +
+  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(var)") +
   geom_line(color = "#771468") +
   theme_bw()
 ```
 
 ## Case Studies
 
-To further illustrate...
+To further illustrate the usability of GAS models, the package includes the following case studies in the form of vignettes:
+
+- `case_durations` ???.
+- `case_rankings` analyzes.
 
 ## Supported Distributions
 
@@ -101,7 +105,7 @@ The list of supported distribution can be obtained by the `distr()` function:
 print(distr(), right = FALSE, row.names = FALSE)
 ```
 
-Details of each distribution, including its density function, expected value, variance, score, and Fisher information, can be found in vignette 'distributions'.
+Details of each distribution, including its density function, expected value, variance, score, and Fisher information, can be found in vignette `distributions`.
 
 ## Generalized Autoregressive Score Models
 
