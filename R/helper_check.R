@@ -553,9 +553,10 @@ check_my_coef_fix_special <- function(coef_fix_special = NULL) {
 check_my_coef_bound_lower <- function(coef_bound_lower = NULL, coef_bound_upper = NULL, par_static = NULL, par_support = NULL, par_num = NULL, coef_in_par_num = NULL, coef_num = NULL) {
   if (is.null(coef_bound_lower) && !is.null(par_static) && !is.null(par_support) && !is.null(par_num) && !is.null(coef_in_par_num)) {
     coef_bound_lower <- unlist(lapply(1:par_num, function(i) { if (!par_static[i]) { rep(-Inf, times = coef_in_par_num[i]) } else if (par_support[i] == "positive" || par_support[i] == "probability") { 1e-12 } else { -Inf } }))
-  } else if (is.vector(coef_bound_lower) && !is.list(coef_bound_lower) && length(coef_bound_lower) > 0L && is.numeric(coef_bound_lower) && !is.null(par_static) && !is.null(par_support) && !is.null(par_num) && !is.null(coef_in_par_num)) {
+  } else if (is.vector(coef_bound_lower) && !is.list(coef_bound_lower) && length(coef_bound_lower) > 0L && is.numeric(coef_bound_lower) && !is.null(par_static) && !is.null(par_support) && !is.null(par_num) && !is.null(coef_in_par_num) && length(coef_bound_lower) == sum(coef_in_par_num)) {
     coef_bound_lower <- pmax(coef_bound_lower, unlist(lapply(1:par_num, function(i) { if (!par_static[i]) { rep(-Inf, times = coef_in_par_num[i]) } else if (par_support[i] == "positive" || par_support[i] == "probability") { 1e-12 } else { -Inf } })), na.rm = TRUE)
   } else if (is.vector(coef_bound_lower) && !is.list(coef_bound_lower) && length(coef_bound_lower) > 0L && is.numeric(coef_bound_lower) && all(!is.na(coef_bound_lower))) {
+    coef_bound_lower <- coef_bound_lower
   } else {
     stop("Invalid argument coef_bound_lower.")
   }
@@ -574,9 +575,10 @@ check_my_coef_bound_lower <- function(coef_bound_lower = NULL, coef_bound_upper 
 check_my_coef_bound_upper <- function(coef_bound_upper = NULL, coef_bound_lower = NULL, par_static = NULL, par_support = NULL, par_num = NULL, coef_in_par_num = NULL, coef_num = NULL) {
   if (is.null(coef_bound_upper) && !is.null(par_static) && !is.null(par_support) && !is.null(par_num) && !is.null(coef_in_par_num)) {
     coef_bound_upper <- unlist(lapply(1:par_num, function(i) { if (!par_static[i]) { rep(Inf, times = coef_in_par_num[i]) } else if (par_support[i] == "probability") { 1 - 1e-12 } else { Inf } }))
-  } else if (is.vector(coef_bound_upper) && !is.list(coef_bound_upper) && length(coef_bound_upper) > 0L && is.numeric(coef_bound_upper) && !is.null(par_static) && !is.null(par_support) && !is.null(par_num) && !is.null(coef_in_par_num)) {
+  } else if (is.vector(coef_bound_upper) && !is.list(coef_bound_upper) && length(coef_bound_upper) > 0L && is.numeric(coef_bound_upper) && !is.null(par_static) && !is.null(par_support) && !is.null(par_num) && !is.null(coef_in_par_num) && length(coef_bound_lower) == sum(coef_in_par_num)) {
     coef_bound_upper <- pmin(coef_bound_upper, unlist(lapply(1:par_num, function(i) { if (!par_static[i]) { rep(Inf, times = coef_in_par_num[i]) } else if (par_support[i] == "probability") { 1 - 1e-12 } else { Inf } })), na.rm = TRUE)
   } else if (is.vector(coef_bound_upper) && !is.list(coef_bound_upper) && length(coef_bound_upper) > 0L && is.numeric(coef_bound_upper) && all(!is.na(coef_bound_upper))) {
+    coef_bound_upper <- coef_bound_upper
   } else {
     stop("Invalid argument coef_bound_upper.")
   }
