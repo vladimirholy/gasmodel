@@ -268,6 +268,9 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
     comp$result_start <- starting_theta(theta_start = solution$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, info_theta = info_theta, print_progress = comp$print_progress)
     solution$status_start <- comp$result_start$status_start
     solution$theta_start <- name_vector(comp$result_start$theta_start, info_theta$theta_names)
+    if (solution$status_start != "success") {
+      warning("Computation of a starting solution ended with status '", solution$status_start, "'")
+    }
   } else {
     solution$status_start <- "starting_values_supplied"
     solution$theta_start <- name_vector(comp$theta_start, info_theta$theta_names)
@@ -277,6 +280,9 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
     comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = solution$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = comp$print_progress), control$optim_arguments))
     solution$status_optim <- comp$result_optim$status_optim
     solution$theta_optim <- name_vector(comp$result_optim$theta_optim, info_theta$theta_names)
+    if (solution$status_optim != "success") {
+      warning("Computation of the optimal solution ended with status '", solution$status_optim, "'")
+    }
   } else {
     solution$status_optim <- "computation_skipped"
     solution$theta_optim <- solution$theta_start
@@ -286,13 +292,16 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
     comp$result_hessian <- do.call(control$hessian_function, args = c(list(obj_fun = likelihood_objective, theta_optim = solution$theta_optim, est_details = comp$est_details, print_progress = comp$print_progress), control$hessian_arguments))
     solution$status_hessian <- comp$result_hessian$status_hessian
     solution$theta_hessian <- name_matrix(comp$result_hessian$theta_hessian, info_theta$theta_names, info_theta$theta_names)
+    if (solution$status_hessian != "success") {
+      warning("Computation of the Hessian matrix ended with status '", solution$status_hessian, "'")
+    }
   } else {
     solution$status_hessian <- "computation_skipped"
     solution$theta_hessian <- name_matrix(matrix(NA_real_, nrow = info_theta$theta_num, ncol = info_theta$theta_num), info_theta$theta_names, info_theta$theta_names)
   }
   fit <- list()
   fit$coef_est <- name_vector(convert_theta_vector_to_coef_vector(solution$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other), info_coef$coef_names)
-  comp$eval_tv <- likelihood_evaluate(coef = fit$coef_est, data = data, model = model, fun = fun, info_par = info_par, info_coef = info_coef)
+  comp$eval_tv <- suppressWarnings(likelihood_evaluate(coef = fit$coef_est, data = data, model = model, fun = fun, info_par = info_par, info_coef = info_coef))
   model$num_obs <- sum(!is.na(comp$eval_tv$lik))
   model$num_coef <- info_theta$theta_num
   comp$theta_vcov <- matrix_inv(solution$theta_hessian) / model$num_obs
