@@ -269,7 +269,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
     solution$status_start <- comp$result_start$status_start
     solution$theta_start <- name_vector(comp$result_start$theta_start, info_theta$theta_names)
     if (solution$status_start != "success") {
-      warning("Computation of a starting solution ended with status '", solution$status_start, "'")
+      warning("Computation of a starting solution ended with status '", solution$status_start, "'.")
     }
   } else {
     solution$status_start <- "starting_values_supplied"
@@ -281,7 +281,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
     solution$status_optim <- comp$result_optim$status_optim
     solution$theta_optim <- name_vector(comp$result_optim$theta_optim, info_theta$theta_names)
     if (solution$status_optim != "success") {
-      warning("Computation of the optimal solution ended with status '", solution$status_optim, "'")
+      warning("Computation of the optimal solution ended with status '", solution$status_optim, "'.")
     }
   } else {
     solution$status_optim <- "computation_skipped"
@@ -293,7 +293,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
     solution$status_hessian <- comp$result_hessian$status_hessian
     solution$theta_hessian <- name_matrix(comp$result_hessian$theta_hessian, info_theta$theta_names, info_theta$theta_names)
     if (solution$status_hessian != "success") {
-      warning("Computation of the Hessian matrix ended with status '", solution$status_hessian, "'")
+      warning("Computation of the Hessian matrix ended with status '", solution$status_hessian, "'.")
     }
   } else {
     solution$status_hessian <- "computation_skipped"
@@ -323,6 +323,9 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   fit$loglik_sum <- sum(fit$loglik_tv, na.rm = TRUE)
   fit$aic <- 2 * model$num_coef - 2 * fit$loglik_sum
   fit$bic <- log(model$num_obs) * model$num_coef - 2 * fit$loglik_sum
+  if (mean(fit$loglik_tv, na.rm = TRUE) <= -1e100) {
+    warning("The likelihood function has zero value. The results are not reliable.")
+  }
   report <- list(data = data, model = model, control = control, solution = solution, fit = fit)
   class(report) <- "gas"
   return(report)
