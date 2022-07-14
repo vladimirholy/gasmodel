@@ -229,7 +229,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
         }
         comp$par_tv[comp$idx_ok_ahead, ] <- comp$par_tv[comp$idx_ok_ahead, ] + comp$err_tv[comp$idx_ok_ahead, ]
       }
-      comp$y[comp$idx_ok_ahead, ] <- fun$mean(f = comp$par_tv[comp$idx_ok_ahead, ])
+      comp$y[comp$idx_ok_ahead, ] <- fun$mean(f = comp$par_tv[comp$idx_ok_ahead, , drop = FALSE])
       info_data <- info_data(y = data$y, x = data$x)
       data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
       data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
