@@ -10,7 +10,9 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-",
   fig.align = "center",
-  out.width = "66%"
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "75%"
 )
 
 options(width = 100, max.print = 1e6)

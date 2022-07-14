@@ -32,7 +32,7 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}).}
 
-\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). Without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
 
 \item{p}{A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
 

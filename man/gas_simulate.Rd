@@ -22,7 +22,7 @@ gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}).}
 
-\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). Without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
 
 \item{n}{A dimension of the model. Required only for multivariate models.}
 

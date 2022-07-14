@@ -107,7 +107,7 @@ ggplot(mapping = aes(x = data$date, y = model_gas$fit$par_tv[, 2])) +
   theme_bw()
 ```
 
-<img src="man/figures/README-example-1.png" width="66%" style="display: block; margin: auto;" />
+<img src="man/figures/README-example-1.png" width="75%" style="display: block; margin: auto;" />
 
 ## Case Studies
 

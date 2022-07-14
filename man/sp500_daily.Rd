@@ -3,7 +3,7 @@
 \docType{data}
 \name{sp500_daily}
 \alias{sp500_daily}
-\title{Results of the Ice Hockey World Championships}
+\title{Daily S&P 500 Prices}
 \format{
 A data frame with columns:
 \describe{

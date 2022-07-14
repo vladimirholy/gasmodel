@@ -1,6 +1,6 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
-author: "Vladimír Holý"
+author: "Vladimír Holý & Jan Zouhar"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -9,30 +9,134 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## Introduction
+
+## Data Preparation
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "75%"
 )
+
+options(width = 100, max.print = 1e3, pillar.print_max = 1e3)
+
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
 ```
 
 ```{r setup, include = FALSE}
+library(tidyverse)
 library(gasmodel)
 ```
+
+Let us prepare the data:
 
 ``` {r data}
 t <- 22
 n <- ncol(ice_hockey_championships$host)
 y <- ice_hockey_championships$rankings[1:t, ]
-x <- lapply(1:n, function(i) { ice_hockey_championships$host[1:t, i] })
+x <- setNames(lapply(1:n, function(i) { ice_hockey_championships$host[1:t, i] }), colnames(y))
 ```
+
+Which teams have participated each year?
+
+``` {r participate}
+participate <- colSums(is.finite(y))
+names(participate)[participate == t]
+```
+
+How many times countries hosted?
+
+``` {r host}
+host <- sapply(x, FUN = sum)
+host[host > 0L]
+```
+
+The number of gold medals:
+
+``` {r gold}
+gold <- colSums(y == 1L)
+gold[gold > 0L]
+```
+
+## Model Estimation
 
 ``` {r distr}
-distr(filter_type = "ranking")
+print(distr(filter_type = "ranking"), right = FALSE, row.names = FALSE)
 ```
 
-``` {r pluce}
-pluce_est <- gas(y = y, x = x, distr = "pluce",
-                 coef_fix_special = c("zero_sum_intercept", "panel_structure"))
-pluce_est
+First, we estimate the static model:
+
+``` {r stat}
+model_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
+  coef_fix_special = c("zero_sum_intercept", "panel_structure"))
+
+model_static
 ```
+
+Second, we estimate the standard GAS model of order one:
+
+``` {r gas}
+model_gas <- gas(y = y, x = x, distr = "pluce",
+  coef_fix_special = c("zero_sum_intercept", "panel_structure"),
+  coef_start = as.vector(rbind(model_static$fit$par_unc / 2, 0, 0.5, 0.5)))
+
+model_gas
+```
+
+Third, we estimate the random walk model:
+
+``` {r walk}
+model_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", spec = "reg_err",
+  coef_fix_special = c("zero_sum_intercept", "panel_structure", "random_walk"),
+  coef_start = as.vector(rbind(model_static$fit$par_unc, 0, 0.5, 1)))
+
+model_walk
+```
+
+We compare the models using the Akaike information criterion (AIC):
+
+``` {r aic}
+AIC(model_static, model_gas, model_walk)
+```
+
+## Who Is Best?
+
+``` {r table}
+tibble(team = colnames(y)) %>%
+  mutate(gas_strength = model_gas$fit$par_unc) %>%
+  mutate(gas_rank = rank(-gas_strength)) %>%
+  mutate(static_strength = model_static$fit$par_unc) %>%
+  mutate(static_rank = rank(-static_strength)) %>%
+  arrange(gas_rank)
+```
+
+``` {r canada}
+ggplot(mapping = aes(x = 1998:2019, y = model_gas$fit$par_tv[, 3])) +
+  labs(title = "Strength of the Canada Team", x = "Year", y = "Worth Parameter") +
+  geom_hline(yintercept = model_gas$fit$par_unc[3], linetype = "dashed") +
+  geom_line(color = "#D52B1E") +
+  scale_x_continuous(breaks = seq(from = 1998, to = 2019, by = 3)) +
+  theme_bw()
+```
+
+``` {r forecast}
+one_ahead <- predict(model_gas, x_ahead = 0)
+
+tibble(team = colnames(y)) %>%
+  mutate(forecasted_strength = one_ahead$forecast$par_tv_ahead_mean[1, ]) %>%
+  mutate(forecasted_gold = exp(forecasted_strength) / sum(exp(forecasted_strength))) %>%
+  mutate(forecasted_rank = rank(-forecasted_strength)) %>%
+  mutate(real_rank = ice_hockey_championships$rankings[24, ]) %>%
+  arrange(real_rank)
+```
+
+## References
+
+Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: [2101.04040](https://arxiv.org/abs/2101.04040).
+
+
