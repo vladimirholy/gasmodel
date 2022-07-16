@@ -4,9 +4,9 @@
 
 # Parameters Function ----------------------------------------------------------
 distr_mvnorm_meanvar_parameters <- function(n) {
-  group_of_par_names <- c(rep("mean", n), rep("var", n), rep("cor", n * (n - 1) / 2))
-  par_names <- c(paste0("mean", 1:n), paste0("var", 1:n), paste0("cor", unlist(lapply(1:(n - 1), function(i) { return(paste0(i, ".", (i + 1):n)) }))))
-  par_support <- c(rep("real", n), rep("positive", n), rep("probability", n * (n - 1) / 2))
+  group_of_par_names <- c(rep("mean", n), rep("var", n), rep("cov", n * (n - 1) / 2))
+  par_names <- c(paste0("mean", 1:n), paste0("var", 1:n), paste0("cov", unlist(lapply(1:(n - 1), function(i) { return(paste0(i, ".", (i + 1):n)) }))))
+  par_support <- c(rep("real", n), rep("positive", n), rep("real", n * (n - 1) / 2))
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
 }
@@ -124,7 +124,8 @@ distr_mvnorm_meanvar_start <- function(y) {
   y_mean <- colMeans(y, na.rm = TRUE)
   y_var <- stats::cov(y, use = "na.or.complete")
   m <- y_mean
-  sc <- pmax(convert_varcov_matrix_to_varcov_vector(y_var), 1e-6)
+  sc <- convert_varcov_matrix_to_varcov_vector(y_var)
+  sc[1:ncol(y)] <- pmax(sc[1:ncol(y)], 1e-6)
   res_start <- c(m, sc)
   return(res_start)
 }
