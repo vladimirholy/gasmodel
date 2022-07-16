@@ -107,7 +107,7 @@ distr <- function(filter_distr = NULL, filter_param = NULL, filter_type = NULL, 
 #'
 #' # Density of the multivariate normal distribution
 #' distr_density(y = rbind(c(0.5, 0.6), c(-2.3, -1.8), c(-0.2, 0.2)),
-#'               f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+#'               f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 #'
 #' @export
 distr_density <- function(y, f, distr, param = NULL, par_link = NULL, trans = NULL) {
@@ -155,7 +155,7 @@ distr_density <- function(y, f, distr, param = NULL, par_link = NULL, trans = NU
 #' distr_mean(f = c(0.5, 1.2), distr = "negbin")
 #'
 #' # Mean for the multivariate normal distribution
-#' distr_mean(f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+#' distr_mean(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 #'
 #' @export
 distr_mean <- function(f, distr, param = NULL, par_link = NULL) {
@@ -194,7 +194,7 @@ distr_mean <- function(f, distr, param = NULL, par_link = NULL) {
 #' distr_var(f = c(0.5, 1.2), distr = "negbin")
 #'
 #' # Variance for the multivariate normal distribution
-#' distr_var(f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+#' distr_var(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 #'
 #' @export
 distr_var <- function(f, distr, param = NULL, par_link = NULL) {
@@ -236,7 +236,7 @@ distr_var <- function(f, distr, param = NULL, par_link = NULL) {
 #'
 #' # Score for the multivariate normal distribution
 #' distr_score(y = rbind(c(0.5, 0.6), c(-2.3, -1.8), c(-0.2, 0.2)),
-#'             f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+#'             f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 #'
 #' @export
 distr_score <- function(y, f, distr, param = NULL, par_link = NULL, scaling = NULL) {
@@ -316,7 +316,7 @@ distr_score <- function(y, f, distr, param = NULL, par_link = NULL, scaling = NU
 #' distr_fisher(f = c(0.5, 1.2), distr = "negbin")
 #'
 #' # Fisher information for the multivariate normal distribution
-#' distr_fisher(f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+#' distr_fisher(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 #'
 #' @export
 distr_fisher <- function(f, distr, param = NULL, par_link = NULL, trans = NULL) {
@@ -391,7 +391,7 @@ distr_fisher <- function(f, distr, param = NULL, par_link = NULL, trans = NULL) 
 #' distr_random(t = 10, f = c(0.5, 1.2), distr = "negbin")
 #'
 #' # Random observations from the multivariate normal distribution
-#' distr_random(t = 10, f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+#' distr_random(t = 10, f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 #'
 #' @export
 distr_random <- function(t, f, distr, param = NULL, par_link = NULL) {

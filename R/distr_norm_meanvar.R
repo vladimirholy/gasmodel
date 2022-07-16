@@ -1,9 +1,9 @@
 
-# POISSON DISTRIBUTION / MEAN-VARIANCE PARAMETRIZATION
+# NORMAL DISTRIBUTION / MEAN-VARIANCE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
-distr_skellam_mean_var_parameters <- function(n) {
+distr_norm_meanvar_parameters <- function(n) {
   group_of_par_names <- c("mean", "var")
   par_names <- c("mean", "var")
   par_support <- c("real", "positive")
@@ -14,40 +14,32 @@ distr_skellam_mean_var_parameters <- function(n) {
 
 
 # Density Function -------------------------------------------------------------
-distr_skellam_mean_var_density <- function(y, f) {
+distr_norm_meanvar_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
-  res_density <- suppressWarnings(exp(-s) * ((s + m) / (s - m))^(y / 2) * besselI(x = sqrt(s^2 - m^2), nu = y))
-  res_density[!is.finite(res_density)] <- -Inf
+  res_density <- suppressWarnings(stats::dnorm(y, mean = m, sd = sqrt(s)))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
 
 
 # Log-Likelihood Function ------------------------------------------------------
-distr_skellam_mean_var_loglik <- function(y, f) {
+distr_norm_meanvar_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
-  res_loglik <- suppressWarnings(y / 2 * log((s + m) / (s - m)) - s + log(besselI(x = sqrt(s^2 - m^2), nu = y)))
-  res_loglik[!is.finite(res_loglik)] <- -Inf
+  res_loglik <- suppressWarnings(stats::dnorm(y, mean = m, sd = sqrt(s), log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
 
 
 # Mean Function ----------------------------------------------------------------
-distr_skellam_mean_var_mean <- function(f) {
+distr_norm_meanvar_mean <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
   res_mean <- m
   return(res_mean)
 }
@@ -55,12 +47,10 @@ distr_skellam_mean_var_mean <- function(f) {
 
 
 # Variance Function ------------------------------------------------------------
-distr_skellam_mean_var_var <- function(f) {
+distr_norm_meanvar_var <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
   res_var <- s
   res_var <- array(res_var, dim = c(t, 1, 1))
   return(res_var)
@@ -69,46 +59,36 @@ distr_skellam_mean_var_var <- function(f) {
 
 
 # Score Function ---------------------------------------------------------------
-distr_skellam_mean_var_score <- function(y, f) {
+distr_norm_meanvar_score <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
   res_score <- matrix(0, nrow = t, ncol = 2L)
-  res_score[, 1] <- (s * y) / (s^2 - m^2) - m / (2 * sqrt(s^2 - m^2)) * (besselI(x = sqrt(s^2 - m^2), nu = y - 1) + besselI(x = sqrt(s^2 - m^2), nu = y + 1)) / besselI(x = sqrt(s^2 - m^2), nu = y)
-  res_score[, 2] <- -(m * y) / (s^2 - m^2) + s / (2 * sqrt(s^2 - m^2)) * (besselI(x = sqrt(s^2 - m^2), nu = y - 1) + besselI(x = sqrt(s^2 - m^2), nu = y + 1)) / besselI(x = sqrt(s^2 - m^2), nu = y) - 1
+  res_score[, 1] <- (y - m) / s
+  res_score[, 2] <- ((y - m)^2 - s) / (2 * s^2)
   return(res_score)
 }
 # ------------------------------------------------------------------------------
 
 
 # Fisher Information Function --------------------------------------------------
-distr_skellam_mean_var_fisher <- function(f) {
+distr_norm_meanvar_fisher <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- NA
-  res_fisher[, 1, 2] <- NA
-  res_fisher[, 2, 1] <- NA
-  res_fisher[, 2, 2] <- NA
+  res_fisher[, 1, 1] <- 1 / s
+  res_fisher[, 2, 2] <- 1 / (2 * s^2)
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
 
 
 # Random Generation Function ---------------------------------------------------
-distr_skellam_mean_var_random <- function(t, f) {
+distr_norm_meanvar_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
-  if (s > abs(m)) {
-    res_random <- suppressWarnings(stats::rpois(t, lambda = (v + m) / 2) - stats::rpois(t, lambda = (v - m) / 2))
-  } else {
-    res_random <- rep(NA_real_, times = t)
-  }
+  res_random <- suppressWarnings(stats::rnorm(t, mean = m, sd = sqrt(s)))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }
@@ -116,11 +96,11 @@ distr_skellam_mean_var_random <- function(t, f) {
 
 
 # Starting Estimates Function --------------------------------------------------
-distr_skellam_mean_var_start <- function(y) {
+distr_norm_meanvar_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
   y_var <- stats::var(y, na.rm = TRUE)
   m <- y_mean
-  s <- max(y_var, abs(y_mean) + 1e-6)
+  s <- max(y_var, 1e-6)
   res_start <- c(m, s)
   return(res_start)
 }
