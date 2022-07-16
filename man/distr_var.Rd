@@ -26,7 +26,7 @@ A function computing variance for a given distribution.
 distr_var(f = c(0.5, 1.2), distr = "negbin")
 
 # Variance for the multivariate normal distribution
-distr_var(f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+distr_var(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 
 }
 \seealso{

@@ -28,7 +28,7 @@ A function generating random observations from a given distribution.
 distr_random(t = 10, f = c(0.5, 1.2), distr = "negbin")
 
 # Random observations from the multivariate normal distribution
-distr_random(t = 10, f = c(0, 0, 1, 1, 0.5), distr = "mnorm")
+distr_random(t = 10, f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
 
 }
 \seealso{
