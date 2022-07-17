@@ -24,6 +24,69 @@ convert_varcov_vector_to_varcov_matrix <- function(varcov_vec) {
 # ------------------------------------------------------------------------------
 
 
+# Convert Variance-Covariance Matrix to Parameter Vector -----------------------
+convert_varcov_matrix_to_sc_vector <- function(varcov_mat) {
+  n <- nrow(varcov_mat)
+  sc_vec <- rep(NA_real_, times = n + n * (n - 1) / 2)
+  sc_vec[1:n] <- diag(varcov_mat)
+  sc_vec[(n + 1):(n + n * (n - 1) / 2)] <- varcov_mat[lower.tri(varcov_mat)] * 2
+  return(sc_vec)
+}
+# ------------------------------------------------------------------------------
+
+
+# Convert Parameter Vector to Variance-Covariance Matrix -----------------------
+convert_sc_vector_to_varcov_matrix <- function(sc_vec) {
+  n <- sqrt(1 / 4 + 2 * length(sc_vec)) - 1 / 2
+  varcov_mat <- diag(sc_vec[1:n])
+  varcov_mat[lower.tri(varcov_mat)] <- sc_vec[(n + 1):(n + n * (n - 1) / 2)] / 2
+  varcov_mat[upper.tri(varcov_mat)] <- t(varcov_mat)[upper.tri(varcov_mat)]
+  return(varcov_mat)
+}
+# ------------------------------------------------------------------------------
+
+
+# Convert Kronecker Matrix to Parameter Matrix ---------------------------------
+convert_krone_matrix_to_sc_matrix <- function(krone_matrix) {
+  n <- sqrt(nrow(krone_matrix))
+  sc_matrix <- matrix(nrow = n + n * (n - 1 ) / 2, ncol = n + n * (n - 1 ) / 2)
+  sc_idx_var <- 1:n
+  sc_idx_cov <- (n + 1):(n + n * (n - 1) / 2)
+  krone_idx_var <- which(as.vector(as.logical(diag(n))))
+  krone_idx_cov_lower <- matrix(1:n^2, nrow = n, ncol = n)[lower.tri(diag(n))]
+  krone_idx_cov_upper <- t(matrix(1:n^2, nrow = n, ncol = n))[lower.tri(diag(n))]
+  sc_matrix[sc_idx_var, sc_idx_var] <- krone_matrix[krone_idx_var, krone_idx_var]
+  sc_matrix[sc_idx_var, sc_idx_cov] <- krone_matrix[krone_idx_var, krone_idx_cov_lower] + krone_matrix[krone_idx_var, krone_idx_cov_upper]
+  sc_matrix[sc_idx_cov, sc_idx_var] <- krone_matrix[krone_idx_cov_lower, krone_idx_var] + krone_matrix[krone_idx_cov_upper, krone_idx_var]
+  sc_matrix[sc_idx_cov, sc_idx_cov] <- krone_matrix[krone_idx_cov_lower, krone_idx_cov_lower] + krone_matrix[krone_idx_cov_lower, krone_idx_cov_upper] + krone_matrix[krone_idx_cov_upper, krone_idx_cov_lower] + krone_matrix[krone_idx_cov_upper, krone_idx_cov_upper]
+  return(sc_matrix)
+}
+# ------------------------------------------------------------------------------
+
+
+# Convert Parameter Matrix to Kronecker Matrix ---------------------------------
+convert_sc_matrix_to_krone_matrix <- function(sc_matrix) {
+  n <- sqrt(1 / 4 + 2 * nrow(sc_matrix)) - 1 / 2
+  krone_matrix <- matrix(nrow = n * n, ncol = n * n)
+  sc_idx_var <- 1:n
+  sc_idx_cov <- (n + 1):(n + n * (n - 1) / 2)
+  krone_idx_var <- which(as.vector(as.logical(diag(n))))
+  krone_idx_cov_lower <- matrix(1:n^2, nrow = n, ncol = n)[lower.tri(diag(n))]
+  krone_idx_cov_upper <- t(matrix(1:n^2, nrow = n, ncol = n))[lower.tri(diag(n))]
+  krone_matrix[krone_idx_var, krone_idx_var] <- sc_matrix[sc_idx_var, sc_idx_var]
+  krone_matrix[krone_idx_var, krone_idx_cov_lower] <- sc_matrix[sc_idx_var, sc_idx_cov] / 2
+  krone_matrix[krone_idx_var, krone_idx_cov_upper] <- sc_matrix[sc_idx_var, sc_idx_cov] / 2
+  krone_matrix[krone_idx_cov_lower, krone_idx_var] <- sc_matrix[sc_idx_cov, sc_idx_var] / 2
+  krone_matrix[krone_idx_cov_upper, krone_idx_var] <- sc_matrix[sc_idx_cov, sc_idx_var] / 2
+  krone_matrix[krone_idx_cov_lower, krone_idx_cov_lower] <- sc_matrix[sc_idx_cov, sc_idx_cov] / 4
+  krone_matrix[krone_idx_cov_lower, krone_idx_cov_upper] <- sc_matrix[sc_idx_cov, sc_idx_cov] / 4
+  krone_matrix[krone_idx_cov_upper, krone_idx_cov_lower] <- sc_matrix[sc_idx_cov, sc_idx_cov] / 4
+  krone_matrix[krone_idx_cov_upper, krone_idx_cov_upper] <- sc_matrix[sc_idx_cov, sc_idx_cov] / 4
+  return(krone_matrix)
+}
+# ------------------------------------------------------------------------------
+
+
 # Convert Coefficient Vector to Optimization Vector  ---------------------------
 convert_coef_vector_to_theta_vector <- function(coef_vec, coef_fix_value, coef_fix_other) {
   theta_vec <- coef_vec[is.na(coef_fix_value)]

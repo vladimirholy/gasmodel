@@ -86,13 +86,12 @@ distr_mvt_meanvar_score <- function(y, f) {
   res_score <- matrix(0, nrow = t, ncol = 2 * n + n * (n - 1) / 2 + 1)
   for (i in 1:t) {
     sigma_inv <- matrix_inv(convert_varcov_vector_to_varcov_matrix(sc[i, ]))
-    sigma_sandwitch <- (y[i, ] - m[i, ]) %*% sigma_inv %*% (y[i, ] - m[i, ])
-    z_norm_sq <- as.vector((y[i, ] - m[i, ]) %*% sigma_inv %*% (y[i, ] - m[i, ]))
-    psi_sandwitch <- convert_varcov_matrix_to_varcov_vector(sigma_inv %*% (y[i, ] - m[i, ]) %*% (y[i, ] - m[i, ]) %*% sigma_inv) * c(rep(1 / 2, times = n), rep(1, times = n * (n - 1) / 2))
-    psi_inv_tr <- convert_varcov_matrix_to_varcov_vector(sigma_inv) * c(rep(1, times = n), rep(2, times = n * (n - 1) / 2))
-    res_score[i, 1:n] <- (v[i] + n) / (v[i] + z_norm_sq) * sigma_inv %*% (y[i, ] - m[i, ])
-    res_score[i, (n + 1):(2 * n + n * (n - 1) / 2)] <- (v[i] + n) / (v[i] + z_norm_sq) * psi_sandwitch - psi_inv_tr / 2
-    res_score[i, 2 * n + n * (n - 1) / 2 + 1] <- (sigma_sandwitch * (n + v[i])) / (2 * v[i] * (v[i] + sigma_sandwitch)) - log((v[i] + sigma_sandwitch) / v[i]) / 2 + digamma((v[i] + n) / 2) / 2 - digamma(v[i] / 2) / 2 - n / 2 / v[i]
+    sigma_ysy <- as.vector((y[i, ] - m[i, ]) %*% sigma_inv %*% (y[i, ] - m[i, ]))
+    psi_inv <- convert_varcov_matrix_to_sc_vector(sigma_inv)
+    psi_syys <- convert_varcov_matrix_to_sc_vector(sigma_inv %*% (y[i, ] - m[i, ]) %*% (y[i, ] - m[i, ]) %*% sigma_inv)
+    res_score[i, 1:n] <- (v[i] + n) / (v[i] + sigma_ysy) * sigma_inv %*% (y[i, ] - m[i, ])
+    res_score[i, (n + 1):(2 * n + n * (n - 1) / 2)] <- 1 / 2 * (v[i] + n) / (v[i] + sigma_ysy) * psi_syys - 1 / 2 * psi_inv
+    res_score[i, 2 * n + n * (n - 1) / 2 + 1] <- 1 / 2 * (sigma_ysy  - n) / (sigma_ysy + v[i]) - 1 / 2 * log(1 + 1 / v[i] * sigma_ysy) - 1 / 2 * digamma(v[i] / 2) + 1 / 2 * digamma((v[i] + n) / 2)
   }
   return(res_score)
 }
@@ -109,14 +108,13 @@ distr_mvt_meanvar_fisher <- function(f) {
   res_fisher <- array(0, dim = c(t, 2 * n + n * (n - 1) / 2 + 1, 2 * n + n * (n - 1) / 2 + 1))
   for (i in 1:t) {
     sigma_inv <- matrix_inv(convert_varcov_vector_to_varcov_matrix(sc[i, ]))
-    sigma_fisher <- (kronecker(sigma_inv, sigma_inv) + matrix(as.vector(sigma_inv), ncol = 1) %*% matrix(as.vector(sigma_inv), nrow = 1)) / 4
-    sigma_idx <- c(which(as.vector(as.logical(diag(n)))), which(as.vector(lower.tri(diag(n)))))
-    psi_inv_tr <- convert_varcov_matrix_to_varcov_vector(sigma_inv) * c(rep(1, times = n), rep(2, times = n * (n - 1) / 2))
+    psi_inv <- convert_varcov_matrix_to_sc_vector(sigma_inv)
+    psi_krone <- convert_krone_matrix_to_sc_matrix(kronecker(sigma_inv, sigma_inv))
     res_fisher[i, 1:n, 1:n] <- (v[i] + n) / (v[i] + n + 2) * sigma_inv
-    res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), (n + 1):(2 * n + n * (n - 1) / 2)] <- (v[i] + n) / (v[i] + n + 2) * sigma_fisher[sigma_idx, sigma_idx] - 1 / (2 * (v[i] + n + 2)) * psi_inv_tr %*% t(psi_inv_tr)
-    res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), 2 * n + n * (n - 1) / 2 + 1] <-  -1 / ((v[i] + n + 2) * (v[i] + n)) * psi_inv_tr
+    res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), (n + 1):(2 * n + n * (n - 1) / 2)] <- 1 / 4 * (v[i] + n) / (v[i] + n + 2) * psi_krone + 1 / 4 * (v[i] + n - 2) / (v[i] + n + 2) * psi_inv %*% t(psi_inv)
+    res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), 2 * n + n * (n - 1) / 2 + 1] <-  -1 / ((v[i] + n + 2) * (v[i] + n)) * psi_inv
     res_fisher[i, 2 * n + n * (n - 1) / 2 + 1, (n + 1):(2 * n + n * (n - 1) / 2)] <- res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), 2 * n + n * (n - 1) / 2 + 1]
-    res_fisher[i, 2 * n + n * (n - 1) / 2 + 1, 2 * n + n * (n - 1) / 2 + 1] <- 1 / 4 * trigamma(v[i] / 2) - 1 / 4 * trigamma((v[i] + n) / 2) - n * (n + v[i] + 4) / (v[i] * (n + v[i]) * (n + v[i] + 2))
+    res_fisher[i, 2 * n + n * (n - 1) / 2 + 1, 2 * n + n * (n - 1) / 2 + 1] <-  -1 / 2 * n * (n + v[i] + 4) / (v[i] * (n + v[i]) * (n + v[i] + 2)) + 1 / 4 * trigamma(v[i] / 2) - 1 / 4 * trigamma((v[i] + n) / 2)
   }
   return(res_fisher)
 }

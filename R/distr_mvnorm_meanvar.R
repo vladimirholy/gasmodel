@@ -79,8 +79,10 @@ distr_mvnorm_meanvar_score <- function(y, f) {
   res_score <- matrix(0, nrow = t, ncol = 2 * n + n * (n - 1) / 2)
   for (i in 1:t) {
     sigma_inv <- matrix_inv(convert_varcov_vector_to_varcov_matrix(sc[i, ]))
+    psi_inv <- convert_varcov_matrix_to_sc_vector(sigma_inv)
+    psi_syys <- convert_varcov_matrix_to_sc_vector(sigma_inv %*% (y[i, ] - m[i, ]) %*% (y[i, ] - m[i, ]) %*% sigma_inv)
     res_score[i, 1:n] <- sigma_inv %*% (y[i, ] - m[i, ])
-    res_score[i, (n + 1):(2 * n + n * (n - 1) / 2)] <- 1 / 2 * convert_varcov_matrix_to_varcov_vector(sigma_inv %*% (y[i, ] - m[i, ]) %*% (y[i, ] - m[i, ]) %*% sigma_inv - sigma_inv) * c(rep(1, times = n), rep(2, times = n * (n - 1) / 2))
+    res_score[i, (n + 1):(2 * n + n * (n - 1) / 2)] <- 1 / 2 * psi_syys - 1 / 2 * psi_inv
   }
   return(res_score)
 }
@@ -96,10 +98,10 @@ distr_mvnorm_meanvar_fisher <- function(f) {
   res_fisher <- array(0, dim = c(t, 2 * n + n * (n - 1) / 2, 2 * n + n * (n - 1) / 2))
   for (i in 1:t) {
     sigma_inv <- matrix_inv(convert_varcov_vector_to_varcov_matrix(sc[i, ]))
-    sigma_fisher <- (kronecker(sigma_inv, sigma_inv) + matrix(as.vector(sigma_inv), ncol = 1) %*% matrix(as.vector(sigma_inv), nrow = 1)) / 4
-    sigma_idx <- c(which(as.vector(as.logical(diag(n)))), which(as.vector(lower.tri(diag(n)))))
+    psi_inv <- convert_varcov_matrix_to_sc_vector(sigma_inv)
+    psi_krone <- convert_krone_matrix_to_sc_matrix(kronecker(sigma_inv, sigma_inv))
     res_fisher[i, 1:n, 1:n] <- sigma_inv
-    res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), (n + 1):(2 * n + n * (n - 1) / 2)] <- sigma_fisher[sigma_idx, sigma_idx]
+    res_fisher[i, (n + 1):(2 * n + n * (n - 1) / 2), (n + 1):(2 * n + n * (n - 1) / 2)] <- 1 / 4 * psi_krone + 1 / 4 * psi_inv %*% t(psi_inv)
   }
   return(res_fisher)
 }
