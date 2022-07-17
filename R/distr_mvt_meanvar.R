@@ -122,8 +122,8 @@ distr_mvt_meanvar_fisher <- function(f) {
 }
 # ------------------------------------------------------------------------------
 
-
 # Random Generation Function ---------------------------------------------------
+
 distr_mvt_meanvar_random <- function(t, f) {
   n <- sqrt(9 / 4 + 2 * (length(f) - 1)) - 3 / 2
   m <- f[1:n]

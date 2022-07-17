@@ -79,10 +79,8 @@ distr_mvnorm_meanvar_score <- function(y, f) {
   res_score <- matrix(0, nrow = t, ncol = 2 * n + n * (n - 1) / 2)
   for (i in 1:t) {
     sigma_inv <- matrix_inv(convert_varcov_vector_to_varcov_matrix(sc[i, ]))
-    sigma_der <- sigma_inv %*% (y[i, ] - m[i, ]) %*% (y[i, ] - m[i, ]) %*% sigma_inv - sigma_inv
-    diag(sigma_der) <- diag(sigma_der) / 2
     res_score[i, 1:n] <- sigma_inv %*% (y[i, ] - m[i, ])
-    res_score[i, (n + 1):(2 * n + n * (n - 1) / 2)] <- convert_varcov_matrix_to_varcov_vector(sigma_der)
+    res_score[i, (n + 1):(2 * n + n * (n - 1) / 2)] <- 1 / 2 * convert_varcov_matrix_to_varcov_vector(sigma_inv %*% (y[i, ] - m[i, ]) %*% (y[i, ] - m[i, ]) %*% sigma_inv - sigma_inv) * c(rep(1, times = n), rep(2, times = n * (n - 1) / 2))
   }
   return(res_score)
 }
