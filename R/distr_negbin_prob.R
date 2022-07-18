@@ -65,7 +65,7 @@ distr_negbin_prob_score <- function(y, f) {
   r <- f[, 2, drop = FALSE]
   res_score <- matrix(0, nrow = t, ncol = 2L)
   res_score[, 1] <- (r * p + p * y - r) / (p^2 - p)
-  res_score[, 2] <- log(p) + digamma(r + y) - digamma(r)
+  res_score[, 2] <- log(p) - digamma(r) + digamma(y + r)
   return(res_score)
 }
 # ------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ distr_negbin_prob_fisher <- function(f) {
   p <- f[, 1, drop = FALSE]
   r <- f[, 2, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- -r / (p^3 - p^2)
+  res_fisher[, 1, 1] <- r / (p^2 * (1 - p))
   res_fisher[, 1, 2] <- -1 / p
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
   res_fisher[, 2, 2] <- trigamma(r) - trigamma(r + r * (1 - p) / p)
