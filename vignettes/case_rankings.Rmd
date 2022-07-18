@@ -9,10 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Introduction
-
-## Data Preparation
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -23,10 +19,18 @@ knitr::opts_chunk$set(
   out.width = "75%"
 )
 
-options(width = 100, max.print = 1e3, pillar.print_max = 1e3)
+options(
+  width = 100,
+  max.print = 1e3,
+  pillar.print_max = 1e3
+)
 
 Sys.setlocale("LC_ALL", "en_US.UTF-8")
 ```
+
+## Introduction
+
+## Data Preparation
 
 ```{r setup, include = FALSE}
 library(tidyverse)

@@ -16,19 +16,91 @@ vignette: >
 
 ## Bernoulli Distribution
 
+### Probabilistic Parametrization
+
+#### Parameter
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
 # Categorical Data
 
 ## Categorical Distribution
+
+### Worth Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
 
 # Ranking Data
 
 ## Plackett-Luce Distribution
 
+### Worth Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
 # Count Data
 
 ## Double Poisson Distribution
 
+### Mean Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
 ## Geometric Distribution
+
+### Mean Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+### Probabilistic Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
 
 ## Negative Binomial Distribution
 
@@ -59,7 +131,7 @@ $$
 $$
 \begin{aligned}
 \nabla_{m} (y; m, s) &= \frac{y - m}{m (1 + s m) } \\
-\nabla_{s} (y; m, s) &= \frac{ y - m}{s (1 + s m)} + \frac{ \ln(1 + s m) + \psi_0 \left( s^{-1} \right) - \psi_0 \left( y + s^{-1} \right)  }{s^2} \\
+\nabla_{s} (y; m, s) &= \frac{ y - m}{s (1 + s m)} + \frac{1}{s^2} \left( \ln(1 + s m) + \psi_0 \left( s^{-1} \right) - \psi_0 \left( y + s^{-1} \right) \right) \\
 \end{aligned}
 $$
 
@@ -74,9 +146,50 @@ $$
 \end{aligned}
 $$
 
+### Probabilistic Parametrization
+
+#### Parameters
+
+- Probability parameter $p \in (0, 1)$
+- Size parameter $r \in (0, \infty)$
+
+#### Density Function
+
+$$
+\mathrm{P} [Y = y | p, r] = \frac{\Gamma(y + r)}{\Gamma(y + 1) \Gamma(r)} (1 - p)^y p^r
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= \frac{r (1 - p)}{p} \\
+\mathrm{var}[Y] &= \frac{r (1 - p)}{p^2} \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{p} (y; p, r) &= \frac{p r + p  y - r}{p (p - 1)} \\
+\nabla_{r} (y; p, r) &= \ln(p) - \psi_0(r) + \psi_0(y + r) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{p, p} (p, r) &= \frac{r}{p^2 (1 - p)} \\
+\mathcal{I}_{p, r} (p, r) &= -\frac{1}{p} \\
+\mathcal{I}_{r, r} (p, r) &\approx \psi_1(r) - \psi_1 \left(r + \frac{r (1 - p)}{p} \right) \\
+\end{aligned}
+$$
+
 ### Note
 
-- The Fisher information for the dispersion parameter, $\mathcal{I}_{s, s} (m, s)$, is not available in a closed form. To speed up calculations, we use an approximation by replacing $y$ with its expected value.
+- The Fisher information for the dispersion or size parameter, $\mathcal{I}_{s, s} (m, s)$ or $\mathcal{I}_{r, r} (p, r)$, is not available in a closed form. To speed up calculations, we use a rough approximation by replacing $y$ with its expected value.
 
 ### Further Reading
 
@@ -88,7 +201,31 @@ $$
 
 ## Poisson Distribution
 
+### Mean Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
 ## Zero-Inflated Geometric Distribution
+
+### Mean Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
 
 ## Zero-Inflated Negative Binomial Distribution
 
@@ -160,23 +297,169 @@ $$
 
 ### Further Reading
 
+- Blasques, F., Holý, V., and Tomanová, P. (2022). Zero-Inflated Autoregressive Conditional Duration Model for Discrete Trade Durations with Excessive Zeros. Working Paper. arXiv: [1812.07318](https://arxiv.org/abs/1812.07318).
+
+- Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
+
+- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](http://ssrn.com/abstract=1293115).
+
+- Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
+
+- Lambert, D. (1992). Zero-Inflated Poisson Regression, with an Application to Defects in Manufacturing. *Technometrics*, **34**(1), 1–14. doi: [10.2307/1269547](https://doi.org/10.2307/1269547).
+
 ## Zero-Inflated Poisson Distribution
+
+### Mean Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+# Integer Data
+
+## Skellam Distribution
+
+### Difference Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+### Mean-Variance Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
 
 # Duration Data
 
 ## Exponential Distribution
 
+### Rate Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+### Scale Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
 ## Gamma Distribution
+
+### Rate Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+### Scale Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
 
 ## Generalized Gamma Distribution
 
+### Rate Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+### Scale Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
 ## Weibull Distribution
+
+### Rate Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
+
+### Scale Parametrization
+
+#### Parameters
+
+#### Density Function
+
+#### Moments
+
+#### Score
+
+#### Fisher Information
 
 # Real Data
 
 ## Normal Distribution
 
-### Standard Parametrization
+### Mean-Variance Parametrization
 
 #### Parameters
 
@@ -219,8 +502,7 @@ $$
 
 ## Student's t Distribution
 
-
-### Standard Parametrization
+### Mean-Variance Parametrization
 
 #### Parameters
 
@@ -249,7 +531,7 @@ $$
 \begin{aligned}
 \nabla_{m} (y; m, s, v) &= \frac{(v + 1) (y - m) }{(y - m)^2 + s v} \\
 \nabla_{s} (y; m, s, v) &= \frac{v}{2s} \frac{(y - m)^2 - s}{(y - m)^2 + s v} \\
-\nabla_{v} (y; m, s, v) &= \frac{1}{2} \frac{(y - m)^2 - s}{(y - m)^2 + s v} + \frac{1}{2} \ln \left(\frac{s v}{(y - m)^2 + s v} \right) - \frac{1}{2} \psi_0 \left( \frac{v}{2} \right) + \frac{1}{2} \psi_0 \left( \frac{v + 1}{2} \right) \\
+\nabla_{v} (y; m, s, v) &= \frac{1}{2} \frac{(y - m)^2 - s}{(y - m)^2 + s v} - \frac{1}{2} \ln \left(1 + \frac{1}{v} \frac{(y - m)^2}{s} \right) - \frac{1}{2} \psi_0 \left( \frac{v}{2} \right) + \frac{1}{2} \psi_0 \left( \frac{v + 1}{2} \right) \\
 \end{aligned}
 $$
 
@@ -262,20 +544,129 @@ $$
 \mathcal{I}_{m, v} (m, s, v) &= 0 \\
 \mathcal{I}_{s, s} (m, s, v) &= \frac{v}{2 s^2 (v + 3)} \\
 \mathcal{I}_{s, v} (m, s, v) &= \frac{-1}{s (v + 1) (v + 3)} \\
-\mathcal{I}_{v, v} (m, s, v) &= - \frac{v + 5}{2 v (v + 1) (v + 3)} + \frac{1}{4} \psi_1 \left( \frac{v}{2} \right) - \frac{1}{4} \psi_1 \left( \frac{v + 1}{2} \right)\\
+\mathcal{I}_{v, v} (m, s, v) &= - \frac{1}{2} \frac{v + 5}{v (v + 1) (v + 3)} + \frac{1}{4} \psi_1 \left( \frac{v}{2} \right) - \frac{1}{4} \psi_1 \left( \frac{v + 1}{2} \right) \\
 \end{aligned}
 $$
 
-=======
+### Further Reading
+
+- Blazsek, S. and Villatoro, M. (2015). Is Beta-t-EGARCH(1,1) Superior to GARCH(1,1)? *Applied Economics*, **47**(17), 1764–1774. doi: [10.1080/00036846.2014.1000536](https://doi.org/10.1080/00036846.2014.1000536).
+
+- Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. *Cambridge Working Papers in Economics*, CWPE 0840. doi: [10.17863/cam.5286](https://doi.org/10.17863/cam.5286).
+
+- Harvey, A. C. and Lange, R. J. (2018). Modeling the Interactions Between Volatility and Returns using EGARCH-M. *Journal of Time Series Analysis*, **39**(6), 909–919. doi: [10.1111/jtsa.12419](https://doi.org/10.1111/jtsa.12419).
+
+- Lange, K. L., Little, R. J. A., and Taylor, J. M. G. (1989). Robust Statistical Modeling Using the t Distribution. *Journal of the American Statistical Association*, **84**(408), 881–896. doi: [10.1080/01621459.1989.10478852](https://doi.org/10.1080/01621459.1989.10478852).
+
+# Multivariate Real Data
+
+## Multivariate Normal Distribution
+
+### Mean-Variance Parametrization
+
+#### Parameters
+
+- Location parameters $m_i \in \mathbb{R}, i = 1, \ldots, n$
+- Scale parameters $s_i \in (0, \infty), i = 1, \ldots, n$
+- Covariance parameters $c_{ij} \in \mathbb{R}, i = 2, \ldots, n, j = 1, \ldots, i$
+
+#### Matrix Notation
+
+- Location vector $\boldsymbol{m}$ of length $n$
+- Variance-covariance matrix $\boldsymbol{K}$ of size $n \times n$
+
+#### Density Function
+
+$$
+f(\boldsymbol{y} | \boldsymbol{m}, \boldsymbol{K}) = \frac{1}{\sqrt{(2 \pi)^n | \boldsymbol{K}|}} \exp \left( - \frac{1}{2} (\boldsymbol{y} - \boldsymbol{m})' \boldsymbol{K}^{-1} (\boldsymbol{y} - \boldsymbol{m}) \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[\boldsymbol{Y}] &= \boldsymbol{m} \\
+\mathrm{var}[\boldsymbol{Y}] &= \boldsymbol{K} \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{\boldsymbol{m}} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}) &= \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \\
+\nabla_{\mathrm{vec}(\boldsymbol{K})} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}) &= \mathrm{vec} \left( \frac{1}{2} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} - \frac{1}{2} \boldsymbol{K}^{-1} \right) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{\boldsymbol{m}, \boldsymbol{m}} (\boldsymbol{m}, \boldsymbol{K}) &= \boldsymbol{K}^{-1} \\
+\mathcal{I}_{\boldsymbol{m}, \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}) &= \boldsymbol{0} \\
+\mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}) &= \frac{1}{4} \boldsymbol{K}^{-1} \otimes \boldsymbol{K}^{-1} + \frac{1}{4} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \mathrm{vec}\left(\boldsymbol{K}^{-1} \right)' \\
+\end{aligned}
+$$
+
+## Multivariate Student's t Distribution
+
+### Mean-Variance Parametrization
+
+#### Parameters
+
+- Location parameters $m_i \in \mathbb{R}, i = 1, \ldots, n$
+- Scale parameters $s_i \in (0, \infty), i = 1, \ldots, n$
+- Covariance parameters $c_{ij} \in \mathbb{R}, i = 2, \ldots, n, j = 1, \ldots, i$
+- Degrees of freedom parameter $v \in (0, \infty)$
+
+#### Matrix Notation
+
+- Location vector $\boldsymbol{m}$ of length $n$
+- Variance-covariance matrix $\boldsymbol{K}$ of size $n \times n$
+
+#### Density Function
+
+$$
+f(\boldsymbol{y} | \boldsymbol{m}, \boldsymbol{K}, v) = \frac{\Gamma \left( \frac{v + n}{2} \right)}{\Gamma \left( \frac{v}{2} \right) \sqrt{(v \pi)^n | \boldsymbol{K}|}} \left( 1 + \frac{1}{v} (\boldsymbol{y} - \boldsymbol{m})' \boldsymbol{K}^{-1} (\boldsymbol{y} - \boldsymbol{m}) \right)^{-\frac{v + n}{2}}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[\boldsymbol{Y}] &= \boldsymbol{m}, & \quad \text{for } v &> 1 \\
+\mathrm{var}[\boldsymbol{Y}] &= \frac{v}{v - 2} \boldsymbol{K}, & \quad \text{for } v &> 2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{\boldsymbol{m}} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= \frac{v + n}{v + \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \\
+\nabla_{\mathrm{vec}(\boldsymbol{K})} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= 
+\mathrm{vec} \left( \frac{1}{2} \frac{v + n}{v + \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} - \frac{1}{2} \boldsymbol{K}^{-1} \right) \\
+\nabla_{v} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= \frac{1}{2} \frac{ \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) - n }{ \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)) + v} - \frac{1}{2} \ln \left( 1 + \frac{1}{v} \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \right) \\
+& \qquad - \frac{1}{2} \psi_0 \left( \frac{v}{2} \right) + \frac{1}{2} \psi_0 \left( \frac{v + n}{2} \right) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{\boldsymbol{m}, \boldsymbol{m}} (\boldsymbol{m}, \boldsymbol{K}, v) &= \frac{v + n}{v + n + 2} \boldsymbol{K}^{-1} \\
+\mathcal{I}_{\boldsymbol{m}, \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}, v) &= \boldsymbol{0} \\
+\mathcal{I}_{\boldsymbol{m}, v} (\boldsymbol{m}, \boldsymbol{K}, v) &= \boldsymbol{0} \\
+\mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}, v) &= 
+\frac{1}{4} \frac{v + n}{v + n + 2} \boldsymbol{K}^{-1} \otimes \boldsymbol{K}^{-1} + \frac{1}{4} \frac{v + n - 2}{v + n + 2} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \mathrm{vec}\left(\boldsymbol{K}^{-1} \right)' \\
+\mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), v} (\boldsymbol{m}, \boldsymbol{K}, v) &= - \frac{1}{(v + n +2)(v + n)} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \\
+\mathcal{I}_{v, v} (\boldsymbol{m}, \boldsymbol{K}, v) &= ) - \frac{1}{2} \frac{n (v + n + 4)}{v (v + n + 2)(v + n)} + \frac{1}{4} \psi_1 \left( \frac{v}{2} \right) - \frac{1}{4} \psi_1 \left( \frac{v + n}{2} \right) \\
+\end{aligned}
+$$
 
 ### Further Reading
 
 - Lange, K. L., Little, R. J. A., and Taylor, J. M. G. (1989). Robust Statistical Modeling Using the t Distribution. *Journal of the American Statistical Association*, **84**(408), 881–896. doi: [10.1080/01621459.1989.10478852](https://doi.org/10.1080/01621459.1989.10478852).
-
-# Multivariate Data
-
-## Multivariate Normal Distribution
-
-### Standard Parametrization
-
 
