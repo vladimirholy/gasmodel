@@ -17,8 +17,8 @@ distr_negbin_prob_parameters <- function(n) {
 distr_negbin_prob_density <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  n <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(stats::dnbinom(y, prob = p, size = n))
+  r <- f[, 2, drop = FALSE]
+  res_density <- suppressWarnings(stats::dnbinom(y, prob = p, size = r))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -28,8 +28,8 @@ distr_negbin_prob_density <- function(y, f) {
 distr_negbin_prob_loglik <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  n <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dnbinom(y, prob = p, size = n, log = TRUE))
+  r <- f[, 2, drop = FALSE]
+  res_loglik <- suppressWarnings(stats::dnbinom(y, prob = p, size = r, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -39,8 +39,8 @@ distr_negbin_prob_loglik <- function(y, f) {
 distr_negbin_prob_mean <- function(f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  n <- f[, 2, drop = FALSE]
-  res_mean <- n * (1 - p) / p
+  r <- f[, 2, drop = FALSE]
+  res_mean <- r * (1 - p) / p
   return(res_mean)
 }
 # ------------------------------------------------------------------------------
@@ -50,8 +50,8 @@ distr_negbin_prob_mean <- function(f) {
 distr_negbin_prob_var <- function(f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  n <- f[, 2, drop = FALSE]
-  res_var <- n * (1 - p) / p^2
+  r <- f[, 2, drop = FALSE]
+  res_var <- r * (1 - p) / p^2
   res_var <- array(res_var, dim = c(t, 1, 1))
   return(res_var)
 }
@@ -62,10 +62,10 @@ distr_negbin_prob_var <- function(f) {
 distr_negbin_prob_score <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  n <- f[, 2, drop = FALSE]
+  r <- f[, 2, drop = FALSE]
   res_score <- matrix(0, nrow = t, ncol = 2L)
-  res_score[, 1] <- (n * p + p * y - n) / (p^2 - p)
-  res_score[, 2] <- log(p) + digamma(n + y) - digamma(n)
+  res_score[, 1] <- (r * p + p * y - r) / (p^2 - p)
+  res_score[, 2] <- log(p) + digamma(r + y) - digamma(r)
   return(res_score)
 }
 # ------------------------------------------------------------------------------
@@ -75,12 +75,12 @@ distr_negbin_prob_score <- function(y, f) {
 distr_negbin_prob_fisher <- function(f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  n <- f[, 2, drop = FALSE]
+  r <- f[, 2, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- -n / (p^3 - p^2)
+  res_fisher[, 1, 1] <- -r / (p^3 - p^2)
   res_fisher[, 1, 2] <- -1 / p
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- trigamma(n) - trigamma(n + n * (1 - p) / p)
+  res_fisher[, 2, 2] <- trigamma(r) - trigamma(r + r * (1 - p) / p)
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
@@ -89,8 +89,8 @@ distr_negbin_prob_fisher <- function(f) {
 # Random Generation Function ---------------------------------------------------
 distr_negbin_prob_random <- function(t, f) {
   p <- f[1]
-  n <- f[2]
-  res_random <- suppressWarnings(stats::rnbinom(t, prob = p, size = n))
+  r <- f[2]
+  res_random <- suppressWarnings(stats::rnbinom(t, prob = p, size = r))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }
@@ -102,8 +102,8 @@ distr_negbin_prob_start <- function(y) {
   y_mean <- mean(y, na.rm = TRUE)
   y_var <- stats::var(y, na.rm = TRUE)
   p <- max(min(y_mean / y_var, 1 - 1e-6), 1e-6)
-  n <- max(y_mean^2 / (y_var - y_mean), 1e-6)
-  res_start <- c(p, n)
+  r <- max(y_mean^2 / (y_var - y_mean), 1e-6)
+  res_start <- c(p, r)
   return(res_start)
 }
 # ------------------------------------------------------------------------------
