@@ -139,6 +139,7 @@ For an overview of various GAS models, see Harvey (2022).
 The extensive GAS literature is listed on [www.gasmodel.com](http://www.gasmodel.com).
 
 ## References
+
 Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. *Electronic Journal of Statistics*, **12**(1), 1019–1052. doi: [10.1214/18-ejs1416](https://doi.org/10.1214/18-ejs1416).
 
 Blasques, F., Koopman, S. J., and Lucas, A. (2014). Stationarity and Ergodicity of Univariate Generalized Autoregressive Score Processes. *Electronic Journal of Statistics*, **8**(1), 1088–1112. doi: [10.1214/14-ejs924](https://doi.org/10.1214/14-ejs924).
