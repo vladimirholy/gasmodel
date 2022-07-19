@@ -80,10 +80,10 @@ distr_zigeom_mean_fisher <- function(f) {
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- (1 - m^2 * p^2 + (m^2 - m - 1) * p + m) / (m^3 + 2 * m^2 + (m^4 + 2 * m^3 + m^2) * p + m)
-  res_fisher[, 1, 2] <- -1 / ((m^2 + m) * p + m + 1)
+  res_fisher[, 1, 1] <- (1 - p) * (1 + m + p * m^2) / m / (1 + m) / (1 + p * m)
+  res_fisher[, 1, 2] <- -1 / (1 + m) / (1 + p * m)
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- -m / (m * p^2 - (m - 1) * p - 1)
+  res_fisher[, 2, 2] <- m / (1 - p) / (1 + p * m)
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
