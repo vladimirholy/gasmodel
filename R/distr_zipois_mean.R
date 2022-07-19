@@ -4,7 +4,7 @@
 
 # Parameters Function ----------------------------------------------------------
 distr_zipois_mean_parameters <- function(n) {
-  group_of_par_names <- c("rate", "inflation")
+  group_of_par_names <- c("mean", "inflation")
   par_names <- c("rate", "inflation")
   par_support <- c("positive", "probability")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
