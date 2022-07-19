@@ -80,27 +80,69 @@ vignette: >
 
 ### Mean Parametrization
 
-#### Parameters
+#### Parameter
 
-#### Density Function
+- Mean parameter $m \in (0, \infty)$
+
+#### Probability Mass Function
+
+$$
+\mathrm{P} [Y = y | m] = \frac{1}{1 + m} \left( \frac{m}{1 + m} \right)^{y}
+$$
 
 #### Moments
 
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= m (1 + m) \\
+\end{aligned}
+$$
+
 #### Score
 
+$$
+\nabla_{m} (y; m) = \frac{y - m}{m (1 + m) }
+$$
+
 #### Fisher Information
+
+$$
+\mathcal{I}_{m, m} (m) = \frac{1}{m (1 + m)}
+$$
 
 ### Probabilistic Parametrization
 
-#### Parameters
+#### Parameter
 
-#### Density Function
+- Probability parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\mathrm{P} [Y = y | p] = p (1 - p)^{y}
+$$
 
 #### Moments
 
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= \frac{1 - p}{p} \\
+\mathrm{var}[Y] &= \frac{1 - p}{p^2} \\
+\end{aligned}
+$$
+
 #### Score
 
+$$
+\nabla_{p} (y; p) = \frac{p y + p - 1}{p (p - 1)}
+$$
+
 #### Fisher Information
+
+$$
+\mathcal{I}_{p, p} (p) = \frac{1}{p^2 (1 - p)}
+$$
 
 ## Negative Binomial Distribution
 
@@ -108,7 +150,7 @@ vignette: >
 
 #### Parameters
 
-- Location parameter $m \in (0, \infty)$
+- Mean parameter $m \in (0, \infty)$
 - Dispersion parameter $s \in (0, \infty)$
 
 #### Probability Mass Function
@@ -131,7 +173,7 @@ $$
 $$
 \begin{aligned}
 \nabla_{m} (y; m, s) &= \frac{y - m}{m (1 + s m) } \\
-\nabla_{s} (y; m, s) &= \frac{ y - m}{s (1 + s m)} + \frac{1}{s^2} \left( \ln(1 + s m) + \psi_0 \left( s^{-1} \right) - \psi_0 \left( y + s^{-1} \right) \right) \\
+\nabla_{s} (y; m, s) &= \frac{ y - m}{s (1 + s m)} + \frac{1}{s^2} \left( \ln(1 + s m) + \psi_0 \left( \frac{1}{s} \right) - \psi_0 \left( y + \frac{1}{s} \right) \right) \\
 \end{aligned}
 $$
 
@@ -141,8 +183,8 @@ $$
 \begin{aligned}
 \mathcal{I}_{m, m} (m, s) &= \frac{1}{m (1 + s m)} \\
 \mathcal{I}_{m, s} (m, s) &= 0 \\
-\mathcal{I}_{s, s} (m, s) &\approx \frac{2}{s^3} \ln(1 + s m) - \frac{m}{s^2 + s^3 m} + \frac{2}{s^3} \psi_0 \left( s^{-1} \right) + \frac{1}{s^4} \psi_1 \left( s^{-1} \right) \\
-& \qquad - \frac{2}{s^3} \psi_0 \left( m + s^{-1} \right) - \frac{1}{s^4} \psi_1 \left( m + s^{-1} \right) \\
+\mathcal{I}_{s, s} (m, s) &\approx \frac{2}{s^3} \ln(1 + s m) - \frac{m}{s^2 + s^3 m} + \frac{2}{s^3} \psi_0 \left( \frac{1}{s} \right) + \frac{1}{s^4} \psi_1 \left( \frac{1}{s} \right) \\
+& \qquad - \frac{2}{s^3} \psi_0 \left( m + \frac{1}{s} \right) - \frac{1}{s^4} \psi_1 \left( m + \frac{1}{s} \right) \\
 \end{aligned}
 $$
 
@@ -203,29 +245,108 @@ $$
 
 ### Mean Parametrization
 
-#### Parameters
+#### Parameter
 
-#### Density Function
+- Mean parameter $m \in (0, \infty)$
+
+#### Probability Mass Function
+
+$$
+\mathrm{P} [Y = y | m] = \frac{m^y}{y!} \exp(-m)
+$$
 
 #### Moments
 
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= m \\
+\end{aligned}
+$$
+
 #### Score
 
+$$
+\nabla_{m} (y; m) = \frac{y - m}{m}
+$$
+
 #### Fisher Information
+
+$$
+\mathcal{I}_{m, m} (m) = \frac{1}{m}
+$$
+
+### Further Reading
+
+- Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
+
+- Davis, R. A., Dunsmuir, W. T. M., and Street, S. B. (2003). Observation-Driven Models for Poisson Counts. *Biometrika*, **90**(4), 777–790. doi: [10.1093/biomet/90.4.777](https://doi.org/10.1093/biomet/90.4.777).
+
+- Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
 
 ## Zero-Inflated Geometric Distribution
 
-### Mean Parametrization
-
 #### Parameters
 
-#### Density Function
+- Mean parameter $m \in (0, \infty)$
+- Zero inflation parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\begin{aligned}
+\mathrm{P} [Y = y | m, p] &= \begin{cases}
+p + (1 - p)  \left( \frac{1}{1 + m} \right) & \text{ for } y = 0 \\
+(1 - p) \left( \frac{1}{1 + m} \right) \left( \frac{m}{1 + m} \right)^{y} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\end{aligned}
+$$
 
 #### Moments
 
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m (1 - p) \\
+\mathrm{var}[Y] &= m(1 - p) (1 + p m + m) \\
+\end{aligned}
+$$
+
 #### Score
 
+$$
+\begin{aligned}
+\nabla_{m} (y; m, p) &= \begin{cases}
+\frac{p - 1}{(1 + m) (1 + p m)} & \text{ for } y = 0 \\
+\frac{y - m}{m (1 + m) } & \text{ for } y \geq 1 \\
+\end{cases} \\
+\nabla_{p} (y; m, p) &= \begin{cases}
+\frac{m}{1 + p m} & \text{ for } y = 0 \\
+\frac{1}{p - 1} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\end{aligned}
+$$
+
 #### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, p) &= \frac{(1 - p) (1 + m + p m^2)}{m (1 + m) (1 + p m)} \\
+\mathcal{I}_{m, p} (m, p) &= - \frac{1}{ (1 + m) ( 1 + p m) } \\
+\mathcal{I}_{p, p} (m, p) &= \frac{m}{(1 - p) ( 1 + p m)} \\
+\end{aligned}
+$$
+
+### Further Reading
+
+- Blasques, F., Holý, V., and Tomanová, P. (2022). Zero-Inflated Autoregressive Conditional Duration Model for Discrete Trade Durations with Excessive Zeros. Working Paper. arXiv: [1812.07318](https://arxiv.org/abs/1812.07318).
+
+- Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
+
+- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](http://ssrn.com/abstract=1293115).
+
+- Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
+
+- Lambert, D. (1992). Zero-Inflated Poisson Regression, with an Application to Defects in Manufacturing. *Technometrics*, **34**(1), 1–14. doi: [10.2307/1269547](https://doi.org/10.2307/1269547).
 
 ## Zero-Inflated Negative Binomial Distribution
 
@@ -233,9 +354,9 @@ $$
 
 #### Parameters
 
-- Location parameter $m \in (0, \infty)$
+- Mean parameter $m \in (0, \infty)$
 - Dispersion parameter $s \in (0, \infty)$
-- Inflation parameter $p \in (0, 1)$
+- Zero inflation parameter $p \in (0, 1)$
 
 #### Probability Mass Function
 
@@ -313,13 +434,69 @@ $$
 
 #### Parameters
 
-#### Density Function
+- Mean parameter $m \in (0, \infty)$
+- Zero inflation parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\begin{aligned}
+\mathrm{P} [Y = y | m, p] &= \begin{cases}
+p + (1 - p)  \exp(-m) & \text{ for } y = 0 \\
+(1 - p) \frac{m^y}{y!} \exp(-m) & \text{ for } y \geq 1 \\
+\end{cases} \\
+\end{aligned}
+$$
 
 #### Moments
 
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m (1 - p) \\
+\mathrm{var}[Y] &= m(1 - p) (1 + p m) \\
+\end{aligned}
+$$
+
 #### Score
 
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, p) &= \begin{cases}
+\frac{p - 1}{p \exp(m) - p + 1} & \text{ for } y = 0 \\
+\frac{y - m}{m} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\nabla_{p} (y; m, s, p) &= \begin{cases}
+\frac{\exp(m) - 1}{p \exp(m) - p + 1} & \text{ for } y = 0 \\
+\frac{1}{p - 1} & \text{ for } y \geq 1 \\
+\end{cases} \\
+\end{aligned}
+$$
+
 #### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s, p) &= \frac{p (p - 1)}{p \exp(m) - p + 1} - \frac{p - 1}{m} \\
+\mathcal{I}_{m, p} (m, s, p) &= - \frac{1}{p \exp(m) - p + 1} \\
+\mathcal{I}_{p, p} (m, s, p) &= \frac{\exp(m) - 1}{(1 - p) (p \exp(m) - p + 1)} \\
+\end{aligned}
+$$
+
+### Note
+
+- The Fisher information for the dispersion parameter, $\mathcal{I}_{s, s} (m, s, p)$, is not available in a closed form. To speed up calculations, we use an approximation by replacing $y$ with its expected value.
+
+### Further Reading
+
+- Blasques, F., Holý, V., and Tomanová, P. (2022). Zero-Inflated Autoregressive Conditional Duration Model for Discrete Trade Durations with Excessive Zeros. Working Paper. arXiv: [1812.07318](https://arxiv.org/abs/1812.07318).
+
+- Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
+
+- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](http://ssrn.com/abstract=1293115).
+
+- Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
+
+- Lambert, D. (1992). Zero-Inflated Poisson Regression, with an Application to Defects in Manufacturing. *Technometrics*, **34**(1), 1–14. doi: [10.2307/1269547](https://doi.org/10.2307/1269547).
 
 # Integer Data
 
@@ -463,8 +640,8 @@ $$
 
 #### Parameters
 
-- Location parameter $m \in \mathbb{R}$
-- Scale parameter $s \in (0, \infty)$
+- Mean parameter $m \in \mathbb{R}$
+- Variance parameter $s \in (0, \infty)$
 
 #### Density Function
 
@@ -506,8 +683,8 @@ $$
 
 #### Parameters
 
-- Location parameter $m \in \mathbb{R}$
-- Scale parameter $s \in (0, \infty)$
+- Mean parameter $m \in \mathbb{R}$
+- Variance parameter $s \in (0, \infty)$
 - Degrees of freedom parameter $v \in (0, \infty)$
 
 #### Density Function
@@ -521,7 +698,7 @@ $$
 $$
 \begin{aligned}
 \mathrm{E}[Y] &= m, & \quad \text{for } v &> 1 \\
-\mathrm{var}[Y] &= s \frac{v}{v - 2}, & \quad \text{for } v &> 2 \\
+\mathrm{var}[Y] &= \frac{v}{v - 2} s, & \quad \text{for } v &> 2 \\
 \end{aligned}
 $$
 
@@ -566,13 +743,13 @@ $$
 
 #### Parameters
 
-- Location parameters $m_i \in \mathbb{R}, i = 1, \ldots, n$
-- Scale parameters $s_i \in (0, \infty), i = 1, \ldots, n$
+- Mean parameters $m_i \in \mathbb{R}, i = 1, \ldots, n$
+- Variance parameters $s_i \in (0, \infty), i = 1, \ldots, n$
 - Covariance parameters $c_{ij} \in \mathbb{R}, i = 2, \ldots, n, j = 1, \ldots, i$
 
 #### Matrix Notation
 
-- Location vector $\boldsymbol{m}$ of length $n$
+- Mean vector $\boldsymbol{m}$ of length $n$
 - Variance-covariance matrix $\boldsymbol{K}$ of size $n \times n$
 
 #### Density Function
@@ -615,14 +792,14 @@ $$
 
 #### Parameters
 
-- Location parameters $m_i \in \mathbb{R}, i = 1, \ldots, n$
-- Scale parameters $s_i \in (0, \infty), i = 1, \ldots, n$
+- Mean parameters $m_i \in \mathbb{R}, i = 1, \ldots, n$
+- Variance parameters $s_i \in (0, \infty), i = 1, \ldots, n$
 - Covariance parameters $c_{ij} \in \mathbb{R}, i = 2, \ldots, n, j = 1, \ldots, i$
 - Degrees of freedom parameter $v \in (0, \infty)$
 
 #### Matrix Notation
 
-- Location vector $\boldsymbol{m}$ of length $n$
+- Mean vector $\boldsymbol{m}$ of length $n$
 - Variance-covariance matrix $\boldsymbol{K}$ of size $n \times n$
 
 #### Density Function
@@ -667,6 +844,12 @@ $$
 $$
 
 ### Further Reading
+
+- Blazsek, S. and Villatoro, M. (2015). Is Beta-t-EGARCH(1,1) Superior to GARCH(1,1)? *Applied Economics*, **47**(17), 1764–1774. doi: [10.1080/00036846.2014.1000536](https://doi.org/10.1080/00036846.2014.1000536).
+
+- Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. *Cambridge Working Papers in Economics*, CWPE 0840. doi: [10.17863/cam.5286](https://doi.org/10.17863/cam.5286).
+
+- Harvey, A. C. and Lange, R. J. (2018). Modeling the Interactions Between Volatility and Returns using EGARCH-M. *Journal of Time Series Analysis*, **39**(6), 909–919. doi: [10.1111/jtsa.12419](https://doi.org/10.1111/jtsa.12419).
 
 - Lange, K. L., Little, R. J. A., and Taylor, J. M. G. (1989). Robust Statistical Modeling Using the t Distribution. *Journal of the American Statistical Association*, **84**(408), 881–896. doi: [10.1080/01621459.1989.10478852](https://doi.org/10.1080/01621459.1989.10478852).
 
