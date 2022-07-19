@@ -4,8 +4,8 @@
 
 # Parameters Function ----------------------------------------------------------
 distr_skellam_diff_parameters <- function(n) {
-  group_of_par_names <- c("pois.mean", "pois.mean")
-  par_names <- c("pois.mean1", "pois.mean2")
+  group_of_par_names <- c("rate", "rate")
+  par_names <- c("rate1", "rate2")
   par_support <- c("positive", "positive")
   res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
   return(res_parameters)
