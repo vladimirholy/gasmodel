@@ -79,10 +79,10 @@ distr_skellam_diff_fisher <- function(f) {
   r1 <- f[, 1, drop = FALSE]
   r2 <- f[, 2, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- NA
-  res_fisher[, 1, 2] <- NA
-  res_fisher[, 2, 1] <- NA
-  res_fisher[, 2, 2] <- NA
+  res_fisher[, 1, 1] <- r2 / r1 * (besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2))^2 - 2 * sqrt(r2 / r1) * besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2) + 1
+  res_fisher[, 1, 2] <- (besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2))^2 - 2 * sqrt(r1 / r2) * besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2) + r1 / r2
+  res_fisher[, 2, 1] <- res_fisher[, 1, 2]
+  res_fisher[, 2, 2] <- r1 / r2 * (besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2))^2 - 2 * (r1 / r2)^(3 / 2) * besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2) + (r1 / r2)^2
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
