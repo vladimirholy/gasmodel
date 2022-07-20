@@ -382,19 +382,3 @@ logLik.gas <- function(object, ...) {
 # ------------------------------------------------------------------------------
 
 
-# Forecast ---------------------------------------------------------------------
-#' @export
-predict.gas <- function(object, method = "mean_path", t_ahead = 1L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975)) {
-  gas_forecast(gas_object = object, method = method, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant)
-}
-# ------------------------------------------------------------------------------
-
-
-# Simulate ---------------------------------------------------------------------
-#' @export
-simulate.gas <- function(object, t_sim = 1L, x_sim = NULL) {
-  gas_simulate(gas_object = object, t_sim = t_sim, x_sim = x_sim)
-}
-# ------------------------------------------------------------------------------
-
-
