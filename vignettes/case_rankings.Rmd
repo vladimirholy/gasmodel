@@ -30,14 +30,16 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
 ## Introduction
 
-## Data Preparation
+In this vignette, we present the empirical study of Holý and Zouhar (2022) which analyzes the results of the Ice Hockey World Championships. Our main object of interest is the annual ranking of 16 teams participating in the championships. For an in-depth overview of statistical toolkit for ranking data, see e.g. Alvo and Yu (2014). However, as Yu et al. (2019) point out, the time perspective is often overlooked in the ranking literature. This is where the GAS model comes into play.
 
-```{r setup, include = FALSE}
+```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
 library(gasmodel)
 ```
 
-Let us prepare the data:
+## Data Preparation
+
+Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as Holý and Zouhar (2022). In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was cancelled due to Covid-19 pandemic. We create two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
 
 ``` {r data}
 t <- 22
@@ -46,21 +48,21 @@ y <- ice_hockey_championships$rankings[1:t, ]
 x <- setNames(lapply(1:n, function(i) { ice_hockey_championships$host[1:t, i] }), colnames(y))
 ```
 
-Which teams have participated each year?
+We look at some basic statistics. In our sample, nine countries have participated each year:
 
 ``` {r participate}
 participate <- colSums(is.finite(y))
 names(participate)[participate == t]
 ```
 
-How many times countries hosted?
+The following countries hosted the championships:
 
 ``` {r host}
 host <- sapply(x, FUN = sum)
 host[host > 0L]
 ```
 
-The number of gold medals:
+The following countries won the gold metal:
 
 ``` {r gold}
 gold <- colSums(y == 1L)
@@ -69,11 +71,15 @@ gold[gold > 0L]
 
 ## Model Estimation
 
+The `gasmodel` package provides a single distribution on rankings -- the Plackett--Luce distribution:
+
 ``` {r distr}
-print(distr(filter_type = "ranking"), right = FALSE, row.names = FALSE)
+distr(filter_type = "ranking")
 ```
 
-First, we estimate the static model:
+It is a convenient and simple probability distribution on rankings utilizing a worth parameter for each item to be ranked. It originates from Luce’s choice axiom and is also related to the Thurstone’s theory of comparative judgment, see Luce (1977) and Yellott (1977). For more details, see Plackett (1975), Stern (1990), and Critchlow et al. (1991).
+
+We consider three different models in total. First, we estimate the static model:
 
 ``` {r stat}
 model_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
@@ -82,7 +88,7 @@ model_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
 model_static
 ```
 
-Second, we estimate the standard GAS model of order one:
+Second, we estimate the standard mean-reverting GAS model of order one:
 
 ``` {r gas}
 model_gas <- gas(y = y, x = x, distr = "pluce",
@@ -102,13 +108,18 @@ model_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", spec = "reg_err
 model_walk
 ```
 
+The random walk model should be approached with caution as it is not stationary.
+
 We compare the models using the Akaike information criterion (AIC):
 
 ``` {r aic}
 AIC(model_static, model_gas, model_walk)
 ```
+In terms of AIC, the mean-reverting model outperformed the remaining two by a wide margin. In all three models, coefficient $\alpha_1$ representing the home advantage is positive but not significant.
 
-## Who Is Best?
+## Who Is the Best?
+
+Our models allows us to construct the ‘ultimate’ (or long-run) ranking. Both the static and mean-reverting models confirm the dominance of the Big Six. Indeed, the rankings in both models agree in all but the first three places; the long-term strength estimates for these three teams are very close to one another, though, making the eventual ranking less clear cut.
 
 ``` {r table}
 tibble(team = colnames(y)) %>%
@@ -119,6 +130,8 @@ tibble(team = colnames(y)) %>%
   arrange(gas_rank)
 ```
 
+We can also take a look at the progression of the worth parameters of the individual teams over the years:
+
 ``` {r canada}
 ggplot(mapping = aes(x = 1998:2019, y = model_gas$fit$par_tv[, 3])) +
   labs(title = "Strength of the Canada Team", x = "Year", y = "Worth Parameter") +
@@ -128,8 +141,12 @@ ggplot(mapping = aes(x = 1998:2019, y = model_gas$fit$par_tv[, 3])) +
   theme_bw()
 ```
 
+## Forecasting
+
+Finally, we perform one-year-ahead forecasts:
+
 ``` {r forecast}
-one_ahead <- predict(model_gas, x_ahead = 0)
+one_ahead <- gas_forecast(model_gas, x_ahead = 0)
 
 tibble(team = colnames(y)) %>%
   mutate(forecasted_strength = one_ahead$forecast$par_tv_ahead_mean[1, ]) %>%
@@ -141,6 +158,20 @@ tibble(team = colnames(y)) %>%
 
 ## References
 
+Alvo, M. and Yu, P. L. H. (2014). *Statistical Methods for Ranking Data*. Springer. doi: [10.1007/978-1-4939-1471-5](https://doi.org/10.1007/978-1-4939-1471-5).
+
+Critchlow, D. E., Fligner, M. A., and Verducci, J. S. (1991). Probability Models on Rankings. *Journal of Mathematical Psychology*, **35**(3), 294–318. doi: [10.1016/0022-2496(91)90050-4](https://doi.org/10.1016/0022-2496(91)90050-4).
+
 Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: [2101.04040](https://arxiv.org/abs/2101.04040).
+
+Luce, R. D. (1977). The Choice Axiom after Twenty Years. *Journal of Mathematical Psychology*, **15**(3), 215–233. doi: [10.1016/0022-2496(77)90032-3](https://doi.org/10.1016/0022-2496(77)90032-3).
+
+Plackett, R. L. (1975). The Analysis of Permutations. *Journal of the Royal Statistical Society: Series C (Applied Statistics)*, **24**(2), 193–202. doi: [10.2307/2346567](https://doi.org/10.2307/2346567).
+
+Stern, H. (1990). Models for Distributions on Permutations. *Journal of the American Statistical Association*, **85**(410), 558–564. doi: [10.1080/01621459.1990.10476235](https://doi.org/10.1080/01621459.1990.10476235).
+
+Yellott, J. I. (1977). The Relationship Between Luce’s Choice Axiom, Thurstone’s Theory of Comparative Judgment, and the Double Exponential Distribution. *Journal of Mathematical Psychology*, **15**(2), 109–144. doi: [10.1016/0022-2496(77)90026-8](https://doi.org/10.1016/0022-2496(77)90026-8).
+
+Yu, P. L. H., Gu, J., and Xu, H. (2019). Analysis of Ranking Data. *Wiley Interdisciplinary Reviews: Computational Statistics*, **11**(6), e1483, 1–26. doi: [10.1002/wics.1483](https://doi.org/10.1002/wics.1483).
 
 

@@ -9,28 +9,55 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "75%"
+)
+
+options(
+  width = 100,
+  max.print = 1e3,
+  pillar.print_max = 1e3
+)
+
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
 ```
+
+## Data Preparation
 
 ```{r packages, warning = FALSE, message = FALSE, results = "hide"}
 library(tidyverse)
-library(ACDm)
 library(gasmodel)
 ```
 
 ``` {r data, fig.width = 6, fig.height = 4}
 data_dur <- bookshop_sales %>%
-  mutate(durations = as.numeric(time - lag(time)) / 60) %>%
-  mutate(durations = recode(durations, "0" = 0.5)) %>%
-  drop_na() %>%
-  diurnalAdj(method = 'cubicSpline', nodes = seq(0, 1440, 90)) %>%
-  mutate(adjDur = as.numeric(adjDur))
+  mutate(duration = as.numeric(time - lag(time)) / 60) %>%
+  mutate(duration = recode(duration, "0" = 0.5)) %>%
+  mutate(just_time = as.vector(as.POSIXct(format(time, format = "1970-01-01 %H:%M:%S")))) %>%
+  drop_na()
+
+
+model_spline <- smooth.spline(data_dur$just_time, data_dur$duration, df = 5)
+plot(model_spline, type = "l")
+
+data_dur <- data_dur %>%
+  mutate(duration_spline = predict(model_spline, x = just_time)$y) %>%
+  mutate(duration_adj = duration / duration_spline) %>%
+  select(-just_time)
+
 ```
 
 ``` {r variables}
-y <- data_dur$adjDur
+y <- data_dur$duration_adj
 ```
+
+## Model Estimation
 
 ``` {r distr}
 distr(filter_type = "duration", filter_dim = "uni", filter_default = TRUE)[, 1:3]
