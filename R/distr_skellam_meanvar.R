@@ -107,7 +107,7 @@ distr_skellam_meanvar_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
   if (s > abs(m)) {
-    res_random <- suppressWarnings(stats::rpois(t, lambda = (v + m) / 2) - stats::rpois(t, lambda = (v - m) / 2))
+    res_random <- suppressWarnings(stats::rpois(t, lambda = (s + m) / 2) - stats::rpois(t, lambda = (s - m) / 2))
   } else {
     res_random <- rep(NA_real_, times = t)
   }
