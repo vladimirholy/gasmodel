@@ -116,21 +116,21 @@ Instead of supplying arguments about the model, the function can be applied to t
 }
 \examples{
 # Simulate GAS model based on the normal distr. with dynamic volatility
-norm_sim <- gas_simulate(distr = "norm", t_sim = 100,
+sim_norm <- gas_simulate(distr = "norm", t_sim = 100,
                          par_static = c(TRUE, FALSE),
                          coef_est = c(0.0, 1.0, 0.4, 0.8))
-norm_sim
+sim_norm
 
 # Extract the simulated time series
-y <- norm_sim$simulation$y_sim
+y <- sim_norm$simulation$y_sim
 
 # Estimate the model
-norm_est <- gas(distr = "norm", y = y, par_static = c(TRUE, FALSE))
-norm_est
+est_norm <- gas(distr = "norm", y = y, par_static = c(TRUE, FALSE))
+est_norm
 
 # Filter the time-varying parameters by the "simulated_coefs" method
-norm_fil <- gas_filter(norm_est)
-norm_fil
+flt_norm <- gas_filter(est_norm)
+flt_norm
 
 }
 \references{

@@ -74,21 +74,21 @@
 #'
 #' @examples
 #' # Simulate GAS model based on the normal distr. with dynamic volatility
-#' norm_sim <- gas_simulate(distr = "norm", t_sim = 100,
+#' sim_norm <- gas_simulate(distr = "norm", t_sim = 100,
 #'                          par_static = c(TRUE, FALSE),
 #'                          coef_est = c(0.0, 1.0, 0.4, 0.8))
-#' norm_sim
+#' sim_norm
 #'
 #' # Extract the simulated time series
-#' y <- norm_sim$simulation$y_sim
+#' y <- sim_norm$simulation$y_sim
 #'
 #' # Estimate the model
-#' norm_est <- gas(distr = "norm", y = y, par_static = c(TRUE, FALSE))
-#' norm_est
+#' est_norm <- gas(distr = "norm", y = y, par_static = c(TRUE, FALSE))
+#' est_norm
 #'
 #' # Filter the time-varying parameters by the "simulated_coefs" method
-#' norm_fil <- gas_filter(norm_est)
-#' norm_fil
+#' flt_norm <- gas_filter(est_norm)
+#' flt_norm
 #'
 #' @export
 gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set = NULL, rep_gen = 1000L, t_ahead = 0L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, coef_vcov = NULL) {

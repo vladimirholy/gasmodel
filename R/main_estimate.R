@@ -113,7 +113,7 @@
 #' \item{fit$bic}{The Bayesian information criterion.}
 #'
 #' @note
-#' Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, and \code{\link[stats:BIC]{BIC()}}.
+#' Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
 #'
 #' @references
 #' Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. \emph{Electronic Journal of Statistics}, \strong{12}(1), 1019–1052. doi: \href{https://doi.org/10.1214/18-ejs1416}{10.1214/18-ejs1416}.
@@ -163,34 +163,34 @@
 #'
 #' @examples
 #' # Simulate GAS model based on the exponential distr. with dynamic scale
-#' exp_sim <- gas_simulate(distr = "exp", t_sim = 100,
+#' sim_exp <- gas_simulate(distr = "exp", t_sim = 100,
 #'                         coef_est = c(1.0, 0.5, 0.8))
-#' exp_sim
+#' sim_exp
 #'
 #' # Extract the simulated time series
-#' y <- exp_sim$simulation$y_sim
+#' y <- sim_exp$simulation$y_sim
 #'
 #' # Estimate the model
-#' exp_est <- gas(distr = "exp", y = y)
-#' exp_est
+#' est_exp <- gas(distr = "exp", y = y)
+#' est_exp
 #'
 #' # Obtain the estimated coefficients
-#' coef(exp_est)
+#' coef(est_exp)
 #'
 #' # Obtain the estimated variance-covariance matrix
-#' vcov(exp_est)
+#' vcov(est_exp)
 #'
 #' # Obtain the log-likelihood, AIC, and BIC
-#' logLik(exp_est)
-#' AIC(exp_est)
-#' BIC(exp_est)
+#' logLik(est_exp)
+#' AIC(est_exp)
+#' BIC(est_exp)
 #'
 #' # Obtain the confidence intervals of coefficients
-#' confint(exp_est)
+#' confint(est_exp)
 #'
 #' # Plot the time-varying parameter with its unconditional value
-#' plot(exp_est$fit$par_tv, type = "b")
-#' abline(h = exp_est$fit$par_unc, lty = 2)
+#' plot(est_exp$fit$par_tv, type = "b")
+#' abline(h = est_exp$fit$par_unc, lty = 2)
 #'
 #' @export
 gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {

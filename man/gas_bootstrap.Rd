@@ -99,21 +99,21 @@ Instead of supplying arguments about the model, the function can be applied to t
 }
 \examples{
 # Simulate GAS model based on the negative binomial distr. with dynamic scale
-negbin_sim <- gas_simulate(distr = "negbin", t_sim = 100,
+sim_negbin <- gas_simulate(distr = "negbin", t_sim = 100,
                            par_static = c(FALSE, TRUE),
                            coef_est = c(2.0, 0.3, 0.5, 0.8))
-negbin_sim
+sim_negbin
 
 # Extract the simulated time series
-y <- negbin_sim$simulation$y_sim
+y <- sim_negbin$simulation$y_sim
 
 # Estimate the model
-negbin_est <- gas(distr = "negbin", y = y, par_static = c(FALSE, TRUE))
-negbin_est
+est_negbin <- gas(distr = "negbin", y = y, par_static = c(FALSE, TRUE))
+est_negbin
 
 # Bootstrap the model
-negbin_boot <- gas_bootstrap(negbin_est, rep_boot = 10)
-negbin_boot
+boot_negbin <- gas_bootstrap(est_negbin, rep_boot = 10)
+boot_negbin
 
 }
 \references{

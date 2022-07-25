@@ -85,25 +85,25 @@ Instead of supplying arguments about the model, the function can be applied to t
 }
 \examples{
 # Simulate GAS model based on the Weibull distr. with dynamic scale
-weibull_sim <- gas_simulate(distr = "weibull", t_sim = 80,
+sim_weibull <- gas_simulate(distr = "weibull", t_sim = 80,
                             par_static = c(FALSE, TRUE),
                             coef_est = c(0.8, 0.3, 0.7, 1.5))
-weibull_sim
+sim_weibull
 
 # Extract the simulated time series
-y <- weibull_sim$simulation$y_sim
+y <- sim_weibull$simulation$y_sim
 
 # Estimate the model
-weibull_est <- gas(distr = "weibull", y = y, par_static = c(FALSE, TRUE))
-weibull_est
+est_weibull <- gas(distr = "weibull", y = y, par_static = c(FALSE, TRUE))
+est_weibull
 # Forecast the model by the "simulated_paths" method
-weibull_for <- gas_forecast(weibull_est, method = "simulated_paths", t_ahead = 20)
-weibull_for
+fcst_weibull <- gas_forecast(est_weibull, method = "simulated_paths", t_ahead = 20)
+fcst_weibull
 
 # Plot the forecasted expected value with the confidence interval
-plot(c(weibull_for$data$y, weibull_for$forecast$y_ahead_mean), type = "b")
-lines(81:100, weibull_for$forecast$y_ahead_quant[, 1], col = "blue")
-lines(81:100, weibull_for$forecast$y_ahead_quant[, 2], col = "blue")
+plot(c(fcst_weibull$data$y, fcst_weibull$forecast$y_ahead_mean), type = "b")
+lines(81:100, fcst_weibull$forecast$y_ahead_quant[, 1], col = "blue")
+lines(81:100, fcst_weibull$forecast$y_ahead_quant[, 2], col = "blue")
 
 }
 \references{

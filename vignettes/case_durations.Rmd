@@ -28,32 +28,49 @@ options(
 Sys.setlocale("LC_ALL", "en_US.UTF-8")
 ```
 
-## Data Preparation
+## Introduction
 
-```{r packages, warning = FALSE, message = FALSE, results = "hide"}
+We loosely follow Tomanová and Holý (2021) and analyze the timing of orders from a Czech antiquarian bookshop. Besides seasonality and diurnal patterns, one would expect the times of orders to be independent of each other. However, this is not the case and we use a GAS model to capture dependence between the times of orders.
+
+A strand of financial econometrics is devoted to analyzing the timing of transactions by the so-called autoregressive conditional duration (ACD) model introduced by Engle and Russell (1998). For a textbook treatment of such financial point processes, see e.g. Hautsch (2012).
+
+```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
 library(gasmodel)
 ```
 
-``` {r data, fig.width = 6, fig.height = 4}
+## Data Preparation
+
+Let us prepare the analyzed data. We use data `bookshop_sales` containing times of orders from June 8, 2018 to December 20, 2018. We calculate differences of subsequent times, i.e. durations. To avoid zero durations, we set them to 0.5 second.
+
+``` {r data}
 data_dur <- bookshop_sales %>%
   mutate(duration = as.numeric(time - lag(time)) / 60) %>%
   mutate(duration = recode(duration, "0" = 0.5)) %>%
-  mutate(just_time = as.vector(as.POSIXct(format(time, format = "1970-01-01 %H:%M:%S")))) %>%
+  mutate(just_time = as.vector(as.POSIXct(format(time, "1970-01-01 %H:%M:%S"), tz = "UTC"))) %>%
   drop_na()
+```
 
+There is a strong diurnal pattern present, as we can see from the following figure:
 
-model_spline <- smooth.spline(data_dur$just_time, data_dur$duration, df = 5)
-plot(model_spline, type = "l")
+``` {r diurnal}
+model_spline <- smooth.spline(data_dur$just_time, data_dur$duration, df = 10)
 
+ggplot(mapping = aes(x = model_spline$x, y = model_spline$y)) +
+  labs(title = "Diurnal Pattern of Durations", x = "Time", y = "Duration") +
+  geom_line(color = "#2E67C5") +
+  scale_x_time(breaks = seq(from = 0, to = 24 * 60 * 60, by = 6 * 60 * 60)) +
+  theme_bw()
+```
+
+We adjust the observed durations for this diurnal pattern and extract the time series to be analyzed:
+
+``` {r variables}
 data_dur <- data_dur %>%
   mutate(duration_spline = predict(model_spline, x = just_time)$y) %>%
   mutate(duration_adj = duration / duration_spline) %>%
   select(-just_time)
 
-```
-
-``` {r variables}
 y <- data_dur$duration_adj
 ```
 
@@ -63,26 +80,45 @@ y <- data_dur$duration_adj
 distr(filter_type = "duration", filter_dim = "uni", filter_default = TRUE)[, 1:3]
 ```
 
+First, we estimate the model based on the exponential distribution:
+
 ``` {r exp}
-exp_est <- gas(y = y, distr = "exp")
-exp_est
+est_exp <- gas(y = y, distr = "exp")
+est_exp
 ```
+
+Second, we estimate the model based on the Weibull distribution:
 
 ``` {r weibull}
-weibull_est <- gas(y = y, distr = "weibull", par_static = c(FALSE, TRUE))
-weibull_est
+est_weibull <- gas(y = y, distr = "weibull", par_static = c(FALSE, TRUE))
+est_weibull
 ```
+
+Third, we estimate the model based on the gamma distribution:
 
 ``` {r gamma}
-gamma_est <- gas(y = y, distr = "gamma", par_static = c(FALSE, TRUE))
-gamma_est
+est_gamma <- gas(y = y, distr = "gamma", par_static = c(FALSE, TRUE))
+est_gamma
 ```
+
+Fourth, we estimate the model based on the generalized gamma distribution:
 
 ``` {r gengamma}
-gengamma_est <- gas(y = y, distr = "gengamma", par_static = c(FALSE, TRUE, TRUE))
-gengamma_est
+est_gengamma <- gas(y = y, distr = "gengamma", par_static = c(FALSE, TRUE, TRUE))
+est_gengamma
 ```
 
+By comparing the Akaike information criterion (AIC), we find that the most general model, i.e. the one based on the generalized gamma distribution, is the most suitable.
+
 ``` {r aic}
-AIC(exp_est, weibull_est, gamma_est, gengamma_est)
+AIC(est_exp, est_weibull, est_gamma, est_gengamma)
 ```
+
+## References
+
+Engle, R. F. and Russell, J. R. (1998). Autoregressive Conditional Duration: A New Model for Irregularly Spaced Transaction Data. *Econometrica*, **66**(5), 1127–1162. doi: [10.2307/2999632](https://doi.org/10.2307/2999632).
+
+Hautsch, N. (2012). *Econometrics of Financial High-Frequency Data*. Springer. doi: [10.1007/978-3-642-21925-2](https://doi.org/10.1007/978-3-642-21925-2).
+
+Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
+

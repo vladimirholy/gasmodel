@@ -64,13 +64,13 @@ Instead of supplying arguments about the model, the function can be applied to t
 }
 \examples{
 # Simulate GAS model based on the zero-inflated Poisson distr. with dynamic rate
-zipois_sim <- gas_simulate(t_sim = 50, distr = "zipois",
+sim_zipois <- gas_simulate(t_sim = 50, distr = "zipois",
                            par_static = c(FALSE, TRUE),
                            coef_est = c(0.2, 0.1, 0.8, 0.2))
-zipois_sim
+sim_zipois
 
 # Plot the simulated time series
-plot(zipois_sim$simulation$y_sim, type = "b")
+plot(sim_zipois$simulation$y_sim, type = "b")
 
 }
 \references{

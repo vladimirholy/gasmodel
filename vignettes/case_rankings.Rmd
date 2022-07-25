@@ -82,30 +82,30 @@ It is a convenient and simple probability distribution on rankings utilizing a w
 We consider three different models in total. First, we estimate the static model:
 
 ``` {r stat}
-model_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
+est_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
   coef_fix_special = c("zero_sum_intercept", "panel_structure"))
 
-model_static
+est_static
 ```
 
 Second, we estimate the standard mean-reverting GAS model of order one:
 
 ``` {r gas}
-model_gas <- gas(y = y, x = x, distr = "pluce",
+est_gas <- gas(y = y, x = x, distr = "pluce",
   coef_fix_special = c("zero_sum_intercept", "panel_structure"),
-  coef_start = as.vector(rbind(model_static$fit$par_unc / 2, 0, 0.5, 0.5)))
+  coef_start = as.vector(rbind(est_static$fit$par_unc / 2, 0, 0.5, 0.5)))
 
-model_gas
+est_gas
 ```
 
 Third, we estimate the random walk model:
 
 ``` {r walk}
-model_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", spec = "reg_err",
+est_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", spec = "reg_err",
   coef_fix_special = c("zero_sum_intercept", "panel_structure", "random_walk"),
-  coef_start = as.vector(rbind(model_static$fit$par_unc, 0, 0.5, 1)))
+  coef_start = as.vector(rbind(est_static$fit$par_unc, 0, 0.5, 1)))
 
-model_walk
+est_walk
 ```
 
 The random walk model should be approached with caution as it is not stationary.
@@ -113,7 +113,7 @@ The random walk model should be approached with caution as it is not stationary.
 We compare the models using the Akaike information criterion (AIC):
 
 ``` {r aic}
-AIC(model_static, model_gas, model_walk)
+AIC(est_static, est_gas, est_walk)
 ```
 In terms of AIC, the mean-reverting model outperformed the remaining two by a wide margin. In all three models, coefficient $\alpha_1$ representing the home advantage is positive but not significant.
 
@@ -123,9 +123,9 @@ Our models allows us to construct the ‘ultimate’ (or long-run) ranking. Both
 
 ``` {r table}
 tibble(team = colnames(y)) %>%
-  mutate(gas_strength = model_gas$fit$par_unc) %>%
+  mutate(gas_strength = est_gas$fit$par_unc) %>%
   mutate(gas_rank = rank(-gas_strength)) %>%
-  mutate(static_strength = model_static$fit$par_unc) %>%
+  mutate(static_strength = est_static$fit$par_unc) %>%
   mutate(static_rank = rank(-static_strength)) %>%
   arrange(gas_rank)
 ```
@@ -133,9 +133,9 @@ tibble(team = colnames(y)) %>%
 We can also take a look at the progression of the worth parameters of the individual teams over the years:
 
 ``` {r canada}
-ggplot(mapping = aes(x = 1998:2019, y = model_gas$fit$par_tv[, 3])) +
+ggplot(mapping = aes(x = 1998:2019, y = est_gas$fit$par_tv[, 3])) +
   labs(title = "Strength of the Canada Team", x = "Year", y = "Worth Parameter") +
-  geom_hline(yintercept = model_gas$fit$par_unc[3], linetype = "dashed") +
+  geom_hline(yintercept = est_gas$fit$par_unc[3], linetype = "dashed") +
   geom_line(color = "#D52B1E") +
   scale_x_continuous(breaks = seq(from = 1998, to = 2019, by = 3)) +
   theme_bw()
@@ -146,10 +146,10 @@ ggplot(mapping = aes(x = 1998:2019, y = model_gas$fit$par_tv[, 3])) +
 Finally, we perform one-year-ahead forecasts:
 
 ``` {r forecast}
-one_ahead <- gas_forecast(model_gas, x_ahead = 0)
+fcst_gas <- gas_forecast(est_gas, x_ahead = 0)
 
 tibble(team = colnames(y)) %>%
-  mutate(forecasted_strength = one_ahead$forecast$par_tv_ahead_mean[1, ]) %>%
+  mutate(forecasted_strength = fcst_gas$forecast$par_tv_ahead_mean[1, ]) %>%
   mutate(forecasted_gold = exp(forecasted_strength) / sum(exp(forecasted_strength))) %>%
   mutate(forecasted_rank = rank(-forecasted_strength)) %>%
   mutate(real_rank = ice_hockey_championships$rankings[24, ]) %>%

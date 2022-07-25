@@ -31,13 +31,13 @@ Their purpose is to be passed as the \code{hessian_function} argument in the \co
 }
 \section{Functions}{
 \itemize{
-\item \code{wrapper_hessian_stats}: Wrapper for Hessian function \code{\link[stats:optimHess]{stats::optimHess()}}.
+\item \code{wrapper_hessian_stats()}: Wrapper for Hessian function \code{\link[stats:optimHess]{stats::optimHess()}}.
 
-\item \code{wrapper_hessian_pracma}: Wrapper for Hessian function \code{\link[pracma:hessian]{pracma::hessian()}}.
+\item \code{wrapper_hessian_pracma()}: Wrapper for Hessian function \code{\link[pracma:hessian]{pracma::hessian()}}.
 
-\item \code{wrapper_hessian_numderiv}: Wrapper for Hessian function \code{\link[numDeriv:hessian]{numDeriv::hessian()}}.
+\item \code{wrapper_hessian_numderiv()}: Wrapper for Hessian function \code{\link[numDeriv:hessian]{numDeriv::hessian()}}.
+
 }}
-
 \seealso{
 \code{\link[gasmodel:gas]{gas()}}
 \code{\link[gasmodel:wrappers_optim]{wrappers_optim}}

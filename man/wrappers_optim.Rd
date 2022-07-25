@@ -34,11 +34,11 @@ Their purpose is to be passed as the \code{optim_function} argument in the \code
 }
 \section{Functions}{
 \itemize{
-\item \code{wrapper_optim_stats}: Wrapper for optimization function \code{\link[stats:optim]{stats::optim()}}.
+\item \code{wrapper_optim_stats()}: Wrapper for optimization function \code{\link[stats:optim]{stats::optim()}}.
 
-\item \code{wrapper_optim_nloptr}: Wrapper for optimization function \code{\link[nloptr:nloptr]{nloptr::nloptr()}}.
+\item \code{wrapper_optim_nloptr()}: Wrapper for optimization function \code{\link[nloptr:nloptr]{nloptr::nloptr()}}.
+
 }}
-
 \seealso{
 \code{\link[gasmodel:gas]{gas()}}
 \code{\link[gasmodel:wrappers_hessian]{wrappers_hessian}}
