@@ -729,6 +729,8 @@ $$
 
 - The computation of the Fisher information is quite intricate and we resort to an approximation by replacing $y$ with its expected value.
 
+- In the mean-variance parametrization, it is required that $s>|m|$.
+
 ### Further Reading
 
 - Alzaid, A. A. and Omair, M. A. (2010). On the Poisson Difference Distribution Inference and Applications. *Bulletin of the Malaysian Mathematical Sciences Society*, **33**(1), 17–45. EuDML: [244475](http://eudml.org/doc/244475).
