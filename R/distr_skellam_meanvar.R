@@ -75,7 +75,7 @@ distr_skellam_meanvar_score <- function(y, f) {
   s <- f[, 2, drop = FALSE]
   m[s <= abs(m)] <- NA_real_
   s[s <= abs(m)] <- NA_real_
-  bi <- (besselI(x = sqrt(s^2 - m^2), nu = m - 1) + besselI(x = sqrt(s^2 - m^2), nu = m + 1)) / besselI(x = sqrt(s^2 - m^2), nu = m)
+  bi <- (besselI(x = sqrt(s^2 - m^2), nu = y - 1) + besselI(x = sqrt(s^2 - m^2), nu = y + 1)) / besselI(x = sqrt(s^2 - m^2), nu = y)
   res_score <- matrix(0, nrow = t, ncol = 2L)
   res_score[, 1] <- (s * y) / (s^2 - m^2) - m / (2 * sqrt(s^2 - m^2)) * bi
   res_score[, 2] <- -(m * y) / (s^2 - m^2) + s / (2 * sqrt(s^2 - m^2)) * bi - 1
