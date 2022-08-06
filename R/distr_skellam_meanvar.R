@@ -77,7 +77,7 @@ distr_skellam_meanvar_score <- function(y, f) {
   s[s <= abs(m)] <- NA_real_
   bi <- (besselI(x = sqrt(s^2 - m^2), nu = y - 1) + besselI(x = sqrt(s^2 - m^2), nu = y + 1)) / besselI(x = sqrt(s^2 - m^2), nu = y)
   res_score <- matrix(0, nrow = t, ncol = 2L)
-  res_score[, 1] <- (s * y) / (s^2 - m^2) - m / (2 * sqrt(s^2 - m^2)) * bi
+  res_score[, 1] <- y - m#(s * y) / (s^2 - m^2) - m / (2 * sqrt(s^2 - m^2)) * bi
   res_score[, 2] <- -(m * y) / (s^2 - m^2) + s / (2 * sqrt(s^2 - m^2)) * bi - 1
   return(res_score)
 }
@@ -93,10 +93,10 @@ distr_skellam_meanvar_fisher <- function(f) {
   s[s <= abs(m)] <- NA_real_
   bi <- (besselI(x = sqrt(s^2 - m^2), nu = m - 1) + besselI(x = sqrt(s^2 - m^2), nu = m + 1)) / besselI(x = sqrt(s^2 - m^2), nu = m)
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- m^2 / (4 * (s^2 - m^2)^2) * ((2 * s) / (sqrt(s^2 - m^2)) - bi)^2
-  res_fisher[, 1, 2] <- -(m * s) / (4 * (s^2 - m^2)^2) * ((2 * s) / (sqrt(s^2 - m^2)) - bi)^2
+  res_fisher[, 1, 1] <- m^2 / (4 * (s^2 - m^2)) * ((2 * s) / (sqrt(s^2 - m^2)) - bi)^2
+  res_fisher[, 1, 2] <- -(m * s) / (4 * (s^2 - m^2)) * ((2 * s) / (sqrt(s^2 - m^2)) - bi)^2
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- s^2 / (4 * (s^2 - m^2)^2) * ((2 * s) / (sqrt(s^2 - m^2)) - bi)^2
+  res_fisher[, 2, 2] <- s^2 / (4 * (s^2 - m^2)) * ((2 * s) / (sqrt(s^2 - m^2)) - bi)^2
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
