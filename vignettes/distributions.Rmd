@@ -684,12 +684,53 @@ $$
 \end{aligned}
 $$
 
+### Mean-Dispersion Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Dispersion parameter $s \in (0, \infty)$
+
+#### Probability Mass Function
+
+$$
+\mathrm{P} [Y = y | m, s] = \exp(-|m| - s) \left( \frac{|m| + m + s}{|m| - m + s} \right)^{\frac{y}{2}} I_y \left( \sqrt{s^2 + 2 |m| s} \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= |m| + s \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{y}{2|m| + s} + \frac{\mathrm{sgn}(m) s}{2 \sqrt{s^2 + 2 |m| s}} \frac{ I_{y-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{y+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_y \left( \sqrt{s^2 + 2 |m| s} \right) } - \mathrm{sgn}(m) \\
+\nabla_{s} (y; m, s) &= - \frac{m y}{s^2 + 2 |m| s} + \frac{|m| + s}{2 \sqrt{s^2 + 2 |m| s}} \frac{ I_{y-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{y+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_y \left( \sqrt{s^2 + 2 |m| s} \right) } - 1 \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &\approx \frac{s^2}{4 \left( s^2 + 2|m|s \right)} \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
+\mathcal{I}_{m, s} (m, s) &\approx \frac{\mathrm{sgn}(m) (|m| + s) s}{4 \left( s^2 + 2|m|s \right)} \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
+\mathcal{I}_{s, s} (m, s) &\approx \frac{(|m| + s)^2}{4 \left( s^2 + 2|m|s \right)} \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
+\end{aligned}
+$$
+
 ### Mean-Variance Parametrization
 
 #### Parameters
 
 - Mean parameter $m \in \mathbb{R}$
-- Variance parameter $s \in (0, \infty)$
+- Variance parameter $s \in (|m|, \infty)$
 
 #### Probability Mass Function
 
@@ -719,17 +760,15 @@ $$
 
 $$
 \begin{aligned}
-\mathcal{I}_{m, m} (m, s) &\approx \frac{m^2}{4 \left( s^2 - m^2 \right)^2} \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
-\mathcal{I}_{m, s} (m, s) &\approx - \frac{m s}{4 \left( s^2 - m^2 \right)^2} \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
-\mathcal{I}_{s, s} (m, s) &\approx \frac{s^2}{4 \left( s^2 - m^2 \right)^2} \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
+\mathcal{I}_{m, m} (m, s) &\approx \frac{m^2}{4 \left( s^2 - m^2 \right)} \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
+\mathcal{I}_{m, s} (m, s) &\approx - \frac{m s}{4 \left( s^2 - m^2 \right)} \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
+\mathcal{I}_{s, s} (m, s) &\approx \frac{s^2}{4 \left( s^2 - m^2 \right)} \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
 \end{aligned}
 $$
 
 ### Note
 
 - The computation of the Fisher information is quite intricate and we resort to an approximation by replacing $y$ with its expected value.
-
-- In the mean-variance parametrization, it is required that $s>|m|$.
 
 ### Further Reading
 
