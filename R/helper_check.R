@@ -19,11 +19,11 @@ check_my_method <- function(method, values) {
 
 # Check Time Series ------------------------------------------------------------
 check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
-  if (!is.null(type) && type == "categorical" && is.null(n) && is.vector(y) && !is.list(y) && length(y) > 0L && all(as.numeric(y) == as.integer(y), na.rm = TRUE) && min(as.integer(y), na.rm = TRUE) >= 1L && max(as.integer(y), na.rm = TRUE) >= 2L) {
+  if (!is.null(type) && type == "categorical" && is.null(n) && (is.vector(y) || is.ts(y)) && !is.list(y) && length(y) > 0L && all(as.numeric(y) == as.integer(y), na.rm = TRUE) && min(as.integer(y), na.rm = TRUE) >= 1L && max(as.integer(y), na.rm = TRUE) >= 2L) {
     y <- t(sapply(y, function(i) { yy <- rep(ifelse(is.na(i), NA, 0), max(as.integer(y), na.rm = TRUE)); yy[i] <- 1; yy }))
-  } else if (is.vector(y) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "uni") {
+  } else if ((is.vector(y) || is.ts(y)) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "uni") {
     y <- matrix(as.numeric(y), ncol = 1)
-  } else if (is.vector(y) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "multi") {
+  } else if ((is.vector(y) || is.ts(y)) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "multi") {
     y <- matrix(as.numeric(y), nrow = 1)
   } else if (is.matrix(y) && nrow(y) > 0L && ncol(y) > 0L) {
     y <- matrix(as.numeric(y), nrow = nrow(y), ncol = ncol(y))
@@ -73,7 +73,9 @@ check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
 
 # Check Exogeneous Variables ---------------------------------------------------
 check_my_x <- function(x = NULL, t = NULL, m = NULL, par_num = NULL, group_num = NULL, par_in_group_num = NULL) {
-  if (is.null(x) && !is.null(t) && !is.null(par_num)) {
+  if (is.null(x) && !is.null(t) && t == 0L && !is.null(m)) {
+    x <- lapply(m, FUN = function(i) { matrix(NA_real_, nrow = 0, ncol = i) })
+  } else if (is.null(x) && !is.null(t) && !is.null(par_num)) {
     x <- rep(list(matrix(NA_real_, nrow = t, ncol = 0L)), times = par_num)
   } else if (is.vector(x) && !is.list(x) && length(x) == 0L && !is.null(t) && !is.null(par_num)) {
     x <- rep(list(matrix(NA_real_, nrow = t, ncol = 0L)), times = par_num)
@@ -91,6 +93,9 @@ check_my_x <- function(x = NULL, t = NULL, m = NULL, par_num = NULL, group_num =
     x <- lapply(x, FUN = function(e) { if (length(e) == 0L) { matrix(NA_real_, nrow = t, ncol = 0L) } else { as.matrix(e) } })
   } else {
     stop("Invalid type of argument x.")
+  }
+  if (!is.null(m) && length(m) > 1L && any(m == 0L)) {
+    x[m == 0L] <- list(matrix(NA_real_, nrow = nrow(x[[1]]), ncol = 0L))
   }
   if (length(unique(sapply(x, FUN = nrow))) > 1L) {
     stop("Different lengths of exogeneous variables x.")
