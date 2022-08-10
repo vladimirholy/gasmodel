@@ -481,7 +481,7 @@ $$
 
 - Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
 
-- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](https://ssrn.com/abstract=1293115).
+- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](https://www.ssrn.com/abstract=1293115).
 
 - Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
 
@@ -1050,7 +1050,7 @@ $$
 
 - Park, T. R. (2014). Derivation of the Fisher Information Matrix for 4-Parameter Generalized Gamma Distribution Using Mathematica. *Journal of the Chosun Natural Science*, **7**(2), 138–144. doi: [10.13160/ricns.2014.7.2.138](https://doi.org/10.13160/ricns.2014.7.2.138).
 
-- Stacy, E. W. (1962). A Generalization of the Gamma Distribution. *The Annals of Mathematical Statistics*, **33**(3), 1187–1192. doi: [10.2307/2237889](https://doi.org/10.2307/2237889).
+- Stacy, E. W. (1962). A Generalization of the Gamma Distribution. *The Annals of Mathematical Statistics*, **33**(3), 1187–1192. doi: [10.1214/aoms/1177704481](https://doi.org/10.1214/aoms/1177704481).
 
 - Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
 
