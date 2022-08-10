@@ -47,31 +47,31 @@
 #' \item{bootstrap$coef_quant}{The quantiles of boostrapped coefficients.}
 #'
 #' @references
-#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 #'
-#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
+#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
 #'
 #'
 #' @seealso
 #' \code{\link[gasmodel:gas]{gas()}}
 #'
 #' @examples
-#' # Simulate GAS model based on the negative binomial distr. with dynamic scale
-#' sim_negbin <- gas_simulate(distr = "negbin", t_sim = 100,
-#'                            par_static = c(FALSE, TRUE),
-#'                            coef_est = c(2.0, 0.3, 0.5, 0.8))
-#' sim_negbin
+#' # Load Level of Lake Huron dataset
+#' data(LakeHuron)
+#' y <- LakeHuron - 570
+#' x <- 1:length(y)
 #'
-#' # Extract the simulated time series
-#' y <- sim_negbin$simulation$y_sim
-#'
-#' # Estimate the model
-#' est_negbin <- gas(distr = "negbin", y = y, par_static = c(FALSE, TRUE))
-#' est_negbin
+#' # Estimate GAS model based on the normal distribution with dynamic mean
+#' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+#'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
+#' est_gas
 #'
 #' # Bootstrap the model
-#' boot_negbin <- gas_bootstrap(est_negbin, rep_boot = 10)
-#' boot_negbin
+#' boot_gas <- gas_bootstrap(est_gas, rep_boot = 1)
+#' boot_gas
+#'
+#' # A single bootstrap sample is of course not enough
+#' # Beware of the computational complexity with a larger number of samples
 #'
 #' @export
 gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6))) {

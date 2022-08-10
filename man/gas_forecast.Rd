@@ -84,34 +84,33 @@ Method \code{"simulated_paths"} repeatedly simulates time series, simultaneously
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 }
 \examples{
-# Simulate GAS model based on the Weibull distr. with dynamic scale
-sim_weibull <- gas_simulate(distr = "weibull", t_sim = 80,
-                            par_static = c(FALSE, TRUE),
-                            coef_est = c(0.8, 0.3, 0.7, 1.5))
-sim_weibull
+# Load Level of Lake Huron dataset
+data(LakeHuron)
+y <- LakeHuron - 570
+x <- 1:length(y)
 
-# Extract the simulated time series
-y <- sim_weibull$simulation$y_sim
+# Estimate GAS model based on the normal distribution with dynamic mean
+est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+  par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
+est_gas
 
-# Estimate the model
-est_weibull <- gas(distr = "weibull", y = y, par_static = c(FALSE, TRUE))
-est_weibull
 # Forecast the model by the "simulated_paths" method
-fcst_weibull <- gas_forecast(est_weibull, method = "simulated_paths", t_ahead = 20)
-fcst_weibull
+fcst_gas <- gas_forecast(est_gas, method = "simulated_paths",
+  t_ahead = 22, x_ahead = 99:120, rep_ahead = 100)
+fcst_gas
 
 # Plot the forecasted expected value with the confidence interval
-plot(c(fcst_weibull$data$y, fcst_weibull$forecast$y_ahead_mean), type = "b")
-lines(81:100, fcst_weibull$forecast$y_ahead_quant[, 1], col = "blue")
-lines(81:100, fcst_weibull$forecast$y_ahead_quant[, 2], col = "blue")
+plot(c(fcst_gas$data$y, fcst_gas$forecast$y_ahead_mean), type = "b")
+lines(99:120, fcst_gas$forecast$y_ahead_quant[, 1], col = "blue")
+lines(99:120, fcst_gas$forecast$y_ahead_quant[, 2], col = "blue")
 
 }
 \references{
-Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. doi: \href{https://doi.org/10.1016/j.ijforecast.2015.11.018}{10.1016/j.ijforecast.2015.11.018}.
+Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. \doi{10.1016/j.ijforecast.2015.11.018}.
 
-Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 
-Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
+Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
 }
 \seealso{
 \code{\link[gasmodel:gas]{gas()}}

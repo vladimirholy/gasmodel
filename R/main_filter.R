@@ -63,32 +63,29 @@
 #' \item{filter$score_tv_ahead_quant}{The quantiles of the forecasted scores. Only when \code{t_ahead > 0}.}
 #'
 #' @references
-#' Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. doi: \href{https://doi.org/10.1016/j.ijforecast.2015.11.018}{10.1016/j.ijforecast.2015.11.018}.
+#' Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. \doi{10.1016/j.ijforecast.2015.11.018}.
 #'
-#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 #'
-#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
+#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
 #'
 #' @seealso
 #' \code{\link[gasmodel:gas]{gas()}}
 #'
 #' @examples
-#' # Simulate GAS model based on the normal distr. with dynamic volatility
-#' sim_norm <- gas_simulate(distr = "norm", t_sim = 100,
-#'                          par_static = c(TRUE, FALSE),
-#'                          coef_est = c(0.0, 1.0, 0.4, 0.8))
-#' sim_norm
+#' # Load Level of Lake Huron dataset
+#' data(LakeHuron)
+#' y <- LakeHuron - 570
+#' x <- 1:length(y)
 #'
-#' # Extract the simulated time series
-#' y <- sim_norm$simulation$y_sim
-#'
-#' # Estimate the model
-#' est_norm <- gas(distr = "norm", y = y, par_static = c(TRUE, FALSE))
-#' est_norm
+#' # Estimate GAS model based on the normal distribution with dynamic mean
+#' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+#'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
+#' est_gas
 #'
 #' # Filter the time-varying parameters by the "simulated_coefs" method
-#' flt_norm <- gas_filter(est_norm)
-#' flt_norm
+#' flt_gas <- gas_filter(est_gas, rep_gen	= 100)
+#' flt_gas
 #'
 #' @export
 gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set = NULL, rep_gen = 1000L, t_ahead = 0L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, coef_vcov = NULL) {

@@ -24,6 +24,6 @@ Since 1998, a total of 24 teams have qualified for the championship division.
 This dataset is analyzed in Holý and Zouhar (2021).
 }
 \references{
-Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: \href{https://arxiv.org/abs/2101.04040}{2101.04040}.
+Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics). \doi{10.1111/rssc.12584}.
 }
 \keyword{datasets}

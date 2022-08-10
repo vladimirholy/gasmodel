@@ -24,8 +24,8 @@ This dataset is analyzed in Tomanová and Holý (2021).
 Details on the bookshop can be also found in Tomanová and Černý (2022).
 }
 \references{
-Tomanová, P. and Černý, M. (2022). Efficiency of Antiquarian Bookshops in Informationally Complete Markets. \emph{Central European Journal of Operations Research}, \strong{30}(2), 573–593. doi: \href{https://doi.org/10.1007/s10100-021-00780-3}{10.1007/s10100-021-00780-3}.
+Tomanová, P. and Černý, M. (2022). Efficiency of Antiquarian Bookshops in Informationally Complete Markets. \emph{Central European Journal of Operations Research}, \strong{30}(2), 573–593. \doi{10.1007/s10100-021-00780-3}.
 
-Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. \emph{Central European Journal of Operations Research}, \strong{29}(3), 859–874. doi: \href{https://doi.org/10.1007/s10100-021-00744-7}{10.1007/s10100-021-00744-7}.
+Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. \emph{Central European Journal of Operations Research}, \strong{29}(3), 859–874. \doi{10.1007/s10100-021-00744-7}.
 }
 \keyword{datasets}

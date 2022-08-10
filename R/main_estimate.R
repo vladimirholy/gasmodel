@@ -116,41 +116,41 @@
 #' Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
 #'
 #' @references
-#' Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. \emph{Electronic Journal of Statistics}, \strong{12}(1), 1019–1052. doi: \href{https://doi.org/10.1214/18-ejs1416}{10.1214/18-ejs1416}.
+#' Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. \emph{Electronic Journal of Statistics}, \strong{12}(1), 1019–1052. \doi{10.1214/18-ejs1416}.
 #'
-#' Blasques, F., Koopman, S. J., and Lucas, A. (2014). Stationarity and Ergodicity of Univariate Generalized Autoregressive Score Processes. \emph{Electronic Journal of Statistics}, \strong{8}(1), 1088–1112. doi: \href{https://doi.org/10.1214/14-ejs924}{10.1214/14-ejs924}.
+#' Blasques, F., Koopman, S. J., and Lucas, A. (2014). Stationarity and Ergodicity of Univariate Generalized Autoregressive Score Processes. \emph{Electronic Journal of Statistics}, \strong{8}(1), 1088–1112. \doi{10.1214/14-ejs924}.
 #'
-#' Blasques, F., Koopman, S. J., and Lucas, A. (2015). Information-Theoretic Optimality of Observation-Driven Time Series Models for Continuous Responses. \emph{Biometrika}, \strong{102}(2), 325–343. doi: \href{https://doi.org/10.1093/biomet/asu076}{10.1093/biomet/asu076}.
+#' Blasques, F., Koopman, S. J., and Lucas, A. (2015). Information-Theoretic Optimality of Observation-Driven Time Series Models for Continuous Responses. \emph{Biometrika}, \strong{102}(2), 325–343. \doi{10.1093/biomet/asu076}.
 #'
-#' Blasques, F., Lucas, A., and van Vlodrop, A. C. (2021). Finite Sample Optimality of Score-Driven Volatility Models: Some Monte Carlo Evidence. \emph{Econometrics and Statistics}, \strong{19}, 47–57. doi: \href{https://doi.org/10.1016/j.ecosta.2020.03.010}{10.1016/j.ecosta.2020.03.010}.
+#' Blasques, F., Lucas, A., and van Vlodrop, A. C. (2021). Finite Sample Optimality of Score-Driven Volatility Models: Some Monte Carlo Evidence. \emph{Econometrics and Statistics}, \strong{19}, 47–57. \doi{10.1016/j.ecosta.2020.03.010}.
 #'
-#' Blasques, F., van Brummelen, J., Koopman, S. J., and Lucas, A. (2022). Maximum Likelihood Estimation for Score-Driven Models. \emph{Journal of Econometrics}, \strong{227}(2), 325–346. doi: \href{https://doi.org/10.1016/j.jeconom.2021.06.003}{10.1016/j.jeconom.2021.06.003}.
+#' Blasques, F., van Brummelen, J., Koopman, S. J., and Lucas, A. (2022). Maximum Likelihood Estimation for Score-Driven Models. \emph{Journal of Econometrics}, \strong{227}(2), 325–346. \doi{10.1016/j.jeconom.2021.06.003}.
 #'
-#' Blazsek, S. and Licht, A. (2020). Dynamic Conditional Score Models: A Review of Their Applications. \emph{Applied Economics}, \strong{52}(11), 1181–1199. doi: \href{https://doi.org/10.1080/00036846.2019.1659498}{10.1080/00036846.2019.1659498}.
+#' Blazsek, S. and Licht, A. (2020). Dynamic Conditional Score Models: A Review of Their Applications. \emph{Applied Economics}, \strong{52}(11), 1181–1199. \doi{10.1080/00036846.2019.1659498}.
 #'
-#' Bollerslev, T. (1986). Generalized Autoregressive Conditional Heteroskedasticity. \emph{Journal of Econometrics}, \strong{31}(3), 307–327. doi: \href{https://doi.org/10.1016/0304-4076(86)90063-1}{10.1016/0304-4076(86)90063-1}.
+#' Bollerslev, T. (1986). Generalized Autoregressive Conditional Heteroskedasticity. \emph{Journal of Econometrics}, \strong{31}(3), 307–327. \doi{10.1016/0304-4076(86)90063-1}.
 #'
-#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+#' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 #'
-#' Davis, R. A., Dunsmuir, W. T. M., and Street, S. B. (2003). Observation-Driven Models for Poisson Counts. \emph{Biometrika}, \strong{90}(4), 777–790. doi: \href{https://doi.org/10.1093/biomet/90.4.777}{10.1093/biomet/90.4.777}.
+#' Davis, R. A., Dunsmuir, W. T. M., and Street, S. B. (2003). Observation-Driven Models for Poisson Counts. \emph{Biometrika}, \strong{90}(4), 777–790. \doi{10.1093/biomet/90.4.777}.
 #'
-#' Engle, R. F. and Russell, J. R. (1998). Autoregressive Conditional Duration: A New Model for Irregularly Spaced Transaction Data. \emph{Econometrica}, \strong{66}(5), 1127–1162. doi: \href{https://doi.org/10.2307/2999632}{10.2307/2999632}.
+#' Engle, R. F. and Russell, J. R. (1998). Autoregressive Conditional Duration: A New Model for Irregularly Spaced Transaction Data. \emph{Econometrica}, \strong{66}(5), 1127–1162. \doi{10.2307/2999632}.
 #'
-#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
+#' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
 #'
-#' Harvey, A. C. (2022). Score-Driven Time Series Models. \emph{Annual Review of Statistics and Its Application}, \strong{9}(1), 321–342. doi: \href{https://doi.org/10.1146/annurev-statistics-040120-021023}{10.1146/annurev-statistics-040120-021023}.
+#' Harvey, A. C. (2022). Score-Driven Time Series Models. \emph{Annual Review of Statistics and Its Application}, \strong{9}(1), 321–342. \doi{10.1146/annurev-statistics-040120-021023}.
 #'
-#' Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. \emph{Cambridge Working Papers in Economics}, CWPE 0840. doi: \href{https://doi.org/10.17863/cam.5286}{10.17863/cam.5286}.
+#' Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. \emph{Cambridge Working Papers in Economics}, CWPE 0840. \doi{10.17863/cam.5286}.
 #'
-#' Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. \emph{Cambridge Working Papers in Economics}, CWPE 1971. doi: \href{https://doi.org/10.17863/cam.43915}{10.17863/cam.43915}.
+#' Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. \emph{Cambridge Working Papers in Economics}, CWPE 1971. \doi{10.17863/cam.43915}.
 #'
-#' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: \href{https://arxiv.org/abs/2101.04040}{2101.04040}.
+#' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics). \doi{10.1111/rssc.12584}.
 #'
-#' Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in National League Competitions Using Score-Driven Time Series Models. \emph{International Journal of Forecasting}, \strong{35}(2), 797–809. doi: \href{https://doi.org/10.1016/j.ijforecast.2018.10.011}{10.1016/j.ijforecast.2018.10.011}.
+#' Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in National League Competitions Using Score-Driven Time Series Models. \emph{International Journal of Forecasting}, \strong{35}(2), 797–809. \doi{10.1016/j.ijforecast.2018.10.011}.
 #'
-#' Koopman, S. J., Lit, R., Lucas, A., and Opschoor, A. (2018). Dynamic Discrete Copula Models for High-Frequency Stock Price Changes. \emph{Journal of Applied Econometrics}, \strong{33}(7), 966–985. doi: \href{https://doi.org/10.1002/jae.2645}{10.1002/jae.2645}.
+#' Koopman, S. J., Lit, R., Lucas, A., and Opschoor, A. (2018). Dynamic Discrete Copula Models for High-Frequency Stock Price Changes. \emph{Journal of Applied Econometrics}, \strong{33}(7), 966–985. \doi{10.1002/jae.2645}.
 #'
-#' Koopman, S. J., Lucas, A., and Scharth, M. (2016). Predicting Time-Varying Parameters with Parameter-Driven and Observation-Driven Models. \emph{Review of Economics and Statistics}, \strong{98}(1), 97–110. doi: \href{https://doi.org/10.1162/rest_a_00533}{10.1162/rest_a_00533}.
+#' Koopman, S. J., Lucas, A., and Scharth, M. (2016). Predicting Time-Varying Parameters with Parameter-Driven and Observation-Driven Models. \emph{Review of Economics and Statistics}, \strong{98}(1), 97–110. \doi{10.1162/rest_a_00533}.
 #'
 #' @seealso
 #' \code{\link[gasmodel:distr]{distr()}},
@@ -162,35 +162,29 @@
 #' \code{\link[gasmodel:wrappers_hessian]{wrappers_hessian}}
 #'
 #' @examples
-#' # Simulate GAS model based on the exponential distr. with dynamic scale
-#' sim_exp <- gas_simulate(distr = "exp", t_sim = 100,
-#'                         coef_est = c(1.0, 0.5, 0.8))
-#' sim_exp
+#' # Load Level of Lake Huron dataset
+#' data(LakeHuron)
+#' y <- LakeHuron - 570
+#' x <- 1:length(y)
 #'
-#' # Extract the simulated time series
-#' y <- sim_exp$simulation$y_sim
-#'
-#' # Estimate the model
-#' est_exp <- gas(distr = "exp", y = y)
-#' est_exp
+#' # Estimate GAS model based on the normal distribution with dynamic mean
+#' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+#'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
+#' est_gas
 #'
 #' # Obtain the estimated coefficients
-#' coef(est_exp)
+#' coef(est_gas)
 #'
 #' # Obtain the estimated variance-covariance matrix
-#' vcov(est_exp)
+#' vcov(est_gas)
 #'
 #' # Obtain the log-likelihood, AIC, and BIC
-#' logLik(est_exp)
-#' AIC(est_exp)
-#' BIC(est_exp)
+#' logLik(est_gas)
+#' AIC(est_gas)
+#' BIC(est_gas)
 #'
 #' # Obtain the confidence intervals of coefficients
-#' confint(est_exp)
-#'
-#' # Plot the time-varying parameter with its unconditional value
-#' plot(est_exp$fit$par_tv, type = "b")
-#' abline(h = est_exp$fit$par_unc, lty = 2)
+#' confint(est_gas)
 #'
 #' @export
 gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {

@@ -22,9 +22,9 @@
 #' }
 #'
 #' @references
-#' Tomanová, P. and Černý, M. (2022). Efficiency of Antiquarian Bookshops in Informationally Complete Markets. \emph{Central European Journal of Operations Research}, \strong{30}(2), 573–593. doi: \href{https://doi.org/10.1007/s10100-021-00780-3}{10.1007/s10100-021-00780-3}.
+#' Tomanová, P. and Černý, M. (2022). Efficiency of Antiquarian Bookshops in Informationally Complete Markets. \emph{Central European Journal of Operations Research}, \strong{30}(2), 573–593. \doi{10.1007/s10100-021-00780-3}.
 #'
-#' Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. \emph{Central European Journal of Operations Research}, \strong{29}(3), 859–874. doi: \href{https://doi.org/10.1007/s10100-021-00744-7}{10.1007/s10100-021-00744-7}.
+#' Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. \emph{Central European Journal of Operations Research}, \strong{29}(3), 859–874. \doi{10.1007/s10100-021-00744-7}.
 #'
 "bookshop_sales"
 # ------------------------------------------------------------------------------
@@ -50,7 +50,7 @@
 #' }
 #'
 #' @references
-#' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: \href{https://arxiv.org/abs/2101.04040}{2101.04040}.
+#' Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics). \doi{10.1111/rssc.12584}.
 #'
 "ice_hockey_championships"
 # ------------------------------------------------------------------------------

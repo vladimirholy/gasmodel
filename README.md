@@ -128,33 +128,62 @@ function:
 
 ``` r
 print(distr(), right = FALSE, row.names = FALSE)
-#>  distr_title                     param_title   distr     param   type        dim   orthog default
-#>  Bernoulli                       Probabilistic bernoulli prob    binary      uni    TRUE   TRUE  
-#>  Categorical                     Worth         cat       worth   categorical multi FALSE   TRUE  
-#>  Double Poisson                  Mean          dpois     mean    count       uni    TRUE   TRUE  
-#>  Exponential                     Rate          exp       rate    duration    uni    TRUE  FALSE  
-#>  Exponential                     Scale         exp       scale   duration    uni    TRUE   TRUE  
-#>  Gamma                           Rate          gamma     rate    duration    uni   FALSE  FALSE  
-#>  Gamma                           Scale         gamma     scale   duration    uni   FALSE   TRUE  
-#>  Generalized Gamma               Rate          gengamma  rate    duration    uni   FALSE  FALSE  
-#>  Generalized Gamma               Scale         gengamma  scale   duration    uni   FALSE   TRUE  
-#>  Geometric                       Mean          geom      mean    count       uni    TRUE   TRUE  
-#>  Geometric                       Probabilistic geom      prob    count       uni    TRUE  FALSE  
-#>  Multivariate Normal             Mean-Variance mvnorm    meanvar real        multi FALSE   TRUE  
-#>  Multivariate Student‘s t        Mean-Variance mvt       meanvar real        multi FALSE   TRUE  
-#>  Negative Binomial               NB2           negbin    nb2     count       uni    TRUE   TRUE  
-#>  Negative Binomial               Probabilistic negbin    prob    count       uni   FALSE  FALSE  
-#>  Normal                          Mean-Variance norm      meanvar real        uni    TRUE   TRUE  
-#>  Plackett-Luce                   Worth         pluce     worth   ranking     multi FALSE   TRUE  
-#>  Poisson                         Mean          pois      mean    count       uni    TRUE   TRUE  
-#>  Skellam                         Difference    skellam   diff    integer     uni   FALSE  FALSE  
-#>  Skellam                         Mean-Variance skellam   meanvar integer     uni   FALSE   TRUE  
-#>  Student‘s t                     Mean-Variance t         meanvar real        uni   FALSE   TRUE  
-#>  Weibull                         Rate          weibull   rate    duration    uni   FALSE  FALSE  
-#>  Weibull                         Scale         weibull   scale   duration    uni   FALSE   TRUE  
-#>  Zero-Inflated Geometric         Mean          zigeom    mean    count       uni   FALSE   TRUE  
-#>  Zero-Inflated Negative Binomial NB2           zinegbin  nb2     count       uni   FALSE   TRUE  
-#>  Zero-Inflated Poisson           Mean          zipois    mean    count       uni   FALSE   TRUE
+#>  distr_title                     param_title     distr     param    type        dim   orthog
+#>  Bernoulli                       Probabilistic   bernoulli prob     binary      uni    TRUE 
+#>  Categorical                     Worth           cat       worth    categorical multi FALSE 
+#>  Double Poisson                  Mean            dpois     mean     count       uni    TRUE 
+#>  Exponential                     Rate            exp       rate     duration    uni    TRUE 
+#>  Exponential                     Scale           exp       scale    duration    uni    TRUE 
+#>  Gamma                           Rate            gamma     rate     duration    uni   FALSE 
+#>  Gamma                           Scale           gamma     scale    duration    uni   FALSE 
+#>  Generalized Gamma               Rate            gengamma  rate     duration    uni   FALSE 
+#>  Generalized Gamma               Scale           gengamma  scale    duration    uni   FALSE 
+#>  Geometric                       Mean            geom      mean     count       uni    TRUE 
+#>  Geometric                       Probabilistic   geom      prob     count       uni    TRUE 
+#>  Multivariate Normal             Mean-Variance   mvnorm    meanvar  real        multi FALSE 
+#>  Multivariate Student‘s t        Mean-Variance   mvt       meanvar  real        multi FALSE 
+#>  Negative Binomial               NB2             negbin    nb2      count       uni    TRUE 
+#>  Negative Binomial               Probabilistic   negbin    prob     count       uni   FALSE 
+#>  Normal                          Mean-Variance   norm      meanvar  real        uni    TRUE 
+#>  Plackett-Luce                   Worth           pluce     worth    ranking     multi FALSE 
+#>  Poisson                         Mean            pois      mean     count       uni    TRUE 
+#>  Skellam                         Difference      skellam   diff     integer     uni   FALSE 
+#>  Skellam                         Mean-Dispersion skellam   meandisp integer     uni   FALSE 
+#>  Skellam                         Mean-Variance   skellam   meanvar  integer     uni   FALSE 
+#>  Student‘s t                     Mean-Variance   t         meanvar  real        uni   FALSE 
+#>  Weibull                         Rate            weibull   rate     duration    uni   FALSE 
+#>  Weibull                         Scale           weibull   scale    duration    uni   FALSE 
+#>  Zero-Inflated Geometric         Mean            zigeom    mean     count       uni   FALSE 
+#>  Zero-Inflated Negative Binomial NB2             zinegbin  nb2      count       uni   FALSE 
+#>  Zero-Inflated Poisson           Mean            zipois    mean     count       uni   FALSE 
+#>  default
+#>   TRUE  
+#>   TRUE  
+#>   TRUE  
+#>  FALSE  
+#>   TRUE  
+#>  FALSE  
+#>   TRUE  
+#>  FALSE  
+#>   TRUE  
+#>   TRUE  
+#>  FALSE  
+#>   TRUE  
+#>   TRUE  
+#>   TRUE  
+#>  FALSE  
+#>   TRUE  
+#>   TRUE  
+#>   TRUE  
+#>  FALSE  
+#>  FALSE  
+#>   TRUE  
+#>   TRUE  
+#>  FALSE  
+#>   TRUE  
+#>   TRUE  
+#>   TRUE  
+#>   TRUE
 ```
 
 Details of each distribution, including its density function, expected
@@ -182,30 +211,30 @@ Specifically, time-varying parameters
 ![f\_{t}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D "f_{t}")
 follow the recursion
 
-![f\_{t} = \\omega + \\sum\_{i=1}^M \\beta_i x\_{ti} + \\sum\_{j=1}^P \\alpha_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j}) + \\sum\_{k=1}^Q \\varphi_k f\_{t-k},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},")
+![f\_{t} = \omega + \sum\_{i=1}^M \beta_i x\_{ti} + \sum\_{j=1}^P \alpha_j S(f\_{t - j}) \nabla(y\_{t - j}, f\_{t - j}) + \sum\_{k=1}^Q \varphi_k f\_{t-k},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},")
 
 where
-![\\omega](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Comega "\omega")
+![\omega](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Comega "\omega")
 is a vector of constants,
-![\\beta_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_i "\beta_i")
+![\beta_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_i "\beta_i")
 are regression parameters,
-![\\alpha_j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_j "\alpha_j")
+![\alpha_j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_j "\alpha_j")
 are score parameters,
-![\\varphi_k](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cvarphi_k "\varphi_k")
+![\varphi_k](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cvarphi_k "\varphi_k")
 are autoregressive parameters,
 ![x\_{ti}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;x_%7Bti%7D "x_{ti}")
 are exogenous variables,
 ![S(f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;S%28f_t%29 "S(f_t)")
 is a scaling function for the score, and
-![\\nabla(y_t, f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29 "\nabla(y_t, f_t)")
+![\nabla(y_t, f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29 "\nabla(y_t, f_t)")
 is the score given by
 
-![\\nabla(y_t, f_t) = \\frac{\\partial \\ln p(y_t \| f_t)}{\\partial f_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D. "\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.")
+![\nabla(y_t, f_t) = \frac{\partial \ln p(y_t \| f_t)}{\partial f_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D. "\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.")
 
 Alternatively, a different model can be obtained by defining the
 recursion in the fashion of regression models with dynamic errors as
 
-![f\_{t} = \\omega + \\sum\_{i=1}^M \\beta_i x\_{ti} + e\_{t}, \\quad e_t = \\sum\_{j=1}^P \\alpha_j S(f\_{t - j}) \\nabla(y\_{t - j}, f\_{t - j}) + \\sum\_{k=1}^Q \\varphi_k e\_{t-k}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20e_%7Bt%7D%2C%20%5Cquad%20e_t%20%3D%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20e_%7Bt-k%7D. "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.")
+![f\_{t} = \omega + \sum\_{i=1}^M \beta_i x\_{ti} + e\_{t}, \quad e_t = \sum\_{j=1}^P \alpha_j S(f\_{t - j}) \nabla(y\_{t - j}, f\_{t - j}) + \sum\_{k=1}^Q \varphi_k e\_{t-k}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20e_%7Bt%7D%2C%20%5Cquad%20e_t%20%3D%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20e_%7Bt-k%7D. "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.")
 
 The GAS models can be straightforwardly estimated by the maximum
 likelihood method. For the asymptotic theory regarding the GAS models
@@ -307,8 +336,9 @@ Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional
 1971. doi: [10.17863/cam.43915](https://doi.org/10.17863/cam.43915).
 
 Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with
-Autoregressive and Score-Driven Dynamics. arXiv:
-[2101.04040](https://arxiv.org/abs/2101.04040).
+Autoregressive and Score-Driven Dynamics. Journal of the Royal
+Statistical Society: Series C (Applied Statistics). doi:
+[10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
 
 Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in
 National League Competitions Using Score-Driven Time Series Models.

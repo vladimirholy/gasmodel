@@ -63,21 +63,19 @@ A function for simulation of generalized autoregressive score (GAS) models of Cr
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 }
 \examples{
-# Simulate GAS model based on the zero-inflated Poisson distr. with dynamic rate
-sim_zipois <- gas_simulate(t_sim = 50, distr = "zipois",
-                           par_static = c(FALSE, TRUE),
-                           coef_est = c(0.2, 0.1, 0.8, 0.2))
-sim_zipois
+# Simulate GAS model based on the Weibull distribution with dynamic scale
+sim_gas <- gas_simulate(t_sim = 50, distr = "weibull",
+  par_static = c(FALSE, TRUE), coef_est = c(0.2, 0.1, 0.8, 2.0))
+sim_gas
 
 # Plot the simulated time series
-plot(sim_zipois$simulation$y_sim, type = "b")
+plot(sim_gas$simulation$y_sim, type = "b")
 
 }
 \references{
-Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. doi: \href{https://doi.org/10.1002/jae.1279}{10.1002/jae.1279}.
+Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 
-Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. doi: \href{https://doi.org/10.1017/cbo9781139540933}{10.1017/cbo9781139540933}.
-#'
+Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
 }
 \seealso{
 \code{\link[gasmodel:gas]{gas()}}

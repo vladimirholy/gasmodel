@@ -168,7 +168,7 @@ Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. *Cambridge Working Pa
 
 Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. *Cambridge Working Papers in Economics*, CWPE 1971. doi: [10.17863/cam.43915](https://doi.org/10.17863/cam.43915).
 
-Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. arXiv: [2101.04040](https://arxiv.org/abs/2101.04040).
+Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics). doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
 
 Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in National League Competitions Using Score-Driven Time Series Models. *International Journal of Forecasting*, **35**(2), 797–809. doi: [10.1016/j.ijforecast.2018.10.011](https://doi.org/10.1016/j.ijforecast.2018.10.011).
 
