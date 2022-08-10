@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Bookshop Orders"
 author: "Vladimír Holý"
-date: "2022-08-10"
+date: "2022-08-11"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Bookshop Orders}
@@ -29,6 +29,7 @@ Let us prepare the analyzed data. We use data `bookshop_sales` containing times 
 
 
 ```r
+data(bookshop_sales)
 data_dur <- bookshop_sales %>%
   mutate(duration = as.numeric(time - lag(time)) / 60) %>%
   mutate(duration = recode(duration, "0" = 0.5)) %>%

@@ -561,7 +561,7 @@ $$
 
 - Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
 
-- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](https://ssrn.com/abstract=1293115).
+- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](https://www.ssrn.com/abstract=1293115).
 
 - Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
 
@@ -631,7 +631,7 @@ $$
 
 - Cameron, A. C. and Trivedi, P. K. (2013). *Regression Analysis of Count Data*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9781139013567](https://doi.org/10.1017/cbo9781139013567).
 
-- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](https://ssrn.com/abstract=1293115).
+- Greene, W. H. (1994). Accounting for Excess Zeros and Sample Selection in Poisson and Negative Binomial Regression Models. *NYU Stern School of Business Research Paper Series*, EC-94-10. SSRN: [1293115](https://www.ssrn.com/abstract=1293115).
 
 - Hilbe, J. M. (2011). *Negative Binomial Regression*. Second Edition. Cambridge University Press. doi: [10.1017/cbo9780511973420](https://doi.org/10.1017/cbo9780511973420).
 

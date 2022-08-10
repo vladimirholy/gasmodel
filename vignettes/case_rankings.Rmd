@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
-date: "2022-08-10"
+date: "2022-08-11"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
@@ -27,6 +27,7 @@ Our analyzed data are supplied in the `ice_hockey_championships` dataset. We res
 
 
 ```r
+data(ice_hockey_championships)
 t <- 22
 n <- ncol(ice_hockey_championships$host)
 y <- ice_hockey_championships$rankings[1:t, ]
