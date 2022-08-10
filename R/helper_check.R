@@ -19,11 +19,11 @@ check_my_method <- function(method, values) {
 
 # Check Time Series ------------------------------------------------------------
 check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
-  if (!is.null(type) && type == "categorical" && is.null(n) && (is.vector(y) || is.ts(y)) && !is.list(y) && length(y) > 0L && all(as.numeric(y) == as.integer(y), na.rm = TRUE) && min(as.integer(y), na.rm = TRUE) >= 1L && max(as.integer(y), na.rm = TRUE) >= 2L) {
+  if (!is.null(type) && type == "categorical" && is.null(n) && (is.vector(y) || stats::is.ts(y)) && !is.list(y) && length(y) > 0L && all(as.numeric(y) == as.integer(y), na.rm = TRUE) && min(as.integer(y), na.rm = TRUE) >= 1L && max(as.integer(y), na.rm = TRUE) >= 2L) {
     y <- t(sapply(y, function(i) { yy <- rep(ifelse(is.na(i), NA, 0), max(as.integer(y), na.rm = TRUE)); yy[i] <- 1; yy }))
-  } else if ((is.vector(y) || is.ts(y)) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "uni") {
+  } else if ((is.vector(y) || stats::is.ts(y)) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "uni") {
     y <- matrix(as.numeric(y), ncol = 1)
-  } else if ((is.vector(y) || is.ts(y)) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "multi") {
+  } else if ((is.vector(y) || stats::is.ts(y)) && !is.list(y) && length(y) > 0L && !is.null(dim) && dim == "multi") {
     y <- matrix(as.numeric(y), nrow = 1)
   } else if (is.matrix(y) && nrow(y) > 0L && ncol(y) > 0L) {
     y <- matrix(as.numeric(y), nrow = nrow(y), ncol = ncol(y))
