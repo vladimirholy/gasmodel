@@ -22,8 +22,7 @@ Imports:
     mvnfast,
     nloptr,
     numDeriv,
-    pracma,
-    stats
+    pracma
 Suggests:
     knitr,
     rmarkdown,
