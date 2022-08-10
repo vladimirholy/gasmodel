@@ -128,62 +128,34 @@ function:
 
 ``` r
 print(distr(), right = FALSE, row.names = FALSE)
-#>  distr_title                     param_title     distr     param    type        dim   orthog
-#>  Bernoulli                       Probabilistic   bernoulli prob     binary      uni    TRUE 
-#>  Categorical                     Worth           cat       worth    categorical multi FALSE 
-#>  Double Poisson                  Mean            dpois     mean     count       uni    TRUE 
-#>  Exponential                     Rate            exp       rate     duration    uni    TRUE 
-#>  Exponential                     Scale           exp       scale    duration    uni    TRUE 
-#>  Gamma                           Rate            gamma     rate     duration    uni   FALSE 
-#>  Gamma                           Scale           gamma     scale    duration    uni   FALSE 
-#>  Generalized Gamma               Rate            gengamma  rate     duration    uni   FALSE 
-#>  Generalized Gamma               Scale           gengamma  scale    duration    uni   FALSE 
-#>  Geometric                       Mean            geom      mean     count       uni    TRUE 
-#>  Geometric                       Probabilistic   geom      prob     count       uni    TRUE 
-#>  Multivariate Normal             Mean-Variance   mvnorm    meanvar  real        multi FALSE 
-#>  Multivariate Student‘s t        Mean-Variance   mvt       meanvar  real        multi FALSE 
-#>  Negative Binomial               NB2             negbin    nb2      count       uni    TRUE 
-#>  Negative Binomial               Probabilistic   negbin    prob     count       uni   FALSE 
-#>  Normal                          Mean-Variance   norm      meanvar  real        uni    TRUE 
-#>  Plackett-Luce                   Worth           pluce     worth    ranking     multi FALSE 
-#>  Poisson                         Mean            pois      mean     count       uni    TRUE 
-#>  Skellam                         Difference      skellam   diff     integer     uni   FALSE 
-#>  Skellam                         Mean-Dispersion skellam   meandisp integer     uni   FALSE 
-#>  Skellam                         Mean-Variance   skellam   meanvar  integer     uni   FALSE 
-#>  Student‘s t                     Mean-Variance   t         meanvar  real        uni   FALSE 
-#>  Weibull                         Rate            weibull   rate     duration    uni   FALSE 
-#>  Weibull                         Scale           weibull   scale    duration    uni   FALSE 
-#>  Zero-Inflated Geometric         Mean            zigeom    mean     count       uni   FALSE 
-#>  Zero-Inflated Negative Binomial NB2             zinegbin  nb2      count       uni   FALSE 
-#>  Zero-Inflated Poisson           Mean            zipois    mean     count       uni   FALSE 
-#>  default
-#>   TRUE  
-#>   TRUE  
-#>   TRUE  
-#>  FALSE  
-#>   TRUE  
-#>  FALSE  
-#>   TRUE  
-#>  FALSE  
-#>   TRUE  
-#>   TRUE  
-#>  FALSE  
-#>   TRUE  
-#>   TRUE  
-#>   TRUE  
-#>  FALSE  
-#>   TRUE  
-#>   TRUE  
-#>   TRUE  
-#>  FALSE  
-#>  FALSE  
-#>   TRUE  
-#>   TRUE  
-#>  FALSE  
-#>   TRUE  
-#>   TRUE  
-#>   TRUE  
-#>   TRUE
+#>  distr_title                     param_title     distr     param    type        dim   orthog default
+#>  Bernoulli                       Probabilistic   bernoulli prob     binary      uni    TRUE   TRUE  
+#>  Categorical                     Worth           cat       worth    categorical multi FALSE   TRUE  
+#>  Double Poisson                  Mean            dpois     mean     count       uni    TRUE   TRUE  
+#>  Exponential                     Rate            exp       rate     duration    uni    TRUE  FALSE  
+#>  Exponential                     Scale           exp       scale    duration    uni    TRUE   TRUE  
+#>  Gamma                           Rate            gamma     rate     duration    uni   FALSE  FALSE  
+#>  Gamma                           Scale           gamma     scale    duration    uni   FALSE   TRUE  
+#>  Generalized Gamma               Rate            gengamma  rate     duration    uni   FALSE  FALSE  
+#>  Generalized Gamma               Scale           gengamma  scale    duration    uni   FALSE   TRUE  
+#>  Geometric                       Mean            geom      mean     count       uni    TRUE   TRUE  
+#>  Geometric                       Probabilistic   geom      prob     count       uni    TRUE  FALSE  
+#>  Multivariate Normal             Mean-Variance   mvnorm    meanvar  real        multi FALSE   TRUE  
+#>  Multivariate Student‘s t        Mean-Variance   mvt       meanvar  real        multi FALSE   TRUE  
+#>  Negative Binomial               NB2             negbin    nb2      count       uni    TRUE   TRUE  
+#>  Negative Binomial               Probabilistic   negbin    prob     count       uni   FALSE  FALSE  
+#>  Normal                          Mean-Variance   norm      meanvar  real        uni    TRUE   TRUE  
+#>  Plackett-Luce                   Worth           pluce     worth    ranking     multi FALSE   TRUE  
+#>  Poisson                         Mean            pois      mean     count       uni    TRUE   TRUE  
+#>  Skellam                         Difference      skellam   diff     integer     uni   FALSE  FALSE  
+#>  Skellam                         Mean-Dispersion skellam   meandisp integer     uni   FALSE  FALSE  
+#>  Skellam                         Mean-Variance   skellam   meanvar  integer     uni   FALSE   TRUE  
+#>  Student‘s t                     Mean-Variance   t         meanvar  real        uni   FALSE   TRUE  
+#>  Weibull                         Rate            weibull   rate     duration    uni   FALSE  FALSE  
+#>  Weibull                         Scale           weibull   scale    duration    uni   FALSE   TRUE  
+#>  Zero-Inflated Geometric         Mean            zigeom    mean     count       uni   FALSE   TRUE  
+#>  Zero-Inflated Negative Binomial NB2             zinegbin  nb2      count       uni   FALSE   TRUE  
+#>  Zero-Inflated Poisson           Mean            zipois    mean     count       uni   FALSE   TRUE
 ```
 
 Details of each distribution, including its density function, expected
