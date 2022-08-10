@@ -17,7 +17,6 @@ LazyData: true
 Imports:
     abind,
     arrangements,
-    mathjaxr,
     Matrix,
     mvnfast,
     nloptr,
@@ -28,7 +27,6 @@ Suggests:
     rmarkdown,
     testthat,
     tidyverse
-RdMacros: mathjaxr
 RoxygenNote: 7.2.1
 Roxygen: list(old_usage = TRUE)
 Depends: 

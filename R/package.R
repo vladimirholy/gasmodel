@@ -1,12 +1,6 @@
 
 # DOCUMENTATION OF PACKAGE
 
-
-# Load LaTeX -------------------------------------------------------------------
-#' @import mathjaxr
-# ------------------------------------------------------------------------------
-
-
 # Package Documentation --------------------------------------------------------
 #' @title gasmodel: Generalized Autoregressive Score Models
 #'

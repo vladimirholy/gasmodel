@@ -115,20 +115,17 @@ Model estimation is performed by the maximum likelihood method and the Hessian m
 The function can be supplied with any optimization and Hessian functions.
 }
 \details{
-\loadmathjax
-
-
 The generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models, have established themselves as a useful modern framework for time series modeling.
 
-The GAS models are observation-driven models allowing for any underlying probability distribution \mjseqn{p(y_t|f_t)} with any time-varying parameters \mjseqn{f_t} for time series \mjseqn{y_t}.
+The GAS models are observation-driven models allowing for any underlying probability distribution \eqn{p(y_t|f_t)} with any time-varying parameters \eqn{f_t} for time series \eqn{y_t}.
 They capture the dynamics of time-varying parameters using the autoregressive term and the lagged score, i.e. the gradient of the log-likelihood function.
 Exogenous variables can also be included.
-Specifically, time-varying parameters \mjseqn{f_{t}} follow the recursion
-\mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},}
-where \mjseqn{\omega} is a vector of constants, \mjseqn{\beta_i} are regression parameters, \mjseqn{\alpha_j} are score parameters, \mjseqn{\varphi_k} are autoregressive parameters, \mjseqn{x_{ti}} are exogenous variables, \mjseqn{S(f_t)} is a scaling function for the score, and \mjseqn{\nabla(y_t, f_t)} is the score given by
-\mjsdeqn{\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.}
+Specifically, time-varying parameters \eqn{f_t} follow the recursion
+\deqn{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t-j}) \nabla(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \varphi_k f_{t-k},}{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t-j}) ∇(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \phi_k f_{t-k},}
+where \eqn{\omega} is a vector of constants, \eqn{\beta_i} are regression parameters, \eqn{\alpha_j} are score parameters, \eqn{\varphi_k}{\phi_k} are autoregressive parameters, \eqn{x_{ti}} are exogenous variables, \eqn{S(f_t)} is a scaling function for the score, and \eqn{\nabla(y_t, f_t)}{∇(y_t, f_t)} is the score given by
+\deqn{\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.}{∇(y_t, f_t) = d ln p(y_t | f_t) / d f_t.}
 Alternatively, a different model can be obtained by defining the recursion in the fashion of regression models with dynamic errors as
-\mjsdeqn{f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.}
+\deqn{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t-j}) \nabla(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.}{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_t,   e_t = \sum_{j=1}^P \alpha_j S(f_{t-j}) ∇(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \phi_k e_{t-k}.}
 
 The GAS models can be straightforwardly estimated by the maximum likelihood method.
 For the asymptotic theory regarding the GAS models and maximum likelihood estimation, see Blasques et al. (2014), Blasques et al. (2018), and Blasques et al. (2022).
