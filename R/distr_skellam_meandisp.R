@@ -65,10 +65,10 @@ distr_skellam_meandisp_score <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  bi <- (besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y - 1) + besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y + 1)) / besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y)
+  tri_bi_y <- (besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y - 1) + besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y + 1)) / besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y)
   res_score <- matrix(0, nrow = t, ncol = 2L)
-  res_score[, 1] <- y / (2 * abs(m) + s) + (sign(m) * s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * bi - sign(m)
-  res_score[, 2] <- -(m * y) / (s^2 + 2 * abs(m) * s) + (abs(m) + s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * bi - 1
+  res_score[, 1] <- y / (2 * abs(m) + s) + (sign(m) * s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * tri_bi_y - sign(m)
+  res_score[, 2] <- -(m * y) / (s^2 + 2 * abs(m) * s) + (abs(m) + s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * tri_bi_y - 1
   return(res_score)
 }
 # ------------------------------------------------------------------------------
@@ -79,14 +79,12 @@ distr_skellam_meandisp_fisher <- function(f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  m[s <= abs(m)] <- NA_real_
-  s[s <= abs(m)] <- NA_real_
-  bi <- (besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m - 1) + besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m + 1)) / besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m)
+  tri_bi_m <- (besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m - 1) + besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m + 1)) / besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m)
   res_fisher <- array(0, dim = c(t, 2L, 2L))
-  res_fisher[, 1, 1] <- s^2 / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - bi)^2
-  res_fisher[, 1, 2] <- (sign(m) * (abs(m) + s) * s) / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - bi)^2
+  res_fisher[, 1, 1] <- s^2 / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - tri_bi_m)^2
+  res_fisher[, 1, 2] <- (sign(m) * (abs(m) + s) * s) / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - tri_bi_m)^2
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- (abs(m) + s)^2 / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - bi)^2
+  res_fisher[, 2, 2] <- (abs(m) + s)^2 / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - tri_bi_m)^2
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
