@@ -782,6 +782,196 @@ $$
 
 - Skellam, J. G. (1946). The Frequency Distribution of the Difference Between Two Poisson Variates Belonging to Different Populations. *Journal of the Royal Statistical Society*, **109**(3), 296. doi: [10.2307/2981372](https://doi.org/10.2307/2981372).
 
+## Zero-Inflated Skellam Distribution
+
+### Difference Parametrization
+
+#### Parameters
+
+- First rate parameter $r_1 \in (0, \infty)$
+- Second rate parameter $r_2 \in (0, \infty)$
+- Inflation parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\begin{aligned}
+\mathrm{P} [Y = y | r_1, r_2, p] &= \begin{cases}
+p + (1 - p) \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1  r_2} \right) & \text{ for } y = 0 \\
+(1 - p) \exp(-r_1 - r_2) \left( \frac{r_1}{r_2} \right)^{\frac{y}{2}} I_y \left( 2 \sqrt{r_1  r_2} \right) & \text{ for } y \neq 0 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= (1 - p) (r_1 - r_2) \\
+\mathrm{var}[Y] &= (1 - p) \left( p \left( r_1 - r_2 \right)^2 + r_1 + r_2 \right) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{r_1} (y; r_1, r_2, p) &= \begin{cases}
+\frac{(p - 1) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} & \text{ for } y = 0 \\
+\sqrt{\frac{r_2}{r_1}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right) } - 1 & \text{ for } y \neq 0 \\
+\end{cases} \\
+\nabla_{r_2} (y; r_1, r_2, p) &= \begin{cases}
+\frac{(p - 1) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} & \text{ for } y = 0 \\
+\sqrt{\frac{r_1}{r_2}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right) } -\frac{y}{r_2} - 1 & \text{ for } y \neq 0 \\
+\end{cases} \\
+\nabla_{p} (y; r_1, r_2, p) &= \begin{cases}
+\frac{\exp(r_1 + r_2) - I_0 \left( 2 \sqrt{r_1 r_2} \right)}{p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right)} & \text{ for } y = 0 \\
+\frac{1}{p - 1} & \text{ for } y \neq 0 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{r_1, r_1} (r_1, r_2, p) &\approx \\
+\mathcal{I}_{r_1, r_2} (r_1, r_2, p) &\approx \\
+\mathcal{I}_{r_1, p} (r_1, r_2, p) &\approx \\
+\mathcal{I}_{r_2, r_2} (r_1, r_2, p) &\approx \\
+\mathcal{I}_{r_2, p} (r_1, r_2, p) &\approx \\
+\mathcal{I}_{p, p} (r_1, r_2, p) &\approx \\
+\end{aligned}
+$$
+
+### Mean-Dispersion Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Dispersion parameter $s \in (0, \infty)$
+- Inflation parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\begin{aligned}
+\mathrm{P} [Y = y | m, s, p] &= \begin{cases}
+p + (1 - p) \exp(-|m| - s) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) & \text{ for } y = 0 \\
+(1 - p) \exp(-|m| - s) \left( \frac{|m| + m + s}{|m| - m + s} \right)^{\frac{y}{2}} I_y \left( \sqrt{s^2 + 2 |m| s} \right) & \text{ for } y \neq 0 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= (1 - p) m \\
+\mathrm{var}[Y] &= (1 - p) \left( |m| + s + p m^2 \right) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, p) &= \begin{cases}
+\frac{\mathrm{sgn}(m) (p - 1) \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - s I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{\sqrt{s^2 + 2 |m| s} \left( (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) + p \exp(|m| + s) \right)} & \text{ for } y = 0 \\
+\frac{y}{2|m| + s} + \frac{\mathrm{sgn}(m) s}{2 \sqrt{s^2 + 2 |m| s}} \frac{ I_{y-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{y+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_y \left( \sqrt{s^2 + 2 |m| s} \right) } - \mathrm{sgn}(m) & \text{ for } y \neq 0 \\
+\end{cases} \\
+\nabla_{s} (y; m, s, p) &= \begin{cases}
+\frac{   (p - 1)  \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - (|m| + s) I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right)    }{\sqrt{s^2 + 2 |m| s} \left( (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) + p \exp(|m| + s) \right)} & \text{ for } y = 0 \\
+- \frac{m y}{s^2 + 2 |m| s} + \frac{|m| + s}{2 \sqrt{s^2 + 2 |m| s}} \frac{ I_{y-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{y+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_y \left( \sqrt{s^2 + 2 |m| s} \right) } - 1 & \text{ for } y \neq 0 \\
+\end{cases} \\
+\nabla_{p} (y; m, s, p) &= \begin{cases}
+\frac{\exp(|m| + s) - I_0 \left( \sqrt{s^2 + 2 |m| s} \right)}{p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right)} & \text{ for } y = 0 \\
+\frac{1}{p - 1} & \text{ for } y \neq 0 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s, p) &\approx \\
+\mathcal{I}_{m, s} (m, s, p) &\approx \\
+\mathcal{I}_{m, p} (m, s, p) &\approx \\
+\mathcal{I}_{s, s} (m, s, p) &\approx \\
+\mathcal{I}_{s, p} (m, s, p) &\approx \\
+\mathcal{I}_{p, p} (m, s, p) &\approx \\
+\end{aligned}
+$$
+
+### Mean-Variance Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Variance parameter $s \in (|m|, \infty)$
+- Inflation parameter $p \in (0, 1)$
+
+#### Probability Mass Function
+
+$$
+\begin{aligned}
+\mathrm{P} [Y = y | m, s, p] &= \begin{cases}
+p + (1 - p) \exp(-s) I_0 \left( \sqrt{s^2 - m^2} \right) & \text{ for } y = 0 \\
+(1 - p) \exp(-s) \left( \frac{s + m}{s - m} \right)^{\frac{y}{2}} I_y \left( \sqrt{s^2 - m^2} \right) & \text{ for } y \neq 0 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= (1 - p) m \\
+\mathrm{var}[Y] &= (1 - p) \left( s + p m^2 \right) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, p) &= \begin{cases}
+\frac{m (p - 1) I_{1} \left( \sqrt{s^2 - m^2} \right)}{\sqrt{s^2 - m^2} \left( p \exp(s) + (1 - p) I_{0} \left( \sqrt{s^2 - m^2} \right) \right)} & \text{ for } y = 0 \\
+\frac{s y}{s^2 - m^2} - \frac{m}{2 \sqrt{s^2 - m^2}} \frac{ I_{y-1} \left( \sqrt{s^2 - m^2} \right) + I_{y+1} \left( \sqrt{s^2 - m^2} \right) }{ I_y \left( \sqrt{s^2 - m^2} \right) } & \text{ for } y \neq 0 \\
+\end{cases} \\
+\nabla_{s} (y; m, s, p) &= \begin{cases}
+\frac{ (p - 1) \left( \sqrt{s^2 - m^2} I_{0} \left( \sqrt{s^2 - m^2} \right) - s I_{1} \left( \sqrt{s^2 - m^2} \right) \right) }{\sqrt{s^2 - m^2} \left( p \exp(s) + (1 - p) I_{0} \left( \sqrt{s^2 - m^2} \right) \right)} & \text{ for } y = 0 \\
+-\frac{m y}{s^2 - m^2} + \frac{s}{2 \sqrt{s^2 - m^2}} \frac{ I_{y-1} \left( \sqrt{s^2 - m^2} \right) + I_{y+1} \left( \sqrt{s^2 - m^2} \right) }{ I_y \left( \sqrt{s^2 - m^2} \right) } - 1 & \text{ for } y \neq 0 \\
+\end{cases} \\
+\nabla_{p} (y; m, s, p) &= \begin{cases}
+\frac{\exp(s) - I_{0} \left( \sqrt{s^2 - m^2} \right)}{p \exp(s) + (1 - p) I_{0} \left( \sqrt{s^2 - m^2} \right)} & \text{ for } y = 0 \\
+\frac{1}{p - 1} & \text{ for } y \neq 0 \\
+\end{cases} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s, p) &\approx \\
+\mathcal{I}_{m, s} (m, s, p) &\approx \\
+\mathcal{I}_{m, p} (m, s, p) &\approx \\
+\mathcal{I}_{s, s} (m, s, p) &\approx \\
+\mathcal{I}_{s, p} (m, s, p) &\approx \\
+\mathcal{I}_{p, p} (m, s, p) &\approx \\
+\end{aligned}
+$$
+
+### Note
+
+- The computation of the Fisher information is quite intricate and we resort to an approximation by replacing $y$ with its expected value.
+
+### Further Reading
+
+- 
+
 # Duration Data
 
 ## Exponential Distribution
