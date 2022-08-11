@@ -1,5 +1,5 @@
 
-# POISSON DISTRIBUTION / MEAN-VARIANCE PARAMETRIZATION
+# SKELLAM DISTRIBUTION / MEAN-DISPERSION PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------

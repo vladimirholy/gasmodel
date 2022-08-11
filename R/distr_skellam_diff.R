@@ -1,5 +1,5 @@
 
-# POISSON DISTRIBUTION / DIFFERENCE PARAMETRIZATION
+# SKELLAM DISTRIBUTION / DIFFERENCE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
