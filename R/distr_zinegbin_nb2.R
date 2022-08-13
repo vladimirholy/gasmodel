@@ -88,11 +88,11 @@ distr_zinegbin_nb2_fisher <- function(f) {
   res_fisher <- array(0, dim = c(t, 3L, 3L))
   res_fisher[, 1, 1] <- -(p^2 + (m * p^2 - m * p) * s - ((m + 1) * p^2 - (m + 2) * p + (m * p^2 - 2 * m * p + m) * s + 1) * (1 / (m * s + 1))^(1 / s) - p)/(m^3 * p * s^2 + 2 * m^2 * p * s + m * p - ((m^3 * p - m^3) * s^2 + m * p + 2 * (m^2 * p - m^2) * s - m) * (1 / (m * s + 1))^(1 / s))
   res_fisher[, 1, 2] <- ((m * p^2 - m * p) * (1 / (m * s + 1))^(1 / s) * s - (p^2 + (m * p^2 - m * p) * s - p) * (1 / (m * s + 1))^(1 / s)*log(m * s + 1))/(m^2 * p * s^4 + 2 * m * p * s^3 + p * s^2 - ((m^2 * p - m^2) * s^4 + 2 * (m * p - m) * s^3 + (p - 1) * s^2) * (1 / (m * s + 1))^(1 / s))
-  res_fisher[, 2, 1] <- res_fisher[, 1, 2]
   res_fisher[, 1, 3] <- -(1 / (m * s + 1))^(1 / s)/(m * p * s - ((m * p - m) * s + p - 1) * (1 / (m * s + 1))^(1 / s) + p)
-  res_fisher[, 3, 1] <- res_fisher[, 1, 3]
-  res_fisher[, 2, 2] <- ((2 * m^2 * digamma(1 / s) - 3 * m^2) * s^3 + (m^2 * trigamma(1 / s) + 4 * m * digamma(1 / s) - 2 * m) * s^2 + 2 * (m * trigamma(1 / s) + digamma(1 / s)) * s + (2 * m * s^3 + s^2) * (1 - p) * m + 2*(m^2 * s^3 + 2 * m * s^2 + s) * log(m * s + 1) - 2 * (m^2 * s^3 + 2 * m * s^2 + s) * digamma((s * (1 - p) * m + 1)/s) - (m^2 * s^2 + 2 * m * s + 1) * trigamma((s * (1 - p) * m + 1) / s) + trigamma(1 / s)) / (m^2 * s^6 + 2 * m * s^5 + s^4)
+  res_fisher[, 2, 1] <- res_fisher[, 1, 2]
+  res_fisher[, 2, 2] <- (log(1 + s * m) + digamma(1 / s) - digamma(m + 1 / s))^2 / s^4 * (1 - p - (1 - p) * (1 + s * m)^(-1 / s)) + ((1 - p)^2 * ((1 + s * m) * log(1 + s * m) - s * m)) / (s^4 * (1 + s * m)^(2 + 1 / s) * (1 + p * (1 + s * m)^(1 / s) - p))
   res_fisher[, 2, 3] <- -((1 / (m * s + 1))^(1 / s) * m * s - (m * s + 1) * (1 / (m * s + 1))^(1 / s) * log(m * s + 1)) / (m * p * s^3 + p * s^2 - ((m * p - m) * s^3 + (p - 1) * s^2) * (1 / (m * s + 1))^(1 / s))
+  res_fisher[, 3, 1] <- res_fisher[, 1, 3]
   res_fisher[, 3, 2] <- res_fisher[, 3, 2]
   res_fisher[, 3, 3] <- ((1 / (m * s + 1))^(1 / s) - 1) / (p^2 - (p^2 - 2 * p + 1) * (1 / (m * s + 1))^(1 / s) - p)
   return(res_fisher)

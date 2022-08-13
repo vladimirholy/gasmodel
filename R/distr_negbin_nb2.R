@@ -78,7 +78,7 @@ distr_negbin_nb2_fisher <- function(f) {
   s <- f[, 2, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 2L, 2L))
   res_fisher[, 1, 1] <- 1 / m / (1 + s * m)
-  res_fisher[, 2, 2] <- 2 * log(1 + s * m) / s^3 - m / (s^2 + s^3 * m) + 2 * digamma(1 / s) / s^3 + trigamma(1 / s) / s^4 - 2 * digamma(m + 1 / s) / s^3 - trigamma(m + 1 / s) / s^4
+  res_fisher[, 2, 2] <- (log(1 + s * m) + digamma(1 / s) - digamma(m + 1 / s))^2
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------

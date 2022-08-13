@@ -80,7 +80,7 @@ distr_negbin_prob_fisher <- function(f) {
   res_fisher[, 1, 1] <- r / (p^2 * (1 - p))
   res_fisher[, 1, 2] <- -1 / p
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- trigamma(r) - trigamma(r + r * (1 - p) / p)
+  res_fisher[, 2, 2] <- (log(p) - digamma(r) + digamma(r * (1 - p) / p + r))^2
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
