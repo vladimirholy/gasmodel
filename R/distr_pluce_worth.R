@@ -49,7 +49,7 @@ distr_pluce_worth_mean <- function(f) {
   t <- nrow(f)
   n <- ncol(f)
   res_mean <- matrix(0, nrow = t, ncol = n)
-  if (n <= 9L) {
+  if (n <= 6L) {
     y_all <- arrangements::permutations(n)
     for (i in 1:t) {
       for (j in 1:nrow(y_all)) {
@@ -58,10 +58,14 @@ distr_pluce_worth_mean <- function(f) {
       }
     }
   } else {
+    if(!exists(".Random.seed")) { set.seed(NULL) }
+    old_seed <- .Random.seed
+    set.seed(13)
     for (i in 1:t) {
-      y_rand <- distr_pluce_worth_random(t = 1e6, f = f[i, , drop = FALSE])
+      y_rand <- distr_pluce_worth_random(t = 1e3, f = f[i, , drop = FALSE])
       res_mean[i, ] <- colMeans(y_rand)
     }
+    .Random.seed <- old_seed
   }
   return(res_mean)
 }
@@ -73,7 +77,7 @@ distr_pluce_worth_var <- function(f) {
   t <- nrow(f)
   n <- ncol(f)
   res_var <- array(0, dim = c(t, n, n))
-  if (n <= 9L) {
+  if (n <= 6L) {
     supp_mean <- matrix(0, nrow = t, ncol = n)
     supp_square <- array(0, dim = c(t, n, n))
     y_all <- arrangements::permutations(n)
@@ -86,10 +90,14 @@ distr_pluce_worth_var <- function(f) {
       res_var[i, , ] <- supp_square[i, , ] - t(supp_mean[i, , drop = FALSE]) %*% supp_mean[i, , drop = FALSE]
     }
   } else {
+    if(!exists(".Random.seed")) { set.seed(NULL) }
+    old_seed <- .Random.seed
+    set.seed(13)
     for (i in 1:t) {
-      y_rand <- distr_pluce_worth_random(t = 1e6, f = f[i, , drop = FALSE])
+      y_rand <- distr_pluce_worth_random(t = 1e3, f = f[i, , drop = FALSE])
       res_var[i, , ] <- stats::cov(y_rand)
     }
+    .Random.seed <- old_seed
   }
   return(res_var)
 }
@@ -126,7 +134,7 @@ distr_pluce_worth_fisher <- function(f) {
   t <- nrow(f)
   n <- ncol(f)
   res_fisher <- array(0, dim = c(t, n, n))
-  if (n <= 9L) {
+  if (n <= 6L) {
     y_all <- arrangements::permutations(n)
     for (i in 1:t) {
       for (j in 1:nrow(y_all)) {
@@ -136,13 +144,17 @@ distr_pluce_worth_fisher <- function(f) {
       }
     }
   } else {
+    if(!exists(".Random.seed")) { set.seed(NULL) }
+    old_seed <- .Random.seed
+    set.seed(13)
     for (i in 1:t) {
-      y_rand <- distr_pluce_worth_random(t = 1e6, f = f[i, , drop = FALSE])
+      y_rand <- distr_pluce_worth_random(t = 1e3, f = f[i, , drop = FALSE])
       for (j in 1:nrow(y_rand)) {
         score <- distr_pluce_worth_score(y = y_rand[j, , drop = FALSE], f = f[i, , drop = FALSE])
         res_fisher[i, , ] <- res_fisher[i, , ] + t(score) %*% score / nrow(y_rand)
       }
     }
+    .Random.seed <- old_seed
   }
   return(res_fisher)
 }
