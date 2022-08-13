@@ -5,12 +5,14 @@ Version: 0.1.0.9000
 Author: Vladimír Holý
 Maintainer: Vladimír Holý <vladimir.holy@vse.cz>
 Description: Estimation, forecasting, and simulation of generalized
-    autoregressive score (GAS) models. Model specification allows for various
-    conditional distributions, different parametrizations, exogenous variables,
-    higher score and autoregressive orders, custom and unconditional initial
-    values of time-varying parameters, fixed and bounded values of coefficients,
-    and missing values. Model estimation is performed by the maximum likelihood
-    method and the Hessian matrix.
+    autoregressive score (GAS) models of Creal, Koopman, and Lucas (2013)
+    <doi:10.1002/jae.1279> and Harvey (2013) <doi:10.1017/cbo9781139540933>.
+    Model specification allows for various conditional distributions, different
+    parametrizations, exogenous variables, higher score and autoregressive
+    orders, custom and unconditional initial values of time-varying parameters,
+    fixed and bounded values of coefficients, and missing values.
+    Model estimation is performed by the maximum likelihood method and the
+    Hessian matrix.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
