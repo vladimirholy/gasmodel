@@ -104,13 +104,16 @@
 #' \item{fit$par_unc}{The unconditional values of time-varying parameters.}
 #' \item{fit$par_tv}{The individual values of time-varying parameter.}
 #' \item{fit$score_tv}{The individual scores of time-varying parameters.}
+#' \item{fit$mean_tv}{The expected values given by the model.}
+#' \item{fit$var_tv}{The variances given by the model.}
+#' \item{fit$resid_tv}{The residuals of the model.}
 #' \item{fit$loglik_tv}{The log-likelihoods for the individual observations.}
 #' \item{fit$loglik_sum}{The overall log-likelihood.}
 #' \item{fit$aic}{The Akaike information criterion.}
 #' \item{fit$bic}{The Bayesian information criterion.}
 #'
 #' @note
-#' Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
+#' Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:residuals]{residuals()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
 #'
 #' @references
 #' Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. \emph{Electronic Journal of Statistics}, \strong{12}(1), 1019–1052. \doi{10.1214/18-ejs1416}.
@@ -225,6 +228,8 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   info_theta <- info_thetas(coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other, coef_names = info_coef$coef_names)
   fun <- list()
   fun$loglik <- setup_fun_loglik(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
+  fun$mean <- setup_fun_mean(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
+  fun$var <- setup_fun_var(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
   fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans)
   comp <- list()
   comp$coef_start <- check_my_coef_start(coef_start = coef_start, coef_bound_lower = model$coef_bound_lower, coef_bound_upper = model$coef_bound_upper, coef_num = info_coef$coef_num)
@@ -310,6 +315,9 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   }
   fit$par_tv <- name_matrix(comp$eval_tv$par, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$score_tv <- name_matrix(comp$eval_tv$score, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
+  fit$mean_tv <- name_matrix(fun$mean(fit$par_tv), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
+  fit$var_tv <- name_matrix(convert_varcov_array_to_var_matrix(fun$var(fit$par_tv)), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
+  fit$resid_tv <- (data$y - fit$mean_tv) / sqrt(fit$var_tv)
   fit$loglik_tv <- name_vector(comp$eval_tv$lik, info_data$index_time)
   fit$loglik_sum <- sum(fit$loglik_tv, na.rm = TRUE)
   fit$aic <- 2 * model$num_coef - 2 * fit$loglik_sum
@@ -357,6 +365,15 @@ coef.gas <- function(object, ...) {
 vcov.gas <- function(object, ...) {
   coef_vcov <- object$fit$coef_vcov
   return(coef_vcov)
+}
+# ------------------------------------------------------------------------------
+
+
+# Obtain Residuals -------------------------------------------------------------
+#' @export
+residuals.gas <- function(object, ...) {
+  resid <- object$fit$resid
+  return(resid)
 }
 # ------------------------------------------------------------------------------
 

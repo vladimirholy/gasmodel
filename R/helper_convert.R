@@ -2,6 +2,18 @@
 # CONVERSION FUNCTIONS
 
 
+# Convert Variance-Covariance Array to Variance Matrix -------------------------
+convert_varcov_array_to_var_matrix <- function(varcov_array) {
+  if (dim(varcov_array)[2] == 1L && dim(varcov_array)[3] == 1L) {
+    var_matrix <- as.matrix(varcov_array[, 1, 1])
+  } else {
+    var_matrix <- t(apply(varcov_array, MARGIN = 1, FUN = diag))
+  }
+  return(var_matrix)
+}
+# ------------------------------------------------------------------------------
+
+
 # Convert Variance-Covariance Matrix to Variance-Covariance Vector -------------
 convert_varcov_matrix_to_varcov_vector <- function(varcov_mat) {
   n <- nrow(varcov_mat)

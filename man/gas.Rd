@@ -103,6 +103,9 @@ A \code{list} of S3 class \code{gas} with components:
 \item{fit$par_unc}{The unconditional values of time-varying parameters.}
 \item{fit$par_tv}{The individual values of time-varying parameter.}
 \item{fit$score_tv}{The individual scores of time-varying parameters.}
+\item{fit$mean_tv}{The expected values given by the model.}
+\item{fit$var_tv}{The variances given by the model.}
+\item{fit$resid_tv}{The residuals of the model.}
 \item{fit$loglik_tv}{The log-likelihoods for the individual observations.}
 \item{fit$loglik_sum}{The overall log-likelihood.}
 \item{fit$aic}{The Akaike information criterion.}
@@ -143,7 +146,7 @@ For an overview of various GAS models, see Harvey (2022).
 The extensive GAS literature is listed on \href{http://www.gasmodel.com}{www.gasmodel.com}.
 }
 \note{
-Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
+Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:residuals]{residuals()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
 }
 \examples{
 # Load Level of Lake Huron dataset

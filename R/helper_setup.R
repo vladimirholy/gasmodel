@@ -27,6 +27,18 @@ setup_fun_mean <- function(distr, param, par_trans) {
 # ------------------------------------------------------------------------------
 
 
+# Create the Variance Function -------------------------------------------------
+setup_fun_var <- function(distr, param, par_trans) {
+  fun <- function(f) {
+    f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
+    res_var <- do.call(paste("distr", distr, param, "var", sep = "_"), args = list(f = f_orig))
+    return(res_var)
+  }
+  return(fun)
+}
+# ------------------------------------------------------------------------------
+
+
 # Create the Score Function ----------------------------------------------------
 setup_fun_score <- function(distr, param, scaling, orthog, par_trans) {
   if (scaling == "unit") {
