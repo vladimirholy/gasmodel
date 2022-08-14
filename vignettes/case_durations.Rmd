@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Bookshop Orders"
 author: "Vladimír Holý"
-date: "2022-08-11"
+date: "2022-08-14"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Bookshop Orders}
@@ -81,18 +81,9 @@ First, we estimate the model based on the exponential distribution:
 
 ```r
 est_exp <- gas(y = y, distr = "exp")
+#> Error in f[, 1, drop = FALSE]: incorrect number of dimensions
 est_exp
-#> GAS Model: Exponential Distribution / Scale Parametrization / Unit Scaling 
-#> 
-#> Coefficients: 
-#>                      Estimate  Std. Error   Z-Test  Pr(>|Z|)    
-#> log(scale)_omega  -0.00085202  0.00114896  -0.7416    0.4584    
-#> log(scale)_alpha1  0.04888439  0.00650562   7.5142 5.727e-14 ***
-#> log(scale)_phi1    0.96343265  0.00910508 105.8126 < 2.2e-16 ***
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Log-Likelihood: -5608.518, AIC: 11223.04, BIC: 11243.01
+#> Error in eval(expr, envir, enclos): object 'est_exp' not found
 ```
 
 Second, we estimate the model based on the Weibull distribution:
@@ -161,11 +152,7 @@ By comparing the Akaike information criterion (AIC), we find that the most gener
 
 ```r
 AIC(est_exp, est_weibull, est_gamma, est_gengamma)
-#>              df      AIC
-#> est_exp       3 11223.04
-#> est_weibull   4 11190.88
-#> est_gamma     4 11211.47
-#> est_gengamma  5 11134.18
+#> Error in AIC(est_exp, est_weibull, est_gamma, est_gengamma): object 'est_exp' not found
 ```
 
 ## References

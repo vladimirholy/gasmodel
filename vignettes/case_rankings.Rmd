@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
-date: "2022-08-11"
+date: "2022-08-14"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}

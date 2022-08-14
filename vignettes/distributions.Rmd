@@ -834,15 +834,15 @@ $$
 
 $$
 \begin{aligned}
-\mathcal{I}_{r_1, r_1} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( 1 - \sqrt{\frac{r_2}{r_1}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right)^2 \\
+\mathcal{I}_{r_1, r_1} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( 1 - \sqrt{\frac{r_2}{r_1}} \frac{I_{r_1 - r_2 -1} \left( 2 \sqrt{r_1 r_2} \right)}{I_{r_1 - r_2} \left( 2 \sqrt{r_1 r_2} \right)} \right)^2 \\
 & \qquad + \frac{(1 - p)^2 \exp(-r_1 - r_2) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)^2}{r_1 r_2 \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
-\mathcal{I}_{r_1, r_2} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( 1 - \sqrt{\frac{r_2}{r_1}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right) \\
-& \qquad \times \left( \frac{r_1}{r_2} - \sqrt{\frac{r_1}{r_2}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right) \\
+\mathcal{I}_{r_1, r_2} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( 1 - \sqrt{\frac{r_2}{r_1}} \frac{I_{r_1 - r_2-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_{r_1 - r_2} \left( 2 \sqrt{r_1 r_2} \right)} \right) \\
+& \qquad \times \left( \frac{r_1}{r_2} - \sqrt{\frac{r_1}{r_2}} \frac{I_{r_1 - r_2 - 1} \left( 2 \sqrt{r_1 r_2} \right)}{I_{r_1 - r_2} \left( 2 \sqrt{r_1 r_2} \right)} \right) \\
 & \qquad + \frac{(1 - p)^2 \exp(-r_1 - r_2) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{r_1 r_2 \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
 & \qquad \times \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right) \\
 \mathcal{I}_{r_1, p} (r_1, r_2, p) &= \frac{(p - 1) \left( 1 - \exp(-r_1 - r_2 ) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
 & \qquad \times \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right) \\
-\mathcal{I}_{r_2, r_2} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( \frac{r_1}{r_2} - \sqrt{\frac{r_1}{r_2}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right)^2 \\
+\mathcal{I}_{r_2, r_2} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( \frac{r_1}{r_2} - \sqrt{\frac{r_1}{r_2}} \frac{I_{r_1 - r_2 - 1} \left( 2 \sqrt{r_1 r_2} \right)}{I_{r_1 - r_2} \left( 2 \sqrt{r_1 r_2} \right)} \right)^2 \\
 & \qquad + \frac{(1 - p)^2 \exp(-r_1 - r_2) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)^2}{r_1 r_2 \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
 \mathcal{I}_{r_2, p} (r_1, r_2, p) &= \frac{(p - 1) \left( 1 - \exp(-r_1 - r_2 ) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
 & \qquad \times \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right) \\
@@ -901,12 +901,12 @@ $$
 
 $$
 \begin{aligned}
-\mathcal{I}_{m, m} (m, s, p) &\approx \frac{s (1 - p) \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{8 |m| + 4 s} \\
+\mathcal{I}_{m, m} (m, s, p) &\approx \frac{s^2 (1 - p) \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{4 s^2 + 8 |m| s} \\
 & \qquad \times \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
 & \qquad + \frac{(1 - p)^2 \exp(-|m| - s) }{\left( s^2 + 2 |m| s \right) \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
 & \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - s I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right)^2 \\
 \mathcal{I}_{m, s} (m, s, p) &\approx
-\frac{\mathrm{sgn}(m) (1 - p) (|m| + s) \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{8 |m| + 4 s} \\
+\frac{\mathrm{sgn}(m) s (1 - p) (|m| + s) \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{4 s^2 + 8 |m| s} \\
 & \qquad \times \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
 & \qquad + \frac{\mathrm{sgn}(m) (1 - p)^2 \exp(-|m| - s)}{\left( s^2 + 2 |m| s \right) \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
 & \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - s I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right) \\
@@ -981,7 +981,7 @@ $$
 & \qquad \times \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
 & \qquad + \frac{m (1 - p)^2 \exp(-s) I_{1} \left( \sqrt{s^2 - m^2} \right)}{\left( s^2 - m^2 \right) \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
 & \qquad \times \left( \sqrt{s^2 - m^2} I_0 \left( \sqrt{s^2 - m^2} \right) - s I_1 \left( \sqrt{s^2 - m^2} \right) \right) \\
-\mathcal{I}_{m, p} (m, s, p) &= \frac{m (p - 1) \exp(-s) \left( \exp(s) - I_0 \left( \sqrt{s^2 - m^2} \right) \right) I_1 \left( \sqrt{s^2 - m^2} \right)}{\sqrt{s^2 - m^2} \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
+\mathcal{I}_{m, p} (m, s, p) &= \frac{m (p - 1) \left( 1 - \exp(-s) I_0 \left( \sqrt{s^2 - m^2} \right) \right) I_1 \left( \sqrt{s^2 - m^2} \right)}{\sqrt{s^2 - m^2} \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
 \mathcal{I}_{s, s} (m, s, p) &\approx \frac{s^2 (1 - p) \left( 1 - \exp(-s) I_{0} \left( \sqrt{s^2 - m^2} \right) \right)}{4 \left( s^2 - m^2 \right)} \\
 & \qquad \times \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
 & \qquad + \frac{(1 - p)^2 \exp(-s) \left( \sqrt{s^2 - m^2} I_0 \left( \sqrt{s^2 - m^2} \right) - s I_1 \left( \sqrt{s^2 - m^2} \right) \right)^2}{\left( s^2 - m^2 \right) \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
