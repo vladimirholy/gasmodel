@@ -131,12 +131,12 @@ $$
 #### Score
 
 $$
-\nabla_{w_i} (\boldsymbol{y}; w_1, \ldots, w_n) = \frac{1}{w_i} - \sum_{j=1}^{y_i} \frac{1}{\sum_{k = r}^n w_{k^{\mathrm{th}}}}
+\nabla_{w_i} (\boldsymbol{y}; w_1, \ldots, w_n) = \frac{1}{w_i} - \sum_{j=1}^{y_i} \frac{1}{\sum_{k = j}^n w_{k^{\mathrm{th}}}}
 $$
 
 ### Notes
 
-- The expected value, the variance, and the Fisher information are computed directly from the definitions as sums over all possible rankings. As the number of permutations grows drastically with increasing $n$, we only use this approach for $n \leq 9$. For $n \geq 10$, we randomly sample 1 million rankings. In this case, the computed expected characteristics are subject to random error.
+- The expected value, the variance, and the Fisher information are computed directly from the definitions as sums over all possible rankings. As the number of permutations grows drastically with increasing $n$, we only use this approach for $n \leq 6$. For $n \geq 7$, we randomly sample 1 000 rankings. We locally set seed so the results are always the same.
 
 - The probability mass function is invariant to the multiplication by a constant of the worth parameters. In the case of the logarithmic transformation, it is invariant to the addition of a constant to the transformed worth parameters. The parameters therefore need to be standardized, e.g. to zero sum in the latter case.
 
@@ -322,8 +322,7 @@ $$
 \begin{aligned}
 \mathcal{I}_{m, m} (m, s) &= \frac{1}{m (1 + s m)} \\
 \mathcal{I}_{m, s} (m, s) &= 0 \\
-\mathcal{I}_{s, s} (m, s) &\approx \frac{2}{s^3} \ln(1 + s m) - \frac{m}{s^2 + s^3 m} + \frac{2}{s^3} \psi_0 \left( \frac{1}{s} \right) + \frac{1}{s^4} \psi_1 \left( \frac{1}{s} \right) \\
-& \qquad - \frac{2}{s^3} \psi_0 \left( m + \frac{1}{s} \right) - \frac{1}{s^4} \psi_1 \left( m + \frac{1}{s} \right) \\
+\mathcal{I}_{s, s} (m, s) &\approx \frac{1}{s^4} \left( \ln(1 + s m) + \psi_0 \left( \frac{1}{s} \right) - \psi_0 \left( m + \frac{1}{s} \right) \right)^2 \\
 \end{aligned}
 $$
 
@@ -364,7 +363,7 @@ $$
 \begin{aligned}
 \mathcal{I}_{p, p} (p, r) &= \frac{r}{p^2 (1 - p)} \\
 \mathcal{I}_{p, r} (p, r) &= -\frac{1}{p} \\
-\mathcal{I}_{r, r} (p, r) &\approx \psi_1(r) - \psi_1 \left(r + \frac{r (1 - p)}{p} \right) \\
+\mathcal{I}_{r, r} (p, r) &\approx \left( \ln(p) - \psi_0(r) + \psi_0 \left( \frac{r}{p} \right) \right)^2 \\
 \end{aligned}
 $$
 
@@ -543,9 +542,9 @@ $$
 \mathcal{I}_{m, m} (m, s, p) &= \frac{p(p - 1)}{(1 + s m)^2 \left( 1 +  p (1 + s m)^{s^{-1}} - p \right)} + \frac{1 -p}{m(1 + s m)} \\
 \mathcal{I}_{m, s} (m, s, p) &= \frac{\left( p - p^2 \right) \left( (1 + s m) \ln(1 + s m) - s m \right) }{s^2 (1 + s m)^2 \left( 1 + p (1 + s m)^{s^{-1}} -p \right)} \\
 \mathcal{I}_{m, p} (m, s, p) &= \frac{-1}{ (1 + s m) \left( 1 + p (1 + s m)^{s^{-1}} - p \right) }\\
-\mathcal{I}_{s, s} (m, s, p) &\approx \frac{2}{s^3} \ln (1 + s m) - \frac{2 m^2 p s + m^2 s + m p + m}{m^2 s^4 + 2 m s^3 + s^2} \\
-& \qquad + \frac{2 s^2 m^2 + 4 s m + 2}{m^2 s^5 + 2 m s^4 + s^3} \left( \psi_0 \left( s^{-1} \right) - \psi_0 \left( s^{-1} + m (1 - p) \right) \right) \\
-& \qquad + \frac{s^2 m^2 + 2 s m + 1}{m^2 s^6 + 2 m s^5 + s^4} \left( \psi_1 \left( s^{-1} \right) - \psi_1 \left( s^{-1} + m (1 - p) \right) \right) \\
+\mathcal{I}_{s, s} (m, s, p) &\approx \frac{1}{s^4} \left( \ln(1 + s m) + \psi_0 \left( s^{-1} \right) - \psi_0 \left( y + s^{-1} \right) \right)^2 \left( 1 - p - (1 - p)  \left( 1 + s m \right)^{-s^{-1}} \right) \\
+& \qquad + \frac{(1 - p)^2 \left( (1 + s m) \ln(1 + s m) - s m \right)^2}
+{s^4 (1 + s m)^{2 + s^{-1}} \left( 1 + p (1 + s m)^{s^{-1}} - p \right)} \\
 \mathcal{I}_{s, p} (m, s, p) &= \frac{(1 + s m) \ln(1 + s m) - s m}{s^2 (1 + s m) \left( 1 + p (1 + s m)^{s^{-1}} - p \right)} \\
 \mathcal{I}_{p, p} (m, s, p) &= \frac{1 - (1 + s m)^{s^{-1}}}{(p - 1) \left( 1 + p (1 + s m)^{s^{-1}} - p \right)}
 \end{aligned}
@@ -553,7 +552,7 @@ $$
 
 ### Note
 
-- The Fisher information for the dispersion parameter, $\mathcal{I}_{s, s} (m, s, p)$, is not available in a closed form. To speed up calculations, we use an approximation by replacing $y$ with its expected value.
+- The Fisher information for the dispersion parameter, $\mathcal{I}_{s, s} (m, s, p)$, is not available in a closed form. To speed up calculations, we use an approximation by replacing $y$ with its expected value combined with the zero value.
 
 ### Further Reading
 
@@ -817,11 +816,11 @@ $$
 $$
 \begin{aligned}
 \nabla_{r_1} (y; r_1, r_2, p) &= \begin{cases}
-\frac{(p - 1) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} & \text{ for } y = 0 \\
+\frac{(p - 1) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} & \text{ for } y = 0 \\
 \sqrt{\frac{r_2}{r_1}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right) } - 1 & \text{ for } y \neq 0 \\
 \end{cases} \\
 \nabla_{r_2} (y; r_1, r_2, p) &= \begin{cases}
-\frac{(p - 1) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} & \text{ for } y = 0 \\
+\frac{(p - 1) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} & \text{ for } y = 0 \\
 \sqrt{\frac{r_1}{r_2}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right) } -\frac{y}{r_2} - 1 & \text{ for } y \neq 0 \\
 \end{cases} \\
 \nabla_{p} (y; r_1, r_2, p) &= \begin{cases}
@@ -835,12 +834,19 @@ $$
 
 $$
 \begin{aligned}
-\mathcal{I}_{r_1, r_1} (r_1, r_2, p) &\approx \\
-\mathcal{I}_{r_1, r_2} (r_1, r_2, p) &\approx \\
-\mathcal{I}_{r_1, p} (r_1, r_2, p) &\approx \\
-\mathcal{I}_{r_2, r_2} (r_1, r_2, p) &\approx \\
-\mathcal{I}_{r_2, p} (r_1, r_2, p) &\approx \\
-\mathcal{I}_{p, p} (r_1, r_2, p) &\approx \\
+\mathcal{I}_{r_1, r_1} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( 1 - \sqrt{\frac{r_2}{r_1}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right)^2 \\
+& \qquad + \frac{(1 - p)^2 \exp(-r_1 - r_2) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)^2}{r_1 r_2 \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
+\mathcal{I}_{r_1, r_2} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( 1 - \sqrt{\frac{r_2}{r_1}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right) \\
+& \qquad \times \left( \frac{r_1}{r_2} - \sqrt{\frac{r_1}{r_2}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right) \\
+& \qquad + \frac{(1 - p)^2 \exp(-r_1 - r_2) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)}{r_1 r_2 \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
+& \qquad \times \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right) \\
+\mathcal{I}_{r_1, p} (r_1, r_2, p) &= \frac{(p - 1) \left( 1 - \exp(-r_1 - r_2 ) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
+& \qquad \times \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_2 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right) \\
+\mathcal{I}_{r_2, r_2} (r_1, r_2, p) &\approx (1 - p) \left( 1 - \exp(-r_1 - r_2) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right) \left( \frac{r_1}{r_2} - \sqrt{\frac{r_1}{r_2}} \frac{I_{y-1} \left( 2 \sqrt{r_1 r_2} \right)}{I_y \left( 2 \sqrt{r_1 r_2} \right)} \right)^2 \\
+& \qquad + \frac{(1 - p)^2 \exp(-r_1 - r_2) \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right)^2}{r_1 r_2 \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
+\mathcal{I}_{r_2, p} (r_1, r_2, p) &= \frac{(p - 1) \left( 1 - \exp(-r_1 - r_2 ) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)}{\sqrt{r_1 r_2} \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
+& \qquad \times \left( \sqrt{r_1 r_2} I_0 \left( 2 \sqrt{r_1 r_2} \right) - r_1 I_1 \left( 2 \sqrt{r_1 r_2} \right) \right) \\
+\mathcal{I}_{p, p} (r_1, r_2, p) &= \frac{\exp(r_1 + r_2) - I_0 \left( 2 \sqrt{r_1 r_2} \right)}{(1 - p) \left( p \exp(r_1 + r_2) + (1 - p) I_0 \left( 2 \sqrt{r_1 r_2} \right) \right)} \\
 \end{aligned}
 $$
 
@@ -895,12 +901,25 @@ $$
 
 $$
 \begin{aligned}
-\mathcal{I}_{m, m} (m, s, p) &\approx \\
-\mathcal{I}_{m, s} (m, s, p) &\approx \\
-\mathcal{I}_{m, p} (m, s, p) &\approx \\
-\mathcal{I}_{s, s} (m, s, p) &\approx \\
-\mathcal{I}_{s, p} (m, s, p) &\approx \\
-\mathcal{I}_{p, p} (m, s, p) &\approx \\
+\mathcal{I}_{m, m} (m, s, p) &\approx \frac{s (1 - p) \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{8 |m| + 4 s} \\
+& \qquad \times \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
+& \qquad + \frac{(1 - p)^2 \exp(-|m| - s) }{\left( s^2 + 2 |m| s \right) \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - s I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right)^2 \\
+\mathcal{I}_{m, s} (m, s, p) &\approx
+\frac{\mathrm{sgn}(m) (1 - p) (|m| + s) \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{8 |m| + 4 s} \\
+& \qquad \times \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
+& \qquad + \frac{\mathrm{sgn}(m) (1 - p)^2 \exp(-|m| - s)}{\left( s^2 + 2 |m| s \right) \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - s I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right) \\
+& \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - (|m| + s) I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right) \\
+\mathcal{I}_{m, p} (m, s, p) &= \frac{\mathrm{sgn}(m) (p - 1) \left( 1 - \exp(-|m| - s) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{\sqrt{s^2 + 2 |m| s} \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - s I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right) \\
+\mathcal{I}_{s, s} (m, s, p) &\approx \frac{(1 - p) (|m| + s)^2 \left( 1 - \exp(-|m|-s) I_{0} \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{4 s^2  + 8 |m| s} \\
+& \qquad \times \left( \frac{2 (|m| + s)}{\sqrt{s^2 + 2 |m| s}} - \frac{ I_{m-1} \left( \sqrt{s^2 + 2 |m| s} \right) + I_{m+1} \left( \sqrt{s^2 + 2 |m| s} \right) }{ I_m \left( \sqrt{s^2 + 2 |m| s} \right)} \right)^2 \\
+& \qquad + \frac{(1 - p)^2 \exp(-|m| - s)}{\left( s^2 + 2 |m| s \right) \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - (|m| + s) I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right)^2 \\
+\mathcal{I}_{s, p} (m, s, p) &= \frac{(p - 1) \left( 1 - \exp(-|m| - s) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)}{\sqrt{s^2 + 2 |m| s} \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 + 2 |m| s} I_0 \left( \sqrt{s^2 + 2 |m| s} \right) - (|m| + s) I_1 \left( \sqrt{s^2 + 2 |m| s} \right) \right) \\
+\mathcal{I}_{p, p} (m, s, p) &= \frac{\exp(|m| + s) - I_0 \left( \sqrt{s^2 + 2 |m| s} \right)}{(1 - p) \left( p \exp(|m| + s) + (1 - p) I_0 \left( \sqrt{s^2 + 2 |m| s} \right) \right)} \\
 \end{aligned}
 $$
 
@@ -955,22 +974,30 @@ $$
 
 $$
 \begin{aligned}
-\mathcal{I}_{m, m} (m, s, p) &\approx \\
-\mathcal{I}_{m, s} (m, s, p) &\approx \\
-\mathcal{I}_{m, p} (m, s, p) &\approx \\
-\mathcal{I}_{s, s} (m, s, p) &\approx \\
-\mathcal{I}_{s, p} (m, s, p) &\approx \\
-\mathcal{I}_{p, p} (m, s, p) &\approx \\
+\mathcal{I}_{m, m} (m, s, p) &\approx \frac{m^2 (1 - p) \left( 1 - \exp(-s) I_{0} \left( \sqrt{s^2 - m^2} \right) \right)}{4 \left( s^2 - m^2 \right)} \\
+& \qquad \times \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
+& \qquad + \frac{m^2 (1 - p)^2 \exp(-s) I_{1} \left( \sqrt{s^2 - m^2} \right)^2}{\left( s^2 - m^2 \right) \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
+\mathcal{I}_{m, s} (m, s, p) &\approx \frac{m s (p - 1) \left( 1 - \exp(-s) I_{0} \left( \sqrt{s^2 - m^2} \right) \right) }{4 \left( s^2 - m^2 \right)} \\
+& \qquad \times \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
+& \qquad + \frac{m (1 - p)^2 \exp(-s) I_{1} \left( \sqrt{s^2 - m^2} \right)}{\left( s^2 - m^2 \right) \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 - m^2} I_0 \left( \sqrt{s^2 - m^2} \right) - s I_1 \left( \sqrt{s^2 - m^2} \right) \right) \\
+\mathcal{I}_{m, p} (m, s, p) &= \frac{m (p - 1) \exp(-s) \left( \exp(s) - I_0 \left( \sqrt{s^2 - m^2} \right) \right) I_1 \left( \sqrt{s^2 - m^2} \right)}{\sqrt{s^2 - m^2} \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
+\mathcal{I}_{s, s} (m, s, p) &\approx \frac{s^2 (1 - p) \left( 1 - \exp(-s) I_{0} \left( \sqrt{s^2 - m^2} \right) \right)}{4 \left( s^2 - m^2 \right)} \\
+& \qquad \times \left( \frac{2 s}{\sqrt{s^2 - m^2}} - \frac{ I_{m-1} \left( \sqrt{s^2 - m^2} \right) + I_{m+1} \left( \sqrt{s^2 - m^2} \right) }{ I_m \left( \sqrt{s^2 - m^2} \right) } \right)^2 \\
+& \qquad + \frac{(1 - p)^2 \exp(-s) \left( \sqrt{s^2 - m^2} I_0 \left( \sqrt{s^2 - m^2} \right) - s I_1 \left( \sqrt{s^2 - m^2} \right) \right)^2}{\left( s^2 - m^2 \right) \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
+\mathcal{I}_{s, p} (m, s, p) &= \frac{(p - 1) \left( 1 - \exp(-s) I_0 \left( \sqrt{s^2 - m^2} \right) \right) }{\sqrt{s^2 - m^2} \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right) \right)} \\
+& \qquad \times \left( \sqrt{s^2 - m^2} I_0 \left( \sqrt{s^2 - m^2} \right) - s I_1 \left( \sqrt{s^2 - m^2} \right) \right) \\
+\mathcal{I}_{p, p} (m, s, p) &= \frac{\exp(s) - I_0 \left( \sqrt{s^2 - m^2} \right)}{(1 - p) \left( p \exp(s) + (1 - p) I_0 \left( \sqrt{s^2 - m^2} \right)  \right) } \\
 \end{aligned}
 $$
 
 ### Note
 
-- The computation of the Fisher information is quite intricate and we resort to an approximation by replacing $y$ with its expected value.
+- The computation of the Fisher information for the first two parameters is quite intricate and we resort to an approximation by replacing $y$ with its expected value combined with the zero value.
 
 ### Further Reading
 
-- 
+- Karlis, D. and Ntzoufras, I. (2009). Bayesian Modelling of Football Outcomes: Using the Skellam’s Distribution for the Goal Difference. *IMA Journal of Management Mathematics*, **20**(2), 133–145. doi: [10.1093/imaman/dpn026](https://doi.org/10.1093/imaman/dpn026).
 
 # Duration Data
 
