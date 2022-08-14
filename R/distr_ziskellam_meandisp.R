@@ -90,17 +90,19 @@ distr_ziskellam_meandisp_fisher <- function(f) {
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
   p <- f[, 3, drop = FALSE]
+  bi_0 <- besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = 0)
+  bi_1 <- besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = 1)
   tri_bi_m <- (besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m - 1) + besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m + 1)) / besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = m)
   res_fisher <- array(0, dim = c(t, 3L, 3L))
-  res_fisher[, 1, 1] <- NA
-  res_fisher[, 1, 2] <- NA
-  res_fisher[, 1, 3] <- NA
+  res_fisher[, 1, 1] <- s * (1 - p) * (1 - exp(-abs(m) - s) * bi_0) / (8 * abs(m) + 4 * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - tri_bi_m)^2 + ((1 - p)^2 * exp(-abs(m) - s) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - s * bi_1)^2) / ((s^2 + 2 * abs(m) * s) * (p * exp(abs(m) + s) + (1 - p) * bi_0))
+  res_fisher[, 1, 2] <- sign(m) * s * (1 - p) * (abs(m) + s) * (1 - exp(-abs(m) - s) * bi_0) / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - tri_bi_m)^2 + (sign(m) * (1 - p)^2 * exp(-abs(m) - s) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - s * bi_1) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - (abs(m) + s) * bi_1)) / ((s^2 + 2 * abs(m) * s) * (p * exp(abs(m) + s) + (1 - p) * bi_0))
+  res_fisher[, 1, 3] <- (sign(m) * (p - 1) * (1 - exp(-abs(m) - s) * bi_0) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - s * bi_1)) / (sqrt(s^2 + 2 * abs(m) * s) * (p * exp(abs(m) + s) + (1 - p) * bi_0))
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- NA
-  res_fisher[, 2, 3] <- NA
+  res_fisher[, 2, 2] <- (1 - p) * (abs(m) + s)^2 * (1 - exp(-abs(m) - s) * bi_0) / (4 * s^2 + 8 * abs(m) * s) * ((2 * abs(m) + 2 * s) / sqrt(s^2 + 2 * abs(m) * s) - tri_bi_m)^2 + ((1 - p)^2 * exp(-abs(m) - s) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - (abs(m) + s) * bi_1)^2) / ((s^2 + 2 * abs(m) * s) * (p * exp(abs(m) + s) + (1 - p) * bi_0))
+  res_fisher[, 2, 3] <- ((p - 1) * (1 - exp(-abs(m) - s) * bi_0) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - (abs(m) + s) * bi_1)) / (sqrt(s^2 + 2 * abs(m) * s) * (p * exp(abs(m) + s) + (1 - p) * bi_0))
   res_fisher[, 3, 1] <- res_fisher[, 1, 3]
   res_fisher[, 3, 2] <- res_fisher[, 2, 3]
-  res_fisher[, 3, 3] <- NA
+  res_fisher[, 3, 3] <- (exp(abs(m) + s) - bi_0) / ((1 - p) * (p * exp(abs(m) + s) + (1 - p) * bi_0))
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------

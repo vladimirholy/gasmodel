@@ -108,17 +108,19 @@ distr_ziskellam_meanvar_fisher <- function(f) {
   m[s <= abs(m)] <- NA_real_
   s[s <= abs(m)] <- NA_real_
   p[s <= abs(m)] <- NA_real_
+  bi_0 <- besselI(x = sqrt(s^2 - m^2), nu = 0)
+  bi_1 <- besselI(x = sqrt(s^2 - m^2), nu = 1)
   tri_bi_m <- (besselI(x = sqrt(s^2 - m^2), nu = m - 1) + besselI(x = sqrt(s^2 - m^2), nu = m + 1)) / besselI(x = sqrt(s^2 - m^2), nu = m)
   res_fisher <- array(0, dim = c(t, 3L, 3L))
-  res_fisher[, 1, 1] <- NA
-  res_fisher[, 1, 2] <- NA
-  res_fisher[, 1, 3] <- NA
+  res_fisher[, 1, 1] <- (m^2 * (1 - p) * (1 - exp(-s) * bi_0)) / (4 * (s^2 - m^2)) * ((2 * s) / (sqrt(s^2 - m^2)) - tri_bi_m)^2 + (m^2 * (1 - p)^2 * exp(-s) * bi_1^2) / ((s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))
+  res_fisher[, 1, 2] <- (m * s * (p - 1) * (1 - exp(-s) * bi_0)) / (4 * (s^2 - m^2)) * ((2 * s) / (sqrt(s^2 - m^2)) - tri_bi_m)^2 + (m * (1 - p)^2 * exp(-s) * bi_1 * (sqrt(s^2 - m^2) * bi_0 + s * bi_1)) / ((s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))
+  res_fisher[, 1, 3] <- (m * (p - 1) * (1 - exp(-s) * bi_0) * bi_1) / (sqrt(s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- NA
-  res_fisher[, 2, 3] <- NA
+  res_fisher[, 2, 2] <- (s^2 * (1 - p) * (1 - exp(-s) * bi_0)) / (4 * (s^2 - m^2)) * ((2 * s) / (sqrt(s^2 - m^2)) - tri_bi_m)^2 + ((1 - p)^2 * exp(-s) * (sqrt(s^2 - m^2) * bi_0 + s * bi_1)^2) / ((s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))
+  res_fisher[, 2, 3] <- ((p - 1) * (1 - exp(-s) * bi_0) * (sqrt(s^2 - m^2) * bi_0 - s * bi_1)) / (sqrt(s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))
   res_fisher[, 3, 1] <- res_fisher[, 1, 3]
   res_fisher[, 3, 2] <- res_fisher[, 2, 3]
-  res_fisher[, 3, 3] <- NA
+  res_fisher[, 3, 3] <- (exp(s) - bi_0) / ((1 - p) * (p * exp(s) + (1 - p) * bi_0))
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------

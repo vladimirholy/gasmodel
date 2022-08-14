@@ -89,16 +89,19 @@ distr_ziskellam_diff_fisher <- function(f) {
   r1 <- f[, 1, drop = FALSE]
   r2 <- f[, 2, drop = FALSE]
   p <- f[, 3, drop = FALSE]
+  bi_0 <- besselI(x = 2 * sqrt(r1 * r2), nu = 0)
+  bi_1 <- besselI(x = 2 * sqrt(r1 * r2), nu = 0)
+  rat_bi_r <- besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2 - 1) / besselI(x = 2 * sqrt(r1 * r2), nu = r1 - r2)
   res_fisher <- array(0, dim = c(t, 3L, 3L))
-  res_fisher[, 1, 1] <- NA
-  res_fisher[, 1, 2] <- NA
-  res_fisher[, 1, 3] <- NA
+  res_fisher[, 1, 1] <- (1 - p) * (1 - exp(-r1 - r2) * bi_0) * (1 - sqrt(r2 / r1) * rat_bi_r)^2 + ((1 - p)^2 * exp(-r1 - r2) * (sqrt(r1 * r2) * bi_0 - r2 * bi_1)^2) / (r1 * r2 * (p * exp(r1 + r2) + (1 - p) * bi_0))
+  res_fisher[, 1, 2] <- (1 - p) * (1 - exp(-r1 - r2) * bi_0) * (1 - sqrt(r2 / r1) * rat_bi_r) * (r1 / r2 - sqrt(r1 / r2) * rat_bi_r) + ((1 - p)^2 * exp(-r1 - r2) * (sqrt(r1 * r2) * bi_0 - r2 * bi_1) * (sqrt(r1 * r2) * bi_0 - r1 * bi_1)) / (r1 * r2 * (p * exp(r1 + r2) + (1 - p) * bi_0))
+  res_fisher[, 1, 3] <- ((p - 1) * (1 - exp(-r1 - r2) * bi_0) * (sqrt(r1 * r2) * bi_0 - r2 * bi_1)) / (sqrt(r1 * r2) * (p * exp(r1 + r2) + (1 - p) * bi_0))
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
-  res_fisher[, 2, 2] <- NA
-  res_fisher[, 2, 3] <- NA
+  res_fisher[, 2, 2] <- (1 - p) * (1 - exp(-r1 - r2) * bi_0) * (r1 / r2 - sqrt(r1 / r2) * rat_bi_r)^2 + ((1 - p)^2 * exp(-r1 - r2) * (sqrt(r1 * r2) * bi_0 - r1 * bi_1)^2) / (r1 * r2 * (p * exp(r1 + r2) + (1 - p) * bi_0))
+  res_fisher[, 2, 3] <- ((p - 1) * (1 - exp(-r1 - r2) * bi_0) * (sqrt(r1 * r2) * bi_0 - r1 * bi_1)) / (sqrt(r1 * r2) * (p * exp(r1 + r2) + (1 - p) * bi_0))
   res_fisher[, 3, 1] <- res_fisher[, 1, 3]
   res_fisher[, 3, 2] <- res_fisher[, 2, 3]
-  res_fisher[, 3, 3] <- NA
+  res_fisher[, 3, 3] <- (exp(r1 + r2) - bi_0) / ((1 - p) * (p * exp(r1 + r2) + (1 - p) * bi_0))
   return(res_fisher)
 }
 # ------------------------------------------------------------------------------
