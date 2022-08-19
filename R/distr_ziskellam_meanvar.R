@@ -91,7 +91,7 @@ distr_ziskellam_meanvar_score <- function(y, f) {
   bi_1 <- besselI(x = sqrt(s^2 - m^2), nu = 1)
   tri_bi_y <- (besselI(x = sqrt(s^2 - m^2), nu = y - 1) + besselI(x = sqrt(s^2 - m^2), nu = y + 1)) / besselI(x = sqrt(s^2 - m^2), nu = y)
   res_score <- matrix(0, nrow = t, ncol = 3L)
-  res_score[, 1] <- y - m#(y == 0L) * ((m * (p - 1) * bi_1) / (sqrt(s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))) + (y != 0L) * ((s * y) / (s^2 - m^2) - m / (2 * sqrt(s^2 - m^2)) * tri_bi_y)
+  res_score[, 1] <- (y == 0L) * ((m * (p - 1) * bi_1) / (sqrt(s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))) + (y != 0L) * ((s * y) / (s^2 - m^2) - m / (2 * sqrt(s^2 - m^2)) * tri_bi_y)
   res_score[, 2] <- (y == 0L) * (((p - 1) * (sqrt(s^2 - m^2) * bi_0 - s * bi_1)) / (sqrt(s^2 - m^2) * (p * exp(s) + (1 - p) * bi_0))) + (y != 0L) * (-(m * y) / (s^2 - m^2) + s / (2 * sqrt(s^2 - m^2)) * tri_bi_y - 1)
   res_score[, 3] <- (y == 0L) * ((exp(s) - bi_0) / (p * exp(s) + (1 - p) * bi_0)) + (y != 0L) * (1 / (p - 1))
   return(res_score)

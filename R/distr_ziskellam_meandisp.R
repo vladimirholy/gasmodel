@@ -76,7 +76,7 @@ distr_ziskellam_meandisp_score <- function(y, f) {
   bi_1 <- besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = 1)
   tri_bi_y <- (besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y - 1) + besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y + 1)) / besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y)
   res_score <- matrix(0, nrow = t, ncol = 3L)
-  res_score[, 1] <- y - m#(y == 0L) * ((sign(m) * (1 - p) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - s * bi_1)) / (sqrt(s^2 + 2 * abs(m) * s) * (p * bi_0 - p * exp(abs(m) + s) - bi_0))) + (y != 0L) * (y / (2 * abs(m) + s) + (sign(m) * s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * tri_bi_y - sign(m))
+  res_score[, 1] <- (y == 0L) * ((sign(m) * (1 - p) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - s * bi_1)) / (sqrt(s^2 + 2 * abs(m) * s) * (p * bi_0 - p * exp(abs(m) + s) - bi_0))) + (y != 0L) * (y / (2 * abs(m) + s) + (sign(m) * s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * tri_bi_y - sign(m))
   res_score[, 2] <- (y == 0L) * (((p - 1) * (sqrt(s^2 + 2 * abs(m) * s) * bi_0 - (abs(m) + s) * bi_1)) / (sqrt(s^2 + 2 * abs(m) * s) * (p * exp(abs(m) + s) + (1 - p) * bi_0))) + (y != 0L) * ((-m * y) / (s^2 + 2 * abs(m) * s) + (abs(m) + s) / (2 * sqrt(s^2 + 2 * abs(m) * s)) * tri_bi_y - 1)
   res_score[, 3] <- (y == 0L) * ((exp(abs(m) + s) - bi_0) / (p * exp(abs(m) + s) + (1 - p) * bi_0)) + (y != 0L) * (1 / (p - 1))
   return(res_score)
