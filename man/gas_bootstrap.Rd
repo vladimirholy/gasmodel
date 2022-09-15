@@ -108,12 +108,9 @@ est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 est_gas
 
-# Bootstrap the model
-boot_gas <- gas_bootstrap(est_gas, rep_boot = 1)
-boot_gas
-
-# A single bootstrap sample is of course not enough
-# Beware of the computational complexity with a larger number of samples
+# Bootstrap the model (can be time-consuming for a larger number of samples)
+\donttest{boot_gas <- gas_bootstrap(est_gas, rep_boot = 10)
+boot_gas}
 
 }
 \references{

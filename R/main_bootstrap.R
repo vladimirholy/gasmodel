@@ -66,12 +66,9 @@
 #'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 #' est_gas
 #'
-#' # Bootstrap the model
-#' boot_gas <- gas_bootstrap(est_gas, rep_boot = 1)
-#' boot_gas
-#'
-#' # A single bootstrap sample is of course not enough
-#' # Beware of the computational complexity with a larger number of samples
+#' # Bootstrap the model (can be time-consuming for a larger number of samples)
+#' \donttest{boot_gas <- gas_bootstrap(est_gas, rep_boot = 10)
+#' boot_gas}
 #'
 #' @export
 gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6))) {
