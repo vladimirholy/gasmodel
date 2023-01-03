@@ -1,4 +1,4 @@
-# gasmodel (development version)
+# gasmodel 0.2.0
 
 * Added expected values, variances, and residuals to the return value of gas().
 * Added the zero-inflated Skellam distribution.
