@@ -315,8 +315,8 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   }
   fit$par_tv <- name_matrix(comp$eval_tv$par, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$score_tv <- name_matrix(comp$eval_tv$score, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
-  fit$mean_tv <- name_matrix(fun$mean(fit$par_tv), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
-  fit$var_tv <- name_matrix(convert_varcov_array_to_var_matrix(fun$var(fit$par_tv)), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
+  fit$mean_tv <- name_matrix(fun$mean(comp$eval_tv$par), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
+  fit$var_tv <- name_matrix(convert_varcov_array_to_var_matrix(fun$var(comp$eval_tv$par)), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
   fit$resid_tv <- (data$y - fit$mean_tv) / sqrt(fit$var_tv)
   fit$loglik_tv <- name_vector(comp$eval_tv$lik, info_data$index_time)
   fit$loglik_sum <- sum(fit$loglik_tv, na.rm = TRUE)
