@@ -90,7 +90,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
     info_coef <- info_coefficients(m = model$m, p = model$p, q = model$q, par_static = model$par_static, par_names = info_par$par_names, par_num = info_par$par_num, group_names = info_par$group_names, group_of_par_names = info_par$group_of_par_names)
     model$coef_est <- name_vector(check_my_coef_est(coef_est = coef_est, coef_num = info_coef$coef_num), info_coef$coef_names)
     fun <- list()
-    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans)
+    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = info_par$par_static)
     fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
     comp <- list()
     comp$pre_num <- max(c(model$p, model$q, 1L))

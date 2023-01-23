@@ -118,7 +118,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     info_theta <- info_thetas(coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other, coef_names = info_coef$coef_names)
     fun <- list()
     fun$loglik <- setup_fun_loglik(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans)
+    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = info_par$par_static)
     fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
     control <- list()
     control$optim_function <- check_generic_function(arg = optim_function, arg_name = "optim_function")

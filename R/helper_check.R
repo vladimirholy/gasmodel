@@ -193,6 +193,14 @@ check_my_scaling <- function(scaling = NULL) {
     scaling <- "fisher_inv"
   } else if (is.vector(scaling) && !is.list(scaling) && length(scaling) == 1L && (scaling == "fisher_inv_sqrt")) {
     scaling <- "fisher_inv_sqrt"
+  } else if (is.vector(scaling) && !is.list(scaling) && length(scaling) == 1L && (scaling == "diag_fisher_inv")) {
+    scaling <- "diag_fisher_inv"
+  } else if (is.vector(scaling) && !is.list(scaling) && length(scaling) == 1L && (scaling == "diag_fisher_inv_sqrt")) {
+    scaling <- "diag_fisher_inv_sqrt"
+  } else if (is.vector(scaling) && !is.list(scaling) && length(scaling) == 1L && (scaling == "full_fisher_inv")) {
+    scaling <- "full_fisher_inv"
+  } else if (is.vector(scaling) && !is.list(scaling) && length(scaling) == 1L && (scaling == "full_fisher_inv_sqrt")) {
+    scaling <- "full_fisher_inv_sqrt"
   } else {
     stop("Unknown scaling given by argument scaling.")
   }

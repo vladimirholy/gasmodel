@@ -40,7 +40,7 @@ setup_fun_var <- function(distr, param, par_trans) {
 
 
 # Create the Score Function ----------------------------------------------------
-setup_fun_score <- function(distr, param, scaling, orthog, par_trans) {
+setup_fun_score <- function(distr, param, scaling, orthog, par_trans, par_static) {
   if (scaling == "unit") {
     fun <- function(y, f) {
       f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
@@ -48,7 +48,7 @@ setup_fun_score <- function(distr, param, scaling, orthog, par_trans) {
       res_score <- t(jacob_inv) %*% do.call(paste("distr", distr, param, "score", sep = "_"), args = list(y = y, f = f_orig))[1, ]
       return(res_score)
     }
-  } else if (scaling == "fisher_inv" && orthog == TRUE) {
+  } else if ((scaling == "fisher_inv" && (orthog == TRUE || sum(!par_static) <= 1L)) || (scaling == "full_fisher_inv" && orthog == TRUE) || scaling == "diag_fisher_inv") {
     fun <- function(y, f) {
       f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
       jacob <- reparam_link_jacob(f_orig = f_orig, par_trans = par_trans)
@@ -56,7 +56,18 @@ setup_fun_score <- function(distr, param, scaling, orthog, par_trans) {
       res_score <- jacob %*% fisher_inv_orig %*% do.call(paste("distr", distr, param, "score", sep = "_"), args = list(y = y, f = f_orig))[1, ]
       return(res_score)
     }
-  } else if (scaling == "fisher_inv" && orthog == FALSE) {
+  } else if (scaling == "fisher_inv" && orthog == FALSE && sum(!par_static) >= 2L) {
+    fun <- function(y, f) {
+      f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
+      jacob <- reparam_link_jacob(f_orig = f_orig, par_trans = par_trans)
+      fisher_orig <- as.matrix(do.call(paste("distr", distr, param, "fisher", sep = "_"), args = list(f = f_orig))[1, , ])
+      fisher_inv_orig <- matrix(0, nrow = nrow(fisher_orig), ncol = ncol(fisher_orig))
+      fisher_inv_orig[!par_static, !par_static] <- matrix_inv(fisher_orig[!par_static, !par_static])
+      fisher_inv_orig[par_static, par_static] <- matrix_diag_inv(fisher_orig[par_static, par_static])
+      res_score <- jacob %*% fisher_inv_orig %*% do.call(paste("distr", distr, param, "score", sep = "_"), args = list(y = y, f = f_orig))[1, ]
+      return(res_score)
+    }
+  } else if (scaling == "full_fisher_inv" && orthog == FALSE) {
     fun <- function(y, f) {
       f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
       jacob <- reparam_link_jacob(f_orig = f_orig, par_trans = par_trans)
@@ -64,7 +75,7 @@ setup_fun_score <- function(distr, param, scaling, orthog, par_trans) {
       res_score <- jacob %*% fisher_inv_orig %*% do.call(paste("distr", distr, param, "score", sep = "_"), args = list(y = y, f = f_orig))[1, ]
       return(res_score)
     }
-  } else if (scaling == "fisher_inv_sqrt" && orthog == TRUE) {
+  } else if ((scaling == "fisher_inv_sqrt" && (orthog == TRUE || sum(!par_static) <= 1L)) || (scaling == "full_fisher_inv_sqrt" && orthog == TRUE) || scaling == "diag_fisher_inv_sqrt") {
     fun <- function(y, f) {
       f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
       jacob_inv <- reparam_link_jacob_inv(f_orig = f_orig, par_trans = par_trans)
@@ -72,7 +83,18 @@ setup_fun_score <- function(distr, param, scaling, orthog, par_trans) {
       res_score <- fisher_inv_sqrt_tilde %*% t(jacob_inv) %*% do.call(paste("distr", distr, param, "score", sep = "_"), args = list(y = y, f = f_orig))[1, ]
       return(res_score)
     }
-  } else if (scaling == "fisher_inv_sqrt" && orthog == FALSE) {
+  } else if (scaling == "fisher_inv_sqrt" && orthog == FALSE && sum(!par_static) >= 2L) {
+    fun <- function(y, f) {
+      f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
+      jacob_inv <- reparam_link_jacob_inv(f_orig = f_orig, par_trans = par_trans)
+      fisher_tilde <- t(jacob_inv) %*% as.matrix(do.call(paste("distr", distr, param, "fisher", sep = "_"), args = list(f = f_orig))[1, , ]) %*% jacob_inv
+      fisher_inv_sqrt_tilde <- matrix(0, nrow = nrow(fisher_tilde), ncol = ncol(fisher_tilde))
+      fisher_inv_sqrt_tilde[!par_static, !par_static] <- matrix_inv_sqrt(fisher_tilde[!par_static, !par_static])
+      fisher_inv_sqrt_tilde[par_static, par_static] <- matrix_diag_inv_sqrt(fisher_tilde[par_static, par_static])
+      res_score <- fisher_inv_sqrt_tilde %*% t(jacob_inv) %*% do.call(paste("distr", distr, param, "score", sep = "_"), args = list(y = y, f = f_orig))[1, ]
+      return(res_score)
+    }
+  } else if (scaling == "full_fisher_inv_sqrt" && orthog == FALSE) {
     fun <- function(y, f) {
       f_orig <- reparam_tilde_to_orig(f_tilde = f, par_trans = par_trans)
       jacob_inv <- reparam_link_jacob_inv(f_orig = f_orig, par_trans = par_trans)
