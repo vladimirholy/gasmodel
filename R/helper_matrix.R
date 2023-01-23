@@ -15,11 +15,15 @@ matrix_inv <- function(mat) {
 
 # Compute Matrix Inverse Square Root -------------------------------------------
 matrix_inv_sqrt <- function(mat) {
-  mat_eigen <- base::eigen(mat, symmetric = TRUE)
-  mat_eigen$values[mat_eigen$values < 1e-6] <- 0
-  mat_inv_sqrt <- suppressWarnings(try(mat_eigen$vectors %*% pracma::pinv(mat_eigen$vectors %*% diag(sqrt(mat_eigen$values))), silent = TRUE))
-  if ("try-error" %in% class(mat_inv_sqrt)) {
+  mat_eigen <- suppressWarnings(try(base::eigen(mat, symmetric = TRUE), silent = TRUE))
+  if ("try-error" %in% class(mat_eigen)) {
     mat_inv_sqrt <- matrix(NA_real_, nrow = nrow(mat), ncol = ncol(mat))
+  } else {
+    mat_eigen$values[mat_eigen$values < 1e-6] <- 0
+    mat_inv_sqrt <- suppressWarnings(try(mat_eigen$vectors %*% pracma::pinv(mat_eigen$vectors %*% diag(sqrt(mat_eigen$values))), silent = TRUE))
+    if ("try-error" %in% class(mat_inv_sqrt)) {
+      mat_inv_sqrt <- matrix(NA_real_, nrow = nrow(mat), ncol = ncol(mat))
+    }
   }
   return(mat_inv_sqrt)
 }
