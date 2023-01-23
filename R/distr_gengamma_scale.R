@@ -83,7 +83,7 @@ distr_gengamma_scale_fisher <- function(f) {
   s <- f[, 1, drop = FALSE]
   a <- f[, 2, drop = FALSE]
   b <- f[, 3, drop = FALSE]
-  res_fisher <- matrix(0, nrow = 3L, ncol = 3L)
+  res_fisher <- array(0, dim = c(t, 3L, 3L))
   res_fisher[, 1, 1] <- a * b^2 / s^2
   res_fisher[, 1, 2] <- b / s
   res_fisher[, 2, 1] <- res_fisher[, 1, 2]
