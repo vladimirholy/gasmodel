@@ -62,11 +62,11 @@ distr_pluce_worth_mean <- function(f) {
     old_seed <- .Random.seed
     set.seed(13)
     for (i in 1:t) {
-      if (any(is.na(f[i, ]))) {
-        res_mean[i, ] <- NA_real_
-      } else {
+      if (all(is.finite(f[i, ])) && all(f[i, ] > 1e-12) && all(f[i, ] < 1e12)) {
         y_rand <- distr_pluce_worth_random(t = 1e3, f = f[i, , drop = FALSE])
         res_mean[i, ] <- colMeans(y_rand)
+      } else {
+        res_mean[i, ] <- NA_real_
       }
     }
     .Random.seed <- old_seed
@@ -98,11 +98,11 @@ distr_pluce_worth_var <- function(f) {
     old_seed <- .Random.seed
     set.seed(13)
     for (i in 1:t) {
-      if (any(is.na(f[i, ]))) {
-        res_var[i, , ] <- NA_real_
-      } else {
+      if (all(is.finite(f[i, ])) && all(f[i, ] > 1e-12) && all(f[i, ] < 1e12)) {
         y_rand <- distr_pluce_worth_random(t = 1e3, f = f[i, , drop = FALSE])
         res_var[i, , ] <- stats::cov(y_rand)
+      } else {
+        res_var[i, , ] <- NA_real_
       }
     }
     .Random.seed <- old_seed
@@ -156,14 +156,14 @@ distr_pluce_worth_fisher <- function(f) {
     old_seed <- .Random.seed
     set.seed(13)
     for (i in 1:t) {
-      if (any(is.na(f[i, ]))) {
-        res_fisher[i, , ] <- NA_real_
-      } else {
+      if (all(is.finite(f[i, ])) && all(f[i, ] > 1e-12) && all(f[i, ] < 1e12)) {
         y_rand <- distr_pluce_worth_random(t = 1e3, f = f[i, , drop = FALSE])
         for (j in 1:nrow(y_rand)) {
           score <- distr_pluce_worth_score(y = y_rand[j, , drop = FALSE], f = f[i, , drop = FALSE])
           res_fisher[i, , ] <- res_fisher[i, , ] + t(score) %*% score / nrow(y_rand)
         }
+      } else {
+        res_fisher[i, , ] <- NA_real_
       }
     }
     .Random.seed <- old_seed
