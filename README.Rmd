@@ -133,7 +133,7 @@ Generally, the GAS models perform quite well when compared to alternatives, incl
 For a comparison of the GAS models to alternative models, see Koopman et al. (2016) and Blazsek and Licht (2020).
 
 The GAS class includes many well-known econometric models, such as the generalized autoregressive conditional heteroskedasticity (GARCH) model of Bollerslev (1986), the autoregressive conditional duration (ACD) model of Engle and Russel (1998), and the Poisson count model of Davis et al. (2003).
-More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the directional model of Harvey (2019), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2021).
+More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the directional model of Harvey (2019), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2022).
 For an overview of various GAS models, see Harvey (2022).
 
 The extensive GAS literature is listed on [www.gasmodel.com](http://www.gasmodel.com).
@@ -168,7 +168,7 @@ Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. *Cambridge Working Pa
 
 Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. *Cambridge Working Papers in Economics*, CWPE 1971. doi: [10.17863/cam.43915](https://doi.org/10.17863/cam.43915).
 
-Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics). doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
+Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), **71**(5). doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
 
 Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in National League Competitions Using Score-Driven Time Series Models. *International Journal of Forecasting*, **35**(2), 797–809. doi: [10.1016/j.ijforecast.2018.10.011](https://doi.org/10.1016/j.ijforecast.2018.10.011).
 

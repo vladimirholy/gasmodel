@@ -33,7 +33,7 @@ Suggests:
     rmarkdown,
     testthat,
     tidyverse
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(old_usage = TRUE)
 Depends: 
     R (>= 2.10)

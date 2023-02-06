@@ -22,33 +22,32 @@ method and the Hessian matrix.
 
 The package offers the following functions for working with GAS models:
 
--   `gas()` estimates GAS models.
--   `gas_simulate()` simulates GAS models.
--   `gas_forecast()` forecasts GAS models.
--   `gas_filter()` obtains filtered time-varying parameters of GAS
-    models.
--   `gas_bootstrap()` bootstraps coefficients of GAS models.
+- `gas()` estimates GAS models.
+- `gas_simulate()` simulates GAS models.
+- `gas_forecast()` forecasts GAS models.
+- `gas_filter()` obtains filtered time-varying parameters of GAS models.
+- `gas_bootstrap()` bootstraps coefficients of GAS models.
 
 The package handles probability distributions by the following
 functions:
 
--   `distr()` provides table of supported distributions.
--   `distr_density()` computes the density of a given distribution.
--   `distr_mean()` computes the mean of a given distribution.
--   `distr_var()` computes the variance of a given distribution.
--   `distr_score()` computes the score of a given distribution.
--   `distr_fisher()` computes the Fisher information of a given
-    distribution.
--   `distr_random()` generates random observations from a given
-    distribution.
+- `distr()` provides table of supported distributions.
+- `distr_density()` computes the density of a given distribution.
+- `distr_mean()` computes the mean of a given distribution.
+- `distr_var()` computes the variance of a given distribution.
+- `distr_score()` computes the score of a given distribution.
+- `distr_fisher()` computes the Fisher information of a given
+  distribution.
+- `distr_random()` generates random observations from a given
+  distribution.
 
 In addition, the package provides the following datasets used in
 examples:
 
--   `bookshop_sales` contains times of antiquarian bookshop sales.
--   `ice_hockey_championships` contains the results of the Ice Hockey
-    World Championships.
--   `sp500_daily` contains daily S&P 500 prices.
+- `bookshop_sales` contains times of antiquarian bookshop sales.
+- `ice_hockey_championships` contains the results of the Ice Hockey
+  World Championships.
+- `sp500_daily` contains daily S&P 500 prices.
 
 ## Installation
 
@@ -114,14 +113,14 @@ ggplot(mapping = aes(x = data$date, y = model_gas$fit$par_tv[, 2])) +
 To further illustrate the usability of GAS models, the package includes
 the following case studies in the form of vignettes:
 
--   `case_durations` analyzes the timing of online antiquarian bookshop
-    orders.
--   `case_rankings` analyzes the strength of national ice hockey teams
-    using the annual Ice Hockey World Championships rankings.
+- `case_durations` analyzes the timing of online antiquarian bookshop
+  orders.
+- `case_rankings` analyzes the strength of national ice hockey teams
+  using the annual Ice Hockey World Championships rankings.
 
 ## Supported Distributions
 
-Currently, there are 19 distributions available.
+Currently, there are 20 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
@@ -155,7 +154,10 @@ print(distr(), right = FALSE, row.names = FALSE)
 #>  Weibull                         Scale           weibull   scale    duration    uni   FALSE   TRUE  
 #>  Zero-Inflated Geometric         Mean            zigeom    mean     count       uni   FALSE   TRUE  
 #>  Zero-Inflated Negative Binomial NB2             zinegbin  nb2      count       uni   FALSE   TRUE  
-#>  Zero-Inflated Poisson           Mean            zipois    mean     count       uni   FALSE   TRUE
+#>  Zero-Inflated Poisson           Mean            zipois    mean     count       uni   FALSE   TRUE  
+#>  Zero-Inflated Skellam           Difference      ziskellam diff     integer     uni   FALSE  FALSE  
+#>  Zero-Inflated Skellam           Mean-Dispersion ziskellam meandisp integer     uni   FALSE  FALSE  
+#>  Zero-Inflated Skellam           Mean-Variance   ziskellam meanvar  integer     uni   FALSE   TRUE
 ```
 
 Details of each distribution, including its density function, expected
@@ -170,43 +172,22 @@ or score-driven (SD) models, have established themselves as a useful
 modern framework for time series modeling.
 
 The GAS models are observation-driven models allowing for any underlying
-probability distribution
-![p(y_t\|f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;p%28y_t%7Cf_t%29 "p(y_t|f_t)")
-with any time-varying parameters
-![f_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_t "f_t")
-for time series
-![y_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_t "y_t").
-They capture the dynamics of time-varying parameters using the
-autoregressive term and the lagged score, i.e. the gradient of the
-log-likelihood function. Exogenous variables can also be included.
-Specifically, time-varying parameters
-![f\_{t}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D "f_{t}")
-follow the recursion
-
-![f\_{t} = \omega + \sum\_{i=1}^M \beta_i x\_{ti} + \sum\_{j=1}^P \alpha_j S(f\_{t - j}) \nabla(y\_{t - j}, f\_{t - j}) + \sum\_{k=1}^Q \varphi_k f\_{t-k},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20f_%7Bt-k%7D%2C "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},")
-
-where
-![\omega](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Comega "\omega")
-is a vector of constants,
-![\beta_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_i "\beta_i")
-are regression parameters,
-![\alpha_j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_j "\alpha_j")
-are score parameters,
-![\varphi_k](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cvarphi_k "\varphi_k")
-are autoregressive parameters,
-![x\_{ti}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;x_%7Bti%7D "x_{ti}")
-are exogenous variables,
-![S(f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;S%28f_t%29 "S(f_t)")
-is a scaling function for the score, and
-![\nabla(y_t, f_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29 "\nabla(y_t, f_t)")
-is the score given by
-
-![\nabla(y_t, f_t) = \frac{\partial \ln p(y_t \| f_t)}{\partial f_t}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cnabla%28y_t%2C%20f_t%29%20%3D%20%5Cfrac%7B%5Cpartial%20%5Cln%20p%28y_t%20%7C%20f_t%29%7D%7B%5Cpartial%20f_t%7D. "\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.")
-
+probability distribution $p(y_t|f_t)$ with any time-varying parameters
+$f_t$ for time series $y_t$. They capture the dynamics of time-varying
+parameters using the autoregressive term and the lagged score, i.e. the
+gradient of the log-likelihood function. Exogenous variables can also be
+included. Specifically, time-varying parameters $f_{t}$ follow the
+recursion
+$$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},$$
+where $\omega$ is a vector of constants, $\beta_i$ are regression
+parameters, $\alpha_j$ are score parameters, $\varphi_k$ are
+autoregressive parameters, $x_{ti}$ are exogenous variables, $S(f_t)$ is
+a scaling function for the score, and $\nabla(y_t, f_t)$ is the score
+given by
+$$\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.$$
 Alternatively, a different model can be obtained by defining the
 recursion in the fashion of regression models with dynamic errors as
-
-![f\_{t} = \omega + \sum\_{i=1}^M \beta_i x\_{ti} + e\_{t}, \quad e_t = \sum\_{j=1}^P \alpha_j S(f\_{t - j}) \nabla(y\_{t - j}, f\_{t - j}) + \sum\_{k=1}^Q \varphi_k e\_{t-k}.](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;f_%7Bt%7D%20%3D%20%5Comega%20%2B%20%5Csum_%7Bi%3D1%7D%5EM%20%5Cbeta_i%20x_%7Bti%7D%20%2B%20e_%7Bt%7D%2C%20%5Cquad%20e_t%20%3D%20%5Csum_%7Bj%3D1%7D%5EP%20%5Calpha_j%20S%28f_%7Bt%20-%20j%7D%29%20%5Cnabla%28y_%7Bt%20-%20j%7D%2C%20f_%7Bt%20-%20j%7D%29%20%2B%20%5Csum_%7Bk%3D1%7D%5EQ%20%5Cvarphi_k%20e_%7Bt-k%7D. "f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.")
+$$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.$$
 
 The GAS models can be straightforwardly estimated by the maximum
 likelihood method. For the asymptotic theory regarding the GAS models
@@ -232,7 +213,7 @@ been proposed, such as the Beta-t-(E)GARCH model of Harvey and
 Chakravarty (2008), the discrete price changes model of Koopman et
 al. (2018), the directional model of Harvey (2019), the bivariate
 Poisson model of Koopman and Lit (2019), and the ranking model of Holý
-and Zouhar (2021). For an overview of various GAS models, see Harvey
+and Zouhar (2022). For an overview of various GAS models, see Harvey
 (2022).
 
 The extensive GAS literature is listed on
@@ -307,9 +288,9 @@ Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional
 (Circular) Time Series. *Cambridge Working Papers in Economics*, CWPE
 1971. doi: [10.17863/cam.43915](https://doi.org/10.17863/cam.43915).
 
-Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with
+Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with
 Autoregressive and Score-Driven Dynamics. Journal of the Royal
-Statistical Society: Series C (Applied Statistics). doi:
+Statistical Society: Series C (Applied Statistics), **71**(5). doi:
 [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
 
 Koopman, S. J. and Lit, R. (2019). Forecasting Football Match Results in
