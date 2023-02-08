@@ -1361,6 +1361,49 @@ $$
 
 # Real Data
 
+## Laplace Distribution
+
+### Mean-Scale Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Scale parameter $s \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s) = \frac{1}{2s} \exp \left\{- \frac{\lvert y - m \rvert}{s} \right\}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= 2s^2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{\mathrm{sign}(y - m)}{s} \\
+\nabla_{s} (y; m, s) &= \frac{\lvert y - m \rvert}{s^2} - \frac{1}{s} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{1}{s^2} \\
+\mathcal{I}_{m, s} (m, s) &= 0 \\
+\mathcal{I}_{s, s} (m, s) &= \frac{1}{s^2} \\
+\end{aligned}
+$$
+
 ## Normal Distribution
 
 ### Mean-Variance Parametrization
