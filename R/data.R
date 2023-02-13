@@ -35,7 +35,7 @@
 #'
 #' @description
 #' Market capitalization of the "Germany's Big Three" automobile manufacturers – Volkswagen Group, Mercedes-Benz Group, and BMW.
-#' Market capitalization is reported in euros and covers the period 1994–2021.
+#' Market capitalization is reported in billions of euros and covers the period 1994–2021.
 #'
 #' @source
 #' Thomson Reuters (\href{https://www.thomsonreuters.com/}{www.thomsonreuters.com}).
@@ -45,7 +45,7 @@
 #' \describe{
 #'   \item{year}{Year.}
 #'   \item{car_manufacturer}{Car manufacturer.}
-#'   \item{market_cap}{Market capitalization in euros.}
+#'   \item{market_cap}{Market capitalization in billions of euros.}
 #' }
 #'
 "german_car_market_cap"
