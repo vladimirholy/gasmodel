@@ -30,6 +30,28 @@
 # ------------------------------------------------------------------------------
 
 
+# Dataset german_car_market_cap ------------------------------------------------
+#' @title Market Capitalization of German Car Manufacturers
+#'
+#' @description
+#' Market capitalization of the "Germany's Big Three" automobile manufacturers – Volkswagen Group, Mercedes-Benz Group, and BMW.
+#' Market capitalization is reported in euros and covers the period 1994–2021.
+#'
+#' @source
+#' Thomson Reuters (\href{https://www.thomsonreuters.com/}{www.thomsonreuters.com}).
+#'
+#' @format
+#' A data frame with columns:
+#' \describe{
+#'   \item{year}{Year.}
+#'   \item{car_manufacturer}{Car manufacturer.}
+#'   \item{market_cap}{Market capitalization in euros.}
+#' }
+#'
+"german_car_market_cap"
+# ------------------------------------------------------------------------------
+
+
 # Dataset ice_hockey_championships ---------------------------------------------
 #' @title Results of the Ice Hockey World Championships
 #'
