@@ -176,6 +176,8 @@ distr_pluce_worth_fisher <- function(f) {
 # Random Generation Function ---------------------------------------------------
 distr_pluce_worth_random <- function(t, f) {
   n <- length(f)
+  f <- pmax(pmin(1e12, f), 1e-12)
+  f[is.na(f)] <- 1
   w <- f / prod(f)^(1 / n)
   res_random <- t(replicate(Matrix::invPerm(sample(1:n, replace = FALSE, prob = w)), n = t))
   return(res_random)
