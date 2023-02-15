@@ -19,7 +19,9 @@ A strand of financial econometrics is devoted to analyzing the timing of transac
 
 
 ```r
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(gasmodel)
 ```
 

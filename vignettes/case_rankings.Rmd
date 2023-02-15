@@ -17,7 +17,8 @@ In this vignette, we present the empirical study of Holý and Zouhar (2022) whic
 
 
 ```r
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(gasmodel)
 ```
 

@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
   out.width = "75%"
 )
 
-options(width = 101, max.print = 1e6)
+options(width = 102, max.print = 1e6)
 
 Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
@@ -70,7 +70,8 @@ install_github("vladimirholy/gasmodel")
 As a simple example, let us model volatility of daily S&P 500 prices in 2021 in the fashion of GARCH models. We estimate the GAS model based on the Student's t-distribution with time-varying volatility and plot the filtered time-varying parameters:
 
 ``` {r example, warning = FALSE, message = FALSE}
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(gasmodel)
 
 data <- sp500_daily %>%

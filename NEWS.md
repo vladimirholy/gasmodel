@@ -4,6 +4,7 @@
 * Added german_car_market_cap dataset.
 * Corrected NA and Inf handling for the Plackett-Luce distribution.
 * Corrected the Fisher information for the generalized gamma distribution.
+* Replaced the tidyverse package with dplyr, tidyr, and ggplot2 packages in Suggests.
 
 # gasmodel 0.2.0
 

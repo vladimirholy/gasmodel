@@ -36,7 +36,9 @@ We loosely follow Tomanová and Holý (2021) and analyze the timing of orders fr
 A strand of financial econometrics is devoted to analyzing the timing of transactions by the so-called autoregressive conditional duration (ACD) model introduced by Engle and Russell (1998). For a textbook treatment of such financial point processes, see e.g. Hautsch (2012).
 
 ```{r setup, warning = FALSE, message = FALSE}
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(gasmodel)
 ```
 

@@ -29,10 +29,12 @@ Imports:
     numDeriv,
     pracma
 Suggests:
+    dplyr,
+    ggplot2,
     knitr,
     rmarkdown,
     testthat,
-    tidyverse
+    tidyr
 RoxygenNote: 7.2.3
 Roxygen: list(old_usage = TRUE)
 Depends: 

@@ -34,7 +34,8 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 In this vignette, we present the empirical study of Holý and Zouhar (2022) which analyzes the results of the Ice Hockey World Championships. Our main object of interest is the annual ranking of 16 teams participating in the championships. For an in-depth overview of statistical toolkit for ranking data, see e.g. Alvo and Yu (2014). However, as Yu et al. (2019) point out, the time perspective is often overlooked in the ranking literature. This is where the GAS model comes into play.
 
 ```{r setup, warning = FALSE, message = FALSE}
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(gasmodel)
 ```
 
