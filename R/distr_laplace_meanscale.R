@@ -88,7 +88,7 @@ distr_laplace_meanscale_fisher <- function(f) {
 distr_laplace_meanscale_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
-  u <- runif(n = t, min = -1, max = 1)
+  u <- stats::runif(n = t, min = -1, max = 1)
   res_random <- m - s * sign(u) * log(1 - abs(u))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
