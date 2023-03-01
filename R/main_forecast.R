@@ -122,7 +122,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
     model$coef_est <- name_vector(check_my_coef_est(coef_est = coef_est, coef_num = info_coef$coef_num), info_coef$coef_names)
     fun <- list()
     fun$mean <- setup_fun_mean(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = info_par$par_static)
+    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = model$par_static)
     fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
     comp <- list()
     comp$pre_num <- max(c(model$p, model$q, 1L))

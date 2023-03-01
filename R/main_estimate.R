@@ -230,7 +230,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   fun$loglik <- setup_fun_loglik(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
   fun$mean <- setup_fun_mean(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
   fun$var <- setup_fun_var(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-  fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = info_par$par_static)
+  fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = model$par_static)
   comp <- list()
   comp$coef_start <- check_my_coef_start(coef_start = coef_start, coef_bound_lower = model$coef_bound_lower, coef_bound_upper = model$coef_bound_upper, coef_num = info_coef$coef_num)
   comp$theta_start <- convert_coef_vector_to_theta_vector(comp$coef_start, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)

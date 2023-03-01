@@ -134,7 +134,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
     model$coef_bound_upper <- name_vector(check_my_coef_bound_upper(coef_bound_upper = coef_bound_upper, coef_bound_lower = model$coef_bound_lower, par_static = model$par_static, par_support = info_par$par_support, par_num = info_par$par_num, coef_in_par_num = info_coef$coef_in_par_num, coef_num = info_coef$coef_num), info_coef$coef_names)
     info_theta <- info_thetas(coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other, coef_names = info_coef$coef_names)
     fun <- list()
-    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = info_par$par_static)
+    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = model$par_static)
     fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
     filter <- list()
     filter$method <- check_my_method(method = method, values = c("given_coefs", "simulated_coefs"))
