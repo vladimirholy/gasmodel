@@ -18,7 +18,7 @@ distr_negbin_prob_density <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   r <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(stats::dnbinom(y, prob = p, size = r))
+  res_density <- be_silent(stats::dnbinom(y, prob = p, size = r))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ distr_negbin_prob_loglik <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
   r <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dnbinom(y, prob = p, size = r, log = TRUE))
+  res_loglik <- be_silent(stats::dnbinom(y, prob = p, size = r, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ distr_negbin_prob_fisher <- function(f) {
 distr_negbin_prob_random <- function(t, f) {
   p <- f[1]
   r <- f[2]
-  res_random <- suppressWarnings(stats::rnbinom(t, prob = p, size = r))
+  res_random <- be_silent(stats::rnbinom(t, prob = p, size = r))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

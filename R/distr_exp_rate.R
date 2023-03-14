@@ -17,7 +17,7 @@ distr_exp_rate_parameters <- function(n) {
 distr_exp_rate_density <- function(y, f) {
   t <- nrow(f)
   r <- f[, 1, drop = FALSE]
-  res_density <- suppressWarnings(stats::dexp(y, rate = r))
+  res_density <- be_silent(stats::dexp(y, rate = r))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ distr_exp_rate_density <- function(y, f) {
 distr_exp_rate_loglik <- function(y, f) {
   t <- nrow(f)
   r <- f[, 1, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dexp(y, rate = r, log = TRUE))
+  res_loglik <- be_silent(stats::dexp(y, rate = r, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ distr_exp_rate_fisher <- function(f) {
 # Random Generation Function ---------------------------------------------------
 distr_exp_rate_random <- function(t, f) {
   r <- f[1]
-  res_random <- suppressWarnings(stats::rexp(t, rate = r))
+  res_random <- be_silent(stats::rexp(t, rate = r))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

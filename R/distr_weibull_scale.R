@@ -18,7 +18,7 @@ distr_weibull_scale_density <- function(y, f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
   b <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(stats::dweibull(y, scale = s, shape = b))
+  res_density <- be_silent(stats::dweibull(y, scale = s, shape = b))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ distr_weibull_scale_loglik <- function(y, f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
   b <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dweibull(y, scale = s, shape = b, log = TRUE))
+  res_loglik <- be_silent(stats::dweibull(y, scale = s, shape = b, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ distr_weibull_scale_fisher <- function(f) {
 distr_weibull_scale_random <- function(t, f) {
   s <- f[1]
   b <- f[2]
-  res_random <- suppressWarnings(stats::rweibull(t, scale = s, shape = b))
+  res_random <- be_silent(stats::rweibull(t, scale = s, shape = b))
   res_random <- matrix(res_random, nrow = t, ncol = 1)
   return(res_random)
 }

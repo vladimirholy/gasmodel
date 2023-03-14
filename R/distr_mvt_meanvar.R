@@ -22,7 +22,7 @@ distr_mvt_meanvar_density <- function(y, f) {
   v <- f[, 2 * n + n * (n - 1) / 2 + 1]
   res_density <- matrix(0, nrow = t, ncol = 1L)
   for (i in 1:t) {
-    res_density[i, ] <- suppressWarnings(mvnfast::dmvt(y[i, ], mu = m[i, ], sigma = convert_varcov_vector_to_varcov_matrix(sc[i, ]), df = v[i], log = FALSE))
+    res_density[i, ] <- be_silent(mvnfast::dmvt(y[i, ], mu = m[i, ], sigma = convert_varcov_vector_to_varcov_matrix(sc[i, ]), df = v[i], log = FALSE))
   }
   return(res_density)
 }
@@ -38,7 +38,7 @@ distr_mvt_meanvar_loglik <- function(y, f) {
   v <- f[, 2 * n + n * (n - 1) / 2 + 1]
   res_loglik <- matrix(0, nrow = t, ncol = 1L)
   for (i in 1:t) {
-    res_loglik[i, ] <- suppressWarnings(mvnfast::dmvt(y[i, ], mu = m[i, ], sigma = convert_varcov_vector_to_varcov_matrix(sc[i, ]), df = v[i], log = TRUE))
+    res_loglik[i, ] <- be_silent(mvnfast::dmvt(y[i, ], mu = m[i, ], sigma = convert_varcov_vector_to_varcov_matrix(sc[i, ]), df = v[i], log = TRUE))
   }
   return(res_loglik)
 }
@@ -127,7 +127,7 @@ distr_mvt_meanvar_random <- function(t, f) {
   m <- f[1:n]
   sc <- f[(n + 1):(2 * n + n * (n - 1) / 2)]
   v <- f[2 * n + n * (n - 1) / 2 + 1]
-  res_random <- suppressWarnings(mvnfast::rmvt(t, mu = m, sigma = convert_varcov_vector_to_varcov_matrix(sc), df = v))
+  res_random <- be_silent(mvnfast::rmvt(t, mu = m, sigma = convert_varcov_vector_to_varcov_matrix(sc), df = v))
   return(res_random)
 }
 # ------------------------------------------------------------------------------

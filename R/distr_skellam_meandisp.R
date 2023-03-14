@@ -18,7 +18,7 @@ distr_skellam_meandisp_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(exp(-abs(m) - s) * ((abs(m) + m + s) / (abs(m) - m + s))^(y / 2) * besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y))
+  res_density <- be_silent(exp(-abs(m) - s) * ((abs(m) + m + s) / (abs(m) - m + s))^(y / 2) * besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y))
   res_density[!is.finite(res_density)] <- -Inf
   return(res_density)
 }
@@ -30,7 +30,7 @@ distr_skellam_meandisp_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(y / 2 * log((abs(m) + m + s) / (abs(m) - m + s)) - abs(m) - s + log(besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y)))
+  res_loglik <- be_silent(y / 2 * log((abs(m) + m + s) / (abs(m) - m + s)) - abs(m) - s + log(besselI(x = sqrt(s^2 + 2 * abs(m) * s), nu = y)))
   res_loglik[!is.finite(res_loglik)] <- -Inf
   return(res_loglik)
 }
@@ -94,7 +94,7 @@ distr_skellam_meandisp_fisher <- function(f) {
 distr_skellam_meandisp_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
-  res_random <- suppressWarnings(stats::rpois(t, lambda = (abs(m) + m + s) / 2) - stats::rpois(t, lambda = (abs(m) - m + s) / 2))
+  res_random <- be_silent(stats::rpois(t, lambda = (abs(m) + m + s) / 2) - stats::rpois(t, lambda = (abs(m) - m + s) / 2))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

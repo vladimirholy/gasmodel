@@ -18,7 +18,7 @@ distr_zipois_mean_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
-  res_density <- (y == 0L) * p + (1 - p) * suppressWarnings(stats::dpois(y, lambda = m))
+  res_density <- (y == 0L) * p + (1 - p) * be_silent(stats::dpois(y, lambda = m))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -30,8 +30,8 @@ distr_zipois_mean_loglik <- function(y, f) {
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
   res_loglik <- matrix(0, nrow = t, ncol = 1)
-  res_loglik[y > 0L, ] <- log(1 - p[y > 0L, ]) + suppressWarnings(stats::dpois(y[y > 0L, ], lambda = m[y > 0L], log = TRUE))
-  res_loglik[y == 0L, ] <- log(p[y == 0L, ] + (1 - p[y == 0L, ]) * suppressWarnings(stats::dpois(0L, lambda = m[y == 0L, ])))
+  res_loglik[y > 0L, ] <- log(1 - p[y > 0L, ]) + be_silent(stats::dpois(y[y > 0L, ], lambda = m[y > 0L], log = TRUE))
+  res_loglik[y == 0L, ] <- log(p[y == 0L, ] + (1 - p[y == 0L, ]) * be_silent(stats::dpois(0L, lambda = m[y == 0L, ])))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ distr_zipois_mean_random <- function(t, f) {
   m <- f[1]
   p <- f[2]
   res_random <- sample(c(0L, NA_real_), size = t, replace = TRUE, prob = c(p, 1 - p))
-  res_random[is.na(res_random)] <- suppressWarnings(stats::rpois(sum(is.na(res_random)), lambda = m))
+  res_random[is.na(res_random)] <- be_silent(stats::rpois(sum(is.na(res_random)), lambda = m))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

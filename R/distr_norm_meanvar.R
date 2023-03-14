@@ -18,7 +18,7 @@ distr_norm_meanvar_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(stats::dnorm(y, mean = m, sd = sqrt(s)))
+  res_density <- be_silent(stats::dnorm(y, mean = m, sd = sqrt(s)))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ distr_norm_meanvar_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dnorm(y, mean = m, sd = sqrt(s), log = TRUE))
+  res_loglik <- be_silent(stats::dnorm(y, mean = m, sd = sqrt(s), log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ distr_norm_meanvar_fisher <- function(f) {
 distr_norm_meanvar_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
-  res_random <- suppressWarnings(stats::rnorm(t, mean = m, sd = sqrt(s)))
+  res_random <- be_silent(stats::rnorm(t, mean = m, sd = sqrt(s)))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

@@ -17,7 +17,7 @@ distr_geom_prob_parameters <- function(n) {
 distr_geom_prob_density <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  res_density <- suppressWarnings(stats::dgeom(y, prob = p))
+  res_density <- be_silent(stats::dgeom(y, prob = p))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ distr_geom_prob_density <- function(y, f) {
 distr_geom_prob_loglik <- function(y, f) {
   t <- nrow(f)
   p <- f[, 1, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dgeom(y, prob = p, log = TRUE))
+  res_loglik <- be_silent(stats::dgeom(y, prob = p, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ distr_geom_prob_fisher <- function(f) {
 # Random Generation Function ---------------------------------------------------
 distr_geom_prob_random <- function(t, f) {
   p <- f[1]
-  res_random <- suppressWarnings(stats::rgeom(t, prob = p))
+  res_random <- be_silent(stats::rgeom(t, prob = p))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

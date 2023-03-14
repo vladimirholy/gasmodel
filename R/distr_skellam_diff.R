@@ -18,7 +18,7 @@ distr_skellam_diff_density <- function(y, f) {
   t <- nrow(f)
   r1 <- f[, 1, drop = FALSE]
   r2 <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(exp(-(r1 + r2)) * (r1 / r2)^(y / 2) * besselI(x = 2 * sqrt(r1 * r2), nu = y))
+  res_density <- be_silent(exp(-(r1 + r2)) * (r1 / r2)^(y / 2) * besselI(x = 2 * sqrt(r1 * r2), nu = y))
   res_density[!is.finite(res_density)] <- -Inf
   return(res_density)
 }
@@ -30,7 +30,7 @@ distr_skellam_diff_loglik <- function(y, f) {
   t <- nrow(f)
   r1 <- f[, 1, drop = FALSE]
   r2 <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(y / 2 * log(r1 / r2) - r1 - r2 + log(besselI(x = 2 * sqrt(r1 * r2), nu = y)))
+  res_loglik <- be_silent(y / 2 * log(r1 / r2) - r1 - r2 + log(besselI(x = 2 * sqrt(r1 * r2), nu = y)))
   res_loglik[!is.finite(res_loglik)] <- -Inf
   return(res_loglik)
 }
@@ -92,7 +92,7 @@ distr_skellam_diff_fisher <- function(f) {
 distr_skellam_diff_random <- function(t, f) {
   r1 <- f[1]
   r2 <- f[2]
-  res_random <- suppressWarnings(stats::rpois(t, lambda = r1) - stats::rpois(t, lambda = r2))
+  res_random <- be_silent(stats::rpois(t, lambda = r1) - stats::rpois(t, lambda = r2))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

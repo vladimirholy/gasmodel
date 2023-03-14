@@ -103,7 +103,7 @@ distr_gengamma_rate_random <- function(t, f) {
   r <- f[1]
   a <- f[2]
   b <- f[3]
-  res_random <- 1 / r * suppressWarnings(stats::rgamma(t, shape = a, rate = 1))^(1 / b)
+  res_random <- 1 / r * be_silent(stats::rgamma(t, shape = a, rate = 1))^(1 / b)
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

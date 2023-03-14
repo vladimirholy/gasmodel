@@ -297,7 +297,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   }
   fit <- list()
   fit$coef_est <- name_vector(convert_theta_vector_to_coef_vector(solution$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other), info_coef$coef_names)
-  comp$eval_tv <- suppressWarnings(likelihood_evaluate(coef = fit$coef_est, data = data, model = model, fun = fun, info_par = info_par, info_coef = info_coef))
+  comp$eval_tv <- be_silent(likelihood_evaluate(coef = fit$coef_est, data = data, model = model, fun = fun, info_par = info_par, info_coef = info_coef))
   model$num_obs <- sum(!is.na(comp$eval_tv$lik))
   model$num_coef <- info_theta$theta_num
   comp$theta_vcov <- matrix_inv(solution$theta_hessian) / model$num_obs
@@ -305,7 +305,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
   data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
   fit$coef_vcov <- name_matrix(convert_theta_matrix_to_coef_matrix(comp$theta_vcov, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other), info_coef$coef_names, info_coef$coef_names)
-  fit$coef_sd <- suppressWarnings(sqrt(diag(fit$coef_vcov)))
+  fit$coef_sd <- be_silent(sqrt(diag(fit$coef_vcov)))
   fit$coef_zstat <- fit$coef_est / fit$coef_sd
   fit$coef_pval <- 2 * stats::pnorm(-abs(fit$coef_zstat))
   if (model$spec == "joint") {

@@ -18,7 +18,7 @@ distr_negbin_nb2_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(stats::dnbinom(y, mu = m, size = 1 / s))
+  res_density <- be_silent(stats::dnbinom(y, mu = m, size = 1 / s))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ distr_negbin_nb2_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dnbinom(y, mu = m, size = 1 / s, log = TRUE))
+  res_loglik <- be_silent(stats::dnbinom(y, mu = m, size = 1 / s, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ distr_negbin_nb2_fisher <- function(f) {
 distr_negbin_nb2_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
-  res_random <- suppressWarnings(stats::rnbinom(t, mu = m, size = 1 / s))
+  res_random <- be_silent(stats::rnbinom(t, mu = m, size = 1 / s))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

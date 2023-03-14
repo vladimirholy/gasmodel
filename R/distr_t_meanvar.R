@@ -19,7 +19,7 @@ distr_t_meanvar_density <- function(y, f) {
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
   v <- f[, 3, drop = FALSE]
-  res_density <- suppressWarnings(stats::dt((y - m) / sqrt(s), df = v) / sqrt(s))
+  res_density <- be_silent(stats::dt((y - m) / sqrt(s), df = v) / sqrt(s))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ distr_t_meanvar_loglik <- function(y, f) {
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
   v <- f[, 3, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dt((y - m) / sqrt(s), df = v, log = TRUE) - log(s) / 2)
+  res_loglik <- be_silent(stats::dt((y - m) / sqrt(s), df = v, log = TRUE) - log(s) / 2)
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ distr_t_meanvar_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
   v <- f[3]
-  res_random <- suppressWarnings(m + sqrt(s) * stats::rt(t, df = v))
+  res_random <- be_silent(m + sqrt(s) * stats::rt(t, df = v))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

@@ -18,7 +18,7 @@ distr_gamma_scale_density <- function(y, f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
   a <- f[, 2, drop = FALSE]
-  res_density <- suppressWarnings(stats::dgamma(y, scale = s, shape = a))
+  res_density <- be_silent(stats::dgamma(y, scale = s, shape = a))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ distr_gamma_scale_loglik <- function(y, f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
   a <- f[, 2, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dgamma(y, scale = s, shape = a, log = TRUE))
+  res_loglik <- be_silent(stats::dgamma(y, scale = s, shape = a, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ distr_gamma_scale_fisher <- function(f) {
 distr_gamma_scale_random <- function(t, f) {
   s <- f[1]
   a <- f[2]
-  res_random <- suppressWarnings(stats::rgamma(t, scale = s, shape = a))
+  res_random <- be_silent(stats::rgamma(t, scale = s, shape = a))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

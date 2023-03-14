@@ -103,7 +103,7 @@ NULL
 #' @describeIn wrappers_hessian Wrapper for Hessian function \code{\link[stats:optimHess]{stats::optimHess()}}.
 #' @export
 wrapper_hessian_stats <- function(obj_fun, theta_optim, ...) {
-  hessian_res <- suppressWarnings(try(stats::optimHess(par = theta_optim, fn = obj_fun, ...), silent = TRUE))
+  hessian_res <- try_and_be_silent(stats::optimHess(par = theta_optim, fn = obj_fun, ...))
   if (inherits(hessian_res, 'try-error')) {
     status_hessian <- "failure"
     theta_hessian <- matrix(NA_real_, nrow = length(theta_optim), ncol = length(theta_optim))
@@ -120,7 +120,7 @@ wrapper_hessian_stats <- function(obj_fun, theta_optim, ...) {
 #' @describeIn wrappers_hessian Wrapper for Hessian function \code{\link[pracma:hessian]{pracma::hessian()}}.
 #' @export
 wrapper_hessian_pracma <- function(obj_fun, theta_optim, ...) {
-  hessian_res <- suppressWarnings(try(pracma::hessian(x0 = theta_optim, f = obj_fun, ...), silent = TRUE))
+  hessian_res <- try_and_be_silent(pracma::hessian(x0 = theta_optim, f = obj_fun, ...))
   if (inherits(hessian_res, 'try-error')) {
     status_hessian <- "failure"
     theta_hessian <- matrix(NA_real_, nrow = length(theta_optim), ncol = length(theta_optim))
@@ -137,7 +137,7 @@ wrapper_hessian_pracma <- function(obj_fun, theta_optim, ...) {
 #' @describeIn wrappers_hessian Wrapper for Hessian function \code{\link[numDeriv:hessian]{numDeriv::hessian()}}.
 #' @export
 wrapper_hessian_numderiv <- function(obj_fun, theta_optim, ...) {
-  hessian_res <- suppressWarnings(try(numDeriv::hessian(x = theta_optim, func = obj_fun, ...), silent = TRUE))
+  hessian_res <- try_and_be_silent(numDeriv::hessian(x = theta_optim, func = obj_fun, ...))
   if (inherits(hessian_res, 'try-error')) {
     status_hessian <- "failure"
     theta_hessian <- matrix(NA_real_, nrow = length(theta_optim), ncol = length(theta_optim))

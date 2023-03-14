@@ -17,7 +17,7 @@ distr_exp_scale_parameters <- function(n) {
 distr_exp_scale_density <- function(y, f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
-  res_density <- suppressWarnings(stats::dexp(y, rate = 1 / s))
+  res_density <- be_silent(stats::dexp(y, rate = 1 / s))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ distr_exp_scale_density <- function(y, f) {
 distr_exp_scale_loglik <- function(y, f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dexp(y, rate = 1 / s, log = TRUE))
+  res_loglik <- be_silent(stats::dexp(y, rate = 1 / s, log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ distr_exp_scale_fisher <- function(f) {
 # Random Generation Function ---------------------------------------------------
 distr_exp_scale_random <- function(t, f) {
   s <- f[1]
-  res_random <- suppressWarnings(stats::rexp(t, rate = 1 / s))
+  res_random <- be_silent(stats::rexp(t, rate = 1 / s))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

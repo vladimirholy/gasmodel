@@ -19,7 +19,7 @@ distr_zinegbin_nb2_density <- function(y, f) {
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
   p <- f[, 3, drop = FALSE]
-  res_density <- (y == 0L) * p + (1 - p) * suppressWarnings(stats::dnbinom(y, mu = m, size = 1 / s))
+  res_density <- (y == 0L) * p + (1 - p) * be_silent(stats::dnbinom(y, mu = m, size = 1 / s))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -32,8 +32,8 @@ distr_zinegbin_nb2_loglik <- function(y, f) {
   s <- f[, 2, drop = FALSE]
   p <- f[, 3, drop = FALSE]
   res_loglik <- matrix(0, nrow = t, ncol = 1L)
-  res_loglik[y > 0L, ] <- log(1 - p[y > 0L, ]) + suppressWarnings(stats::dnbinom(y[y > 0L, ], mu = m[y > 0L, ], size = 1 / s[y > 0L, ], log = TRUE))
-  res_loglik[y == 0L, ] <- log(p[y == 0L, ] + (1 - p[y == 0L, ]) * suppressWarnings(stats::dnbinom(0L, mu = m[y == 0L, ], size = 1 / s[y == 0L, ])))
+  res_loglik[y > 0L, ] <- log(1 - p[y > 0L, ]) + be_silent(stats::dnbinom(y[y > 0L, ], mu = m[y > 0L, ], size = 1 / s[y > 0L, ], log = TRUE))
+  res_loglik[y == 0L, ] <- log(p[y == 0L, ] + (1 - p[y == 0L, ]) * be_silent(stats::dnbinom(0L, mu = m[y == 0L, ], size = 1 / s[y == 0L, ])))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ distr_zinegbin_nb2_random <- function(t, f) {
   s <- f[2]
   p <- f[3]
   res_random <- sample(c(0L, NA_real_), size = t, replace = TRUE, prob = c(p, 1 - p))
-  res_random[is.na(res_random)] <- suppressWarnings(stats::rnbinom(sum(is.na(res_random)), mu = m, size = 1 / s))
+  res_random[is.na(res_random)] <- be_silent(stats::rnbinom(sum(is.na(res_random)), mu = m, size = 1 / s))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

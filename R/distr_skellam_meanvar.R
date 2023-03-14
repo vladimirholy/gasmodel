@@ -20,7 +20,7 @@ distr_skellam_meanvar_density <- function(y, f) {
   s <- f[, 2, drop = FALSE]
   m[s <= abs(m)] <- NA_real_
   s[s <= abs(m)] <- NA_real_
-  res_density <- suppressWarnings(exp(-s) * ((s + m) / (s - m))^(y / 2) * besselI(x = sqrt(s^2 - m^2), nu = y))
+  res_density <- be_silent(exp(-s) * ((s + m) / (s - m))^(y / 2) * besselI(x = sqrt(s^2 - m^2), nu = y))
   res_density[!is.finite(res_density)] <- -Inf
   return(res_density)
 }
@@ -34,7 +34,7 @@ distr_skellam_meanvar_loglik <- function(y, f) {
   s <- f[, 2, drop = FALSE]
   m[s <= abs(m)] <- NA_real_
   s[s <= abs(m)] <- NA_real_
-  res_loglik <- suppressWarnings(y / 2 * log((s + m) / (s - m)) - s + log(besselI(x = sqrt(s^2 - m^2), nu = y)))
+  res_loglik <- be_silent(y / 2 * log((s + m) / (s - m)) - s + log(besselI(x = sqrt(s^2 - m^2), nu = y)))
   res_loglik[!is.finite(res_loglik)] <- -Inf
   return(res_loglik)
 }
@@ -107,7 +107,7 @@ distr_skellam_meanvar_random <- function(t, f) {
   m <- f[1]
   s <- f[2]
   if (s > abs(m)) {
-    res_random <- suppressWarnings(stats::rpois(t, lambda = (s + m) / 2) - stats::rpois(t, lambda = (s - m) / 2))
+    res_random <- be_silent(stats::rpois(t, lambda = (s + m) / 2) - stats::rpois(t, lambda = (s - m) / 2))
   } else {
     res_random <- rep(NA_real_, times = t)
   }

@@ -22,7 +22,7 @@ distr_ziskellam_meanvar_density <- function(y, f) {
   m[s <= abs(m)] <- NA_real_
   s[s <= abs(m)] <- NA_real_
   p[s <= abs(m)] <- NA_real_
-  res_density <- suppressWarnings((y == 0L) * p + (1 - p) * exp(-s) * ((s + m) / (s - m))^(y / 2) * besselI(x = sqrt(s^2 - m^2), nu = y))
+  res_density <- be_silent((y == 0L) * p + (1 - p) * exp(-s) * ((s + m) / (s - m))^(y / 2) * besselI(x = sqrt(s^2 - m^2), nu = y))
   res_density[!is.finite(res_density)] <- -Inf
   return(res_density)
 }
@@ -39,8 +39,8 @@ distr_ziskellam_meanvar_loglik <- function(y, f) {
   s[s <= abs(m)] <- NA_real_
   p[s <= abs(m)] <- NA_real_
   res_loglik <- matrix(0, nrow = t, ncol = 1L)
-  res_loglik[y != 0L, ] <- suppressWarnings(log(1 - p[y != 0L, ]) + y[y != 0L, ] / 2 * log((s[y != 0L, ] + m[y != 0L, ]) / (s[y != 0L, ] - m[y != 0L, ])) - s[y != 0L, ] + log(besselI(x = sqrt(s[y != 0L, ]^2 - m[y != 0L, ]^2), nu = y[y != 0L, ])))
-  res_loglik[y == 0L, ] <- suppressWarnings(log(p[y == 0L, ] + (1 - p[y == 0L, ]) * exp(-s[y == 0L, ]) * besselI(x = sqrt(s[y == 0L, ]^2 - m[y == 0L, ]^2), nu = 0)))
+  res_loglik[y != 0L, ] <- be_silent(log(1 - p[y != 0L, ]) + y[y != 0L, ] / 2 * log((s[y != 0L, ] + m[y != 0L, ]) / (s[y != 0L, ] - m[y != 0L, ])) - s[y != 0L, ] + log(besselI(x = sqrt(s[y != 0L, ]^2 - m[y != 0L, ]^2), nu = y[y != 0L, ])))
+  res_loglik[y == 0L, ] <- be_silent(log(p[y == 0L, ] + (1 - p[y == 0L, ]) * exp(-s[y == 0L, ]) * besselI(x = sqrt(s[y == 0L, ]^2 - m[y == 0L, ]^2), nu = 0)))
   res_loglik[!is.finite(res_loglik)] <- -Inf
   return(res_loglik)
 }
@@ -132,7 +132,7 @@ distr_ziskellam_meanvar_random <- function(t, f) {
   s <- f[2]
   p <- f[3]
   res_random <- sample(c(0L, NA_real_), size = t, replace = TRUE, prob = c(p, 1 - p))
-  res_random[is.na(res_random)] <- suppressWarnings(stats::rpois(sum(is.na(res_random)), lambda = (s + m) / 2) - stats::rpois(sum(is.na(res_random)), lambda = (s - m) / 2))
+  res_random[is.na(res_random)] <- be_silent(stats::rpois(sum(is.na(res_random)), lambda = (s + m) / 2) - stats::rpois(sum(is.na(res_random)), lambda = (s - m) / 2))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }

@@ -17,7 +17,7 @@ distr_geom_mean_parameters <- function(n) {
 distr_geom_mean_density <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
-  res_density <- suppressWarnings(stats::dgeom(y, prob = 1 / (1 + m)))
+  res_density <- be_silent(stats::dgeom(y, prob = 1 / (1 + m)))
   return(res_density)
 }
 # ------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ distr_geom_mean_density <- function(y, f) {
 distr_geom_mean_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
-  res_loglik <- suppressWarnings(stats::dgeom(y, prob = 1 / (1 + m), log = TRUE))
+  res_loglik <- be_silent(stats::dgeom(y, prob = 1 / (1 + m), log = TRUE))
   return(res_loglik)
 }
 # ------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ distr_geom_mean_fisher <- function(f) {
 # Random Generation Function ---------------------------------------------------
 distr_geom_mean_random <- function(t, f) {
   m <- f[1]
-  res_random <- suppressWarnings(stats::rgeom(t, prob = 1 / (1 + m)))
+  res_random <- be_silent(stats::rgeom(t, prob = 1 / (1 + m)))
   res_random <- matrix(res_random, nrow = t, ncol = 1L)
   return(res_random)
 }
