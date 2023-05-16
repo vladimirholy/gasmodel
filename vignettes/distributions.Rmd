@@ -999,6 +999,133 @@ $$
 
 - Karlis, D. and Ntzoufras, I. (2009). Bayesian Modelling of Football Outcomes: Using the Skellam’s Distribution for the Goal Difference. *IMA Journal of Management Mathematics*, **20**(2), 133–145. doi: [10.1093/imaman/dpn026](https://doi.org/10.1093/imaman/dpn026).
 
+# Interval Data
+
+## Beta Distribution
+
+### Mean-Size Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in (0, 1)$
+- Size parameter $v \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | a, b) = \frac{1}{B(m v, (1 - m) v)} y^{m v - 1} (1 - y)^{(1 - m) v - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= \frac{m (1 - m)}{v + 1} \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, v) &= \frac{v}{1 - m} (\psi_0(v) - \psi_0(m v) + \ln(y)) \\
+\nabla_{v} (y; m, v) &= \psi_0(v) - \psi_0(v - m v) + \ln(1 - y) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, v) &= \frac{v^2}{(1 - m)^2} (\psi_1(m v) - \psi_1(v)) \\
+\mathcal{I}_{s, v} (m, v) &= \frac{v}{m - 1} \psi_1(v) \\
+\mathcal{I}_{v, v} (m, v) &= \psi_1(v - m v) - \psi_1(v) \\
+\end{aligned}
+$$
+
+### Mean-Variance Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in (0, 1)$
+- Variance parameter $s \in (0, m (1 - m))$
+
+#### Density Function
+
+$$
+f(y | a, b) = \frac{1}{B \left( m \left( \frac{m - m^2}{s} - 1 \right), (1 - m) \left( \frac{m - m^2}{s} - 1 \right) \right)} y^{m \left( \frac{m - m^2}{s} - 1 \right) - 1} (1 - y)^{(1 - m) \left( \frac{m - m^2}{s} - 1 \right) - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= s \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{m^2 - m + s}{(m - 1) s} \left( \psi_0 \left( \frac{m - m^2}{s} - 1 \right) - \psi_0 \left( m \left( \frac{m - m^2}{s} - 1 \right) \right) + \ln(y) \right) \\
+\nabla_{s} (y; m, s) &= \frac{s^2 (3 m^2 - 2 m + s)}{m (m - 1) (m^2 - m + s)}  \left( \psi_0 \left( \frac{m - m^2}{s} - 1 \right) - \psi_0 \left( (1 - m) \left( \frac{m - m^2}{s} - 1 \right) \right) + \ln(1 - y) \right) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{(m^2 - m + s)^2}{(m - 1)^2 s^2} \left( \psi_1 \left( m \left( \frac{m - m^2}{s} - 1 \right) \right)  - \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \right) \\
+\mathcal{I}_{s, s} (m, s) &= \frac{s (2 m - 3 m^2 - s)}{m (m^2 - 2 m + 1)} \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \\
+\mathcal{I}_{s, s} (m, s) &= \frac{s^2 (3 m^2 - 2 m + s)^2}{(m - 1)^4 m^2} \left( \psi_1 \left( (1 - m) \left( \frac{m - m^2}{s} - 1 \right) \right)  - \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \right) \\
+\end{aligned}
+$$
+
+### Shape Parametrization
+
+#### Parameters
+
+- First shape parameter $a \in (0, \infty)$
+- Second shape parameter $b \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | a, b) = \frac{1}{B(a, b)} y^{a - 1} (1 - y)^{b - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= \frac{a}{a + b} \\
+\mathrm{var}[Y] &= \frac{a b}{(a + b)^2 (a + b + 1)} \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{a} (y; a, b) &= \psi_0(a + b) - \psi_0(a) + \ln(y) \\
+\nabla_{b} (y; a, b) &= \psi_0(a + b) - \psi_0(b) + \ln(1 - y) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{a, a} (a, b) &= \psi_1(a) - \psi_1(a + b) \\
+\mathcal{I}_{a, b} (a, b) &= -\psi_1(a + b) \\
+\mathcal{I}_{b, b} (a, b) &= \psi_1(b) - \psi_1(a + b) \\
+\end{aligned}
+$$
+
 # Duration Data
 
 ## Exponential Distribution

@@ -121,7 +121,7 @@ the following case studies in the form of vignettes:
 
 ## Supported Distributions
 
-Currently, there are 21 distributions available.
+Currently, there are 22 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
@@ -130,6 +130,9 @@ function:
 print(distr(), right = FALSE, row.names = FALSE)
 #>  distr_title                     param_title     distr     param     type        dim   orthog default
 #>  Bernoulli                       Probabilistic   bernoulli prob      binary      uni    TRUE   TRUE  
+#>  Beta                            Mean-Variance   beta      meansize  interval    uni   FALSE  FALSE  
+#>  Beta                            Shape           beta      meanvar   interval    uni   FALSE  FALSE  
+#>  Beta                            Mean-Size       beta      shape     interval    uni   FALSE   TRUE  
 #>  Categorical                     Worth           cat       worth     categorical multi FALSE   TRUE  
 #>  Double Poisson                  Mean            dpois     mean      count       uni    TRUE   TRUE  
 #>  Exponential                     Rate            exp       rate      duration    uni    TRUE  FALSE  

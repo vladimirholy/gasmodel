@@ -1,5 +1,6 @@
 # gasmodel (development version)
 * Added diagonal and full Fisher information matrix scalings.
+* Added the Beta distribution.
 * Added the Laplace distribution.
 * Added german_car_market_cap dataset.
 * Corrected NA and Inf handling for the Plackett-Luce distribution.
