@@ -33,7 +33,7 @@ check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
   y[rowSums(is.na(y)) > 0L, ] <- NA_real_
   if (!is.null(type) && type == "binary" && all(y == 0L | y == 1L, na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "categorical" && all(y == 0L | y == 1L, na.rm = TRUE) && all(rowSums(y) == 1L, na.rm = TRUE)) {
+  } else if (!is.null(type) && type == "cat" && all(y == 0L | y == 1L, na.rm = TRUE) && all(rowSums(y) == 1L, na.rm = TRUE)) {
     y <- y
   } else if (!is.null(type) && type == "ranking" && all(y > 0, na.rm = TRUE) && all(apply(y, 1, function(e) { all(is.na(e)) || all(1:sum(is.finite(e)) %in% e) }))) {
     y <- y
@@ -41,11 +41,11 @@ check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
     y <- y
   } else if (!is.null(type) && type == "integer" && all(!is.infinite(y), na.rm = TRUE) && all(as.vector(y) == as.integer(y), na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "directional" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0 | y <= 2 * pi, na.rm = TRUE)) {
+  } else if (!is.null(type) && type == "circular" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0 | y <= 2 * pi, na.rm = TRUE)) {
     y <- y
   } else if (!is.null(type) && type == "interval" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0 | y <= 1, na.rm = TRUE)) {
     y <- y
-  } else if (!is.null(type) && type == "compositional" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE) && all(abs(rowSums(y) - 1) < 1e-6, na.rm = TRUE)) {
+  } else if (!is.null(type) && type == "comp" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE) && all(abs(rowSums(y) - 1) < 1e-6, na.rm = TRUE)) {
     y <- y
   } else if (!is.null(type) && type == "duration" && all(!is.infinite(y), na.rm = TRUE) && all(y >= 0, na.rm = TRUE)) {
     y <- y

@@ -45,6 +45,8 @@ In addition, the package provides the following datasets used in
 examples:
 
 - `bookshop_sales` contains times of antiquarian bookshop sales.
+- `german_car_market_cap` contains the market capitalization of major
+  German car manufacturers.
 - `ice_hockey_championships` contains the results of the Ice Hockey
   World Championships.
 - `sp500_daily` contains daily S&P 500 prices.
@@ -121,48 +123,50 @@ the following case studies in the form of vignettes:
 
 ## Supported Distributions
 
-Currently, there are 22 distributions available.
+Currently, there are 24 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
 
 ``` r
 print(distr(), right = FALSE, row.names = FALSE)
-#>  distr_title                     param_title     distr     param     type        dim   orthog default
-#>  Bernoulli                       Probabilistic   bernoulli prob      binary      uni    TRUE   TRUE  
-#>  Beta                            Mean-Variance   beta      meansize  interval    uni   FALSE  FALSE  
-#>  Beta                            Shape           beta      meanvar   interval    uni   FALSE  FALSE  
-#>  Beta                            Mean-Size       beta      shape     interval    uni   FALSE   TRUE  
-#>  Categorical                     Worth           cat       worth     categorical multi FALSE   TRUE  
-#>  Double Poisson                  Mean            dpois     mean      count       uni    TRUE   TRUE  
-#>  Exponential                     Rate            exp       rate      duration    uni    TRUE  FALSE  
-#>  Exponential                     Scale           exp       scale     duration    uni    TRUE   TRUE  
-#>  Gamma                           Rate            gamma     rate      duration    uni   FALSE  FALSE  
-#>  Gamma                           Scale           gamma     scale     duration    uni   FALSE   TRUE  
-#>  Generalized Gamma               Rate            gengamma  rate      duration    uni   FALSE  FALSE  
-#>  Generalized Gamma               Scale           gengamma  scale     duration    uni   FALSE   TRUE  
-#>  Geometric                       Mean            geom      mean      count       uni    TRUE   TRUE  
-#>  Geometric                       Probabilistic   geom      prob      count       uni    TRUE  FALSE  
-#>  Laplace                         Mean-Scale      laplace   meanscale real        uni    TRUE   TRUE  
-#>  Multivariate Normal             Mean-Variance   mvnorm    meanvar   real        multi FALSE   TRUE  
-#>  Multivariate Student‘s t        Mean-Variance   mvt       meanvar   real        multi FALSE   TRUE  
-#>  Negative Binomial               NB2             negbin    nb2       count       uni    TRUE   TRUE  
-#>  Negative Binomial               Probabilistic   negbin    prob      count       uni   FALSE  FALSE  
-#>  Normal                          Mean-Variance   norm      meanvar   real        uni    TRUE   TRUE  
-#>  Plackett-Luce                   Worth           pluce     worth     ranking     multi FALSE   TRUE  
-#>  Poisson                         Mean            pois      mean      count       uni    TRUE   TRUE  
-#>  Skellam                         Difference      skellam   diff      integer     uni   FALSE  FALSE  
-#>  Skellam                         Mean-Dispersion skellam   meandisp  integer     uni   FALSE  FALSE  
-#>  Skellam                         Mean-Variance   skellam   meanvar   integer     uni   FALSE   TRUE  
-#>  Student‘s t                     Mean-Variance   t         meanvar   real        uni   FALSE   TRUE  
-#>  Weibull                         Rate            weibull   rate      duration    uni   FALSE  FALSE  
-#>  Weibull                         Scale           weibull   scale     duration    uni   FALSE   TRUE  
-#>  Zero-Inflated Geometric         Mean            zigeom    mean      count       uni   FALSE   TRUE  
-#>  Zero-Inflated Negative Binomial NB2             zinegbin  nb2       count       uni   FALSE   TRUE  
-#>  Zero-Inflated Poisson           Mean            zipois    mean      count       uni   FALSE   TRUE  
-#>  Zero-Inflated Skellam           Difference      ziskellam diff      integer     uni   FALSE  FALSE  
-#>  Zero-Inflated Skellam           Mean-Dispersion ziskellam meandisp  integer     uni   FALSE  FALSE  
-#>  Zero-Inflated Skellam           Mean-Variance   ziskellam meanvar   integer     uni   FALSE   TRUE
+#>  distr_title                     param_title        distr     param     type     dim   orthog default
+#>  Bernoulli                       Probabilistic      bernoulli prob      binary   uni    TRUE   TRUE  
+#>  Beta                            Concentration      beta      conc      interval uni   FALSE   TRUE  
+#>  Beta                            Mean-Size          beta      meansize  interval uni   FALSE  FALSE  
+#>  Beta                            Mean-Variance      beta      meanvar   interval uni   FALSE  FALSE  
+#>  Categorical                     Worth              cat       worth     cat      multi FALSE   TRUE  
+#>  Dirichlet                       Concentration      dirichlet conc      comp     multi FALSE   TRUE  
+#>  Double Poisson                  Mean               dpois     mean      count    uni    TRUE   TRUE  
+#>  Exponential                     Rate               exp       rate      duration uni    TRUE  FALSE  
+#>  Exponential                     Scale              exp       scale     duration uni    TRUE   TRUE  
+#>  Gamma                           Rate               gamma     rate      duration uni   FALSE  FALSE  
+#>  Gamma                           Scale              gamma     scale     duration uni   FALSE   TRUE  
+#>  Generalized Gamma               Rate               gengamma  rate      duration uni   FALSE  FALSE  
+#>  Generalized Gamma               Scale              gengamma  scale     duration uni   FALSE   TRUE  
+#>  Geometric                       Mean               geom      mean      count    uni    TRUE   TRUE  
+#>  Geometric                       Probabilistic      geom      prob      count    uni    TRUE  FALSE  
+#>  Laplace                         Mean-Scale         laplace   meanscale real     uni    TRUE   TRUE  
+#>  Multivariate Normal             Mean-Variance      mvnorm    meanvar   real     multi FALSE   TRUE  
+#>  Multivariate Student‘s t        Mean-Variance      mvt       meanvar   real     multi FALSE   TRUE  
+#>  Negative Binomial               NB2                negbin    nb2       count    uni    TRUE   TRUE  
+#>  Negative Binomial               Probabilistic      negbin    prob      count    uni   FALSE  FALSE  
+#>  Normal                          Mean-Variance      norm      meanvar   real     uni    TRUE   TRUE  
+#>  Plackett-Luce                   Worth              pluce     worth     ranking  multi FALSE   TRUE  
+#>  Poisson                         Mean               pois      mean      count    uni    TRUE   TRUE  
+#>  Skellam                         Difference         skellam   diff      integer  uni   FALSE  FALSE  
+#>  Skellam                         Mean-Dispersion    skellam   meandisp  integer  uni   FALSE  FALSE  
+#>  Skellam                         Mean-Variance      skellam   meanvar   integer  uni   FALSE   TRUE  
+#>  Student‘s t                     Mean-Variance      t         meanvar   real     uni   FALSE   TRUE  
+#>  von Mises                       Mean-Concentration vonmises  meanconc  circular uni    TRUE   TRUE  
+#>  Weibull                         Rate               weibull   rate      duration uni   FALSE  FALSE  
+#>  Weibull                         Scale              weibull   scale     duration uni   FALSE   TRUE  
+#>  Zero-Inflated Geometric         Mean               zigeom    mean      count    uni   FALSE   TRUE  
+#>  Zero-Inflated Negative Binomial NB2                zinegbin  nb2       count    uni   FALSE   TRUE  
+#>  Zero-Inflated Poisson           Mean               zipois    mean      count    uni   FALSE   TRUE  
+#>  Zero-Inflated Skellam           Difference         ziskellam diff      integer  uni   FALSE  FALSE  
+#>  Zero-Inflated Skellam           Mean-Dispersion    ziskellam meandisp  integer  uni   FALSE  FALSE  
+#>  Zero-Inflated Skellam           Mean-Variance      ziskellam meanvar   integer  uni   FALSE   TRUE
 ```
 
 Details of each distribution, including its density function, expected

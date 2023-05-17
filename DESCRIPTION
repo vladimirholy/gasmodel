@@ -23,6 +23,7 @@ LazyData: true
 Imports:
     abind,
     arrangements,
+    CircStats,
     Matrix,
     mvnfast,
     nloptr,

@@ -54,6 +54,7 @@ The package handles probability distributions by the following functions:
 In addition, the package provides the following datasets used in examples:
 
 - `bookshop_sales` contains times of antiquarian bookshop sales.
+- `german_car_market_cap` contains the market capitalization of major German car manufacturers.
 - `ice_hockey_championships` contains the results of the Ice Hockey World Championships.
 - `sp500_daily` contains daily S&P 500 prices.
 
