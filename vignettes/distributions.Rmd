@@ -86,7 +86,7 @@ $$
 $$
 \begin{aligned}
 \mathrm{E}[\boldsymbol{Y}] &= \frac{1}{\sum_{i=1}^n w_i} \boldsymbol{w} \\
-\mathrm{var}[\boldsymbol{Y}] &= \frac{1}{\sum_{i=1}^n w_i}  \mathrm{diag} (\boldsymbol{w}) - \frac{1}{\left( \sum_{i=1}^n w_i \right)^2} \boldsymbol{w} \boldsymbol{w}' \\
+\mathrm{var}[\boldsymbol{Y}] &= \frac{1}{\sum_{i=1}^n w_i}  \mathrm{diag} (\boldsymbol{w}) - \frac{1}{\left( \sum_{i=1}^n w_i \right)^2} \boldsymbol{w} \boldsymbol{w}^\intercal \\
 \end{aligned}
 $$
 
@@ -999,9 +999,99 @@ $$
 
 - Karlis, D. and Ntzoufras, I. (2009). Bayesian Modelling of Football Outcomes: Using the Skellam’s Distribution for the Goal Difference. *IMA Journal of Management Mathematics*, **20**(2), 133–145. doi: [10.1093/imaman/dpn026](https://doi.org/10.1093/imaman/dpn026).
 
+# Circular Data
+
+## von Mises Distribution
+
+### Mean-Concentration Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Concentration parameter $v \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, v) = \frac{1}{2 \pi I_0(v)} \exp \left( v \cos(y - m) \right)
+$$
+
+#### Circular Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= 1 - \frac{I_1(v)}{I_0(v)} \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, v) &= v \sin(y - m) \\
+\nabla_{v} (y; m, v) &= \cos(y - m) - \frac{I_1(v)}{I_0(v)} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, v) &= v \frac{I_1(v)}{I_0(v)} \\
+\mathcal{I}_{m, v} (m, v) &= 0 \\
+\mathcal{I}_{v, v} (m, v) &= \frac{1}{2} - \left( \frac{I_1(v)}{I_0(v)} \right)^2 + \frac{I_2(v)}{2 I_0(v)} \\
+\end{aligned}
+$$
+
+### Further Reading
+
+- Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. *Cambridge Working Papers in Economics*, CWPE 1971. doi: [10.17863/cam.43915](https://doi.org/10.17863/cam.43915).
+
 # Interval Data
 
 ## Beta Distribution
+
+### Concentration Parametrization
+
+#### Parameters
+
+- First concentration parameter $a_1 \in (0, \infty)$
+- Second concentration parameter $a_2 \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | a_1, a_2) = \frac{1}{B(a_1, a_2)} y^{a_1 - 1} (1 - y)^{a_2 - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= \frac{a_1}{a_1 + a_2} \\
+\mathrm{var}[Y] &= \frac{a_1 a_2}{(a_1 + a_2)^2 (a_1 + a_2 + 1)} \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{a} (y; a_1, a_2) &= \psi_0(a_1 + a_2) - \psi_0(a_1) + \ln(y) \\
+\nabla_{b} (y; a_1, a_2) &= \psi_0(a_1 + a_2) - \psi_0(a_2) + \ln(1 - y) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{a_1, a_1} (a_1, a_2) &= \psi_1(a_1) - \psi_1(a_1 + a_2) \\
+\mathcal{I}_{a_1, a_2} (a_1, a_2) &= -\psi_1(a_1 + a_2) \\
+\mathcal{I}_{a_2, a_2} (a_1, a_2) &= \psi_1(a_2) - \psi_1(a_1 + a_2) \\
+\end{aligned}
+$$
 
 ### Mean-Size Parametrization
 
@@ -1013,7 +1103,7 @@ $$
 #### Density Function
 
 $$
-f(y | a, b) = \frac{1}{B(m v, (1 - m) v)} y^{m v - 1} (1 - y)^{(1 - m) v - 1}
+f(y | m, v) = \frac{1}{B(m v, (1 - m) v)} y^{m v - 1} (1 - y)^{(1 - m) v - 1}
 $$
 
 #### Moments
@@ -1039,7 +1129,7 @@ $$
 $$
 \begin{aligned}
 \mathcal{I}_{m, m} (m, v) &= \frac{v^2}{(1 - m)^2} (\psi_1(m v) - \psi_1(v)) \\
-\mathcal{I}_{s, v} (m, v) &= \frac{v}{m - 1} \psi_1(v) \\
+\mathcal{I}_{m, v} (m, v) &= \frac{v}{m - 1} \psi_1(v) \\
 \mathcal{I}_{v, v} (m, v) &= \psi_1(v - m v) - \psi_1(v) \\
 \end{aligned}
 $$
@@ -1054,7 +1144,7 @@ $$
 #### Density Function
 
 $$
-f(y | a, b) = \frac{1}{B \left( m \left( \frac{m - m^2}{s} - 1 \right), (1 - m) \left( \frac{m - m^2}{s} - 1 \right) \right)} y^{m \left( \frac{m - m^2}{s} - 1 \right) - 1} (1 - y)^{(1 - m) \left( \frac{m - m^2}{s} - 1 \right) - 1}
+f(y | m, s) = \frac{1}{B \left( m \left( \frac{m - m^2}{s} - 1 \right), (1 - m) \left( \frac{m - m^2}{s} - 1 \right) \right)} y^{m \left( \frac{m - m^2}{s} - 1 \right) - 1} (1 - y)^{(1 - m) \left( \frac{m - m^2}{s} - 1 \right) - 1}
 $$
 
 #### Moments
@@ -1080,51 +1170,55 @@ $$
 $$
 \begin{aligned}
 \mathcal{I}_{m, m} (m, s) &= \frac{(m^2 - m + s)^2}{(m - 1)^2 s^2} \left( \psi_1 \left( m \left( \frac{m - m^2}{s} - 1 \right) \right)  - \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \right) \\
-\mathcal{I}_{s, s} (m, s) &= \frac{s (2 m - 3 m^2 - s)}{m (m^2 - 2 m + 1)} \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \\
+\mathcal{I}_{m, s} (m, s) &= \frac{s (2 m - 3 m^2 - s)}{m (m^2 - 2 m + 1)} \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \\
 \mathcal{I}_{s, s} (m, s) &= \frac{s^2 (3 m^2 - 2 m + s)^2}{(m - 1)^4 m^2} \left( \psi_1 \left( (1 - m) \left( \frac{m - m^2}{s} - 1 \right) \right)  - \psi_1 \left( \frac{m - m^2}{s} - 1 \right) \right) \\
 \end{aligned}
 $$
 
-### Shape Parametrization
+# Compositional Data
+
+## Dirichlet Distribution
+
+### Concentration Parametrization
 
 #### Parameters
 
-- First shape parameter $a \in (0, \infty)$
-- Second shape parameter $b \in (0, \infty)$
+- Concentration parameters $a_i \in (0, \infty)$, $i = 1,\ldots,n$
+
+#### Vector Notation
+
+- Concentration vector $\boldsymbol{a}$ of length $n$
 
 #### Density Function
 
 $$
-f(y | a, b) = \frac{1}{B(a, b)} y^{a - 1} (1 - y)^{b - 1}
+f(\boldsymbol{y} | \boldsymbol{a}) = \frac{1}{B(\boldsymbol{a})} \prod_{i=1}^n y_i^{a_i - 1}
 $$
 
 #### Moments
 
 $$
 \begin{aligned}
-\mathrm{E}[Y] &= \frac{a}{a + b} \\
-\mathrm{var}[Y] &= \frac{a b}{(a + b)^2 (a + b + 1)} \\
+\mathrm{E}[\boldsymbol{Y}] &= \frac{1}{\sum_{i=1}^n a_i} \boldsymbol{a} \\
+\mathrm{var}[\boldsymbol{Y}] &= \frac{1}{1 + \sum_{i=1}^n a_i} \left( \frac{1}{\sum_{i=1}^n a_i} \mathrm{diag}(\boldsymbol{a}) - \frac{1}{\left( \sum_{i=1}^n a_i \right)^2} \boldsymbol{a} \boldsymbol{a}^\intercal \right) \\
 \end{aligned}
 $$
 
 #### Score
 
 $$
-\begin{aligned}
-\nabla_{a} (y; a, b) &= \psi_0(a + b) - \psi_0(a) + \ln(y) \\
-\nabla_{b} (y; a, b) &= \psi_0(a + b) - \psi_0(b) + \ln(1 - y) \\
-\end{aligned}
+\nabla_{\boldsymbol{a}} (\boldsymbol{y}; \boldsymbol{a}) = \ln(\boldsymbol{y}) - \psi_0 (\boldsymbol{a}) + \psi_0 \left( \sum_{i=1}^n a_i \right) \\
 $$
 
 #### Fisher Information
 
 $$
-\begin{aligned}
-\mathcal{I}_{a, a} (a, b) &= \psi_1(a) - \psi_1(a + b) \\
-\mathcal{I}_{a, b} (a, b) &= -\psi_1(a + b) \\
-\mathcal{I}_{b, b} (a, b) &= \psi_1(b) - \psi_1(a + b) \\
-\end{aligned}
+\mathcal{I}_{\boldsymbol{a}, \boldsymbol{a}} (\boldsymbol{a}) = \mathrm{diag} \left( \psi_1 \left( \boldsymbol{a} \right) \right) - \psi_1 \left( \sum_{i=1}^n a_i \right)  \\
 $$
+
+### Further Reading
+
+- Calvori, F., Cipollini, F., and Gallo, G. M. (2013). Go with the Flow: A GAS Model For Predicting Intra-Daily Volume Shares. *SSRN*, 2363483. doi: [10.2139/ssrn.2363483](https://doi.org/10.2139/ssrn.2363483).
 
 # Duration Data
 
@@ -1652,7 +1746,7 @@ $$
 #### Density Function
 
 $$
-f(\boldsymbol{y} | \boldsymbol{m}, \boldsymbol{K}) = \frac{1}{\sqrt{(2 \pi)^n | \boldsymbol{K}|}} \exp \left( - \frac{1}{2} (\boldsymbol{y} - \boldsymbol{m})' \boldsymbol{K}^{-1} (\boldsymbol{y} - \boldsymbol{m}) \right)
+f(\boldsymbol{y} | \boldsymbol{m}, \boldsymbol{K}) = \frac{1}{\sqrt{(2 \pi)^n | \boldsymbol{K}|}} \exp \left( - \frac{1}{2} (\boldsymbol{y} - \boldsymbol{m})^\intercal \boldsymbol{K}^{-1} (\boldsymbol{y} - \boldsymbol{m}) \right)
 $$
 
 #### Moments
@@ -1669,7 +1763,7 @@ $$
 $$
 \begin{aligned}
 \nabla_{\boldsymbol{m}} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}) &= \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \\
-\nabla_{\mathrm{vec}(\boldsymbol{K})} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}) &= \mathrm{vec} \left( \frac{1}{2} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} - \frac{1}{2} \boldsymbol{K}^{-1} \right) \\
+\nabla_{\mathrm{vec}(\boldsymbol{K})} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}) &= \mathrm{vec} \left( \frac{1}{2} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} - \frac{1}{2} \boldsymbol{K}^{-1} \right) \\
 \end{aligned}
 $$
 
@@ -1679,7 +1773,7 @@ $$
 \begin{aligned}
 \mathcal{I}_{\boldsymbol{m}, \boldsymbol{m}} (\boldsymbol{m}, \boldsymbol{K}) &= \boldsymbol{K}^{-1} \\
 \mathcal{I}_{\boldsymbol{m}, \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}) &= \boldsymbol{0} \\
-\mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}) &= \frac{1}{4} \boldsymbol{K}^{-1} \otimes \boldsymbol{K}^{-1} + \frac{1}{4} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \mathrm{vec}\left(\boldsymbol{K}^{-1} \right)' \\
+\mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}) &= \frac{1}{4} \boldsymbol{K}^{-1} \otimes \boldsymbol{K}^{-1} + \frac{1}{4} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \mathrm{vec}\left(\boldsymbol{K}^{-1} \right)^\intercal \\
 \end{aligned}
 $$
 
@@ -1702,7 +1796,7 @@ $$
 #### Density Function
 
 $$
-f(\boldsymbol{y} | \boldsymbol{m}, \boldsymbol{K}, v) = \frac{\Gamma \left( \frac{v + n}{2} \right)}{\Gamma \left( \frac{v}{2} \right) \sqrt{(v \pi)^n | \boldsymbol{K}|}} \left( 1 + \frac{1}{v} (\boldsymbol{y} - \boldsymbol{m})' \boldsymbol{K}^{-1} (\boldsymbol{y} - \boldsymbol{m}) \right)^{-\frac{v + n}{2}}
+f(\boldsymbol{y} | \boldsymbol{m}, \boldsymbol{K}, v) = \frac{\Gamma \left( \frac{v + n}{2} \right)}{\Gamma \left( \frac{v}{2} \right) \sqrt{(v \pi)^n | \boldsymbol{K}|}} \left( 1 + \frac{1}{v} (\boldsymbol{y} - \boldsymbol{m})^\intercal \boldsymbol{K}^{-1} (\boldsymbol{y} - \boldsymbol{m}) \right)^{-\frac{v + n}{2}}
 $$
 
 #### Moments
@@ -1718,10 +1812,10 @@ $$
 
 $$
 \begin{aligned}
-\nabla_{\boldsymbol{m}} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= \frac{v + n}{v + \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \\
+\nabla_{\boldsymbol{m}} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= \frac{v + n}{v + \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \\
 \nabla_{\mathrm{vec}(\boldsymbol{K})} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= 
-\mathrm{vec} \left( \frac{1}{2} \frac{v + n}{v + \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} - \frac{1}{2} \boldsymbol{K}^{-1} \right) \\
-\nabla_{v} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= \frac{1}{2} \frac{ \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) - n }{ \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)) + v} - \frac{1}{2} \ln \left( 1 + \frac{1}{v} \left(\boldsymbol{y} - \boldsymbol{m} \right)' \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \right) \\
+\mathrm{vec} \left( \frac{1}{2} \frac{v + n}{v + \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)} \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} - \frac{1}{2} \boldsymbol{K}^{-1} \right) \\
+\nabla_{v} (\boldsymbol{y}; \boldsymbol{m}, \boldsymbol{K}, v) &= \frac{1}{2} \frac{ \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) - n }{ \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right)) + v} - \frac{1}{2} \ln \left( 1 + \frac{1}{v} \left(\boldsymbol{y} - \boldsymbol{m} \right)^\intercal \boldsymbol{K}^{-1} \left(\boldsymbol{y} - \boldsymbol{m} \right) \right) \\
 & \qquad - \frac{1}{2} \psi_0 \left( \frac{v}{2} \right) + \frac{1}{2} \psi_0 \left( \frac{v + n}{2} \right) \\
 \end{aligned}
 $$
@@ -1734,7 +1828,7 @@ $$
 \mathcal{I}_{\boldsymbol{m}, \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}, v) &= \boldsymbol{0} \\
 \mathcal{I}_{\boldsymbol{m}, v} (\boldsymbol{m}, \boldsymbol{K}, v) &= \boldsymbol{0} \\
 \mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), \mathrm{vec}(\boldsymbol{K})} (\boldsymbol{m}, \boldsymbol{K}, v) &= 
-\frac{1}{4} \frac{v + n}{v + n + 2} \boldsymbol{K}^{-1} \otimes \boldsymbol{K}^{-1} + \frac{1}{4} \frac{v + n - 2}{v + n + 2} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \mathrm{vec}\left(\boldsymbol{K}^{-1} \right)' \\
+\frac{1}{4} \frac{v + n}{v + n + 2} \boldsymbol{K}^{-1} \otimes \boldsymbol{K}^{-1} + \frac{1}{4} \frac{v + n - 2}{v + n + 2} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \mathrm{vec}\left(\boldsymbol{K}^{-1} \right)^\intercal \\
 \mathcal{I}_{\mathrm{vec}(\boldsymbol{K}), v} (\boldsymbol{m}, \boldsymbol{K}, v) &= - \frac{1}{(v + n +2)(v + n)} \mathrm{vec}\left(\boldsymbol{K}^{-1} \right) \\
 \mathcal{I}_{v, v} (\boldsymbol{m}, \boldsymbol{K}, v) &= ) - \frac{1}{2} \frac{n (v + n + 4)}{v (v + n + 2)(v + n)} + \frac{1}{4} \psi_1 \left( \frac{v}{2} \right) - \frac{1}{4} \psi_1 \left( \frac{v + n}{2} \right) \\
 \end{aligned}
