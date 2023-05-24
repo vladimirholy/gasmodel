@@ -15,7 +15,12 @@ knitr::opts_chunk$set(
   out.width = "75%"
 )
 
-options(width = 102, max.print = 1e6)
+options(
+  width = 100,
+  pillar.width = Inf,
+  dplyr.print_max = Inf,
+  dplyr.summarise.inform = FALSE
+)
 
 Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
@@ -60,10 +65,17 @@ In addition, the package provides the following datasets used in examples:
 
 ## Installation
 
-You can install the development version of `gasmodel` from GitHub using package `devtools` as:
+To install the `gasmodel` package from CRAN, you can use:
 
 ``` r
-install_github("vladimirholy/gasmodel")
+install.packages("gasmodel")
+```
+
+To install the development version of the `gasmodel` package from GitHub, you can use:
+
+``` r
+install.packages("devtools")
+devtools::install_github("vladimirholy/gasmodel")
 ```
 
 ## Example
@@ -106,7 +118,14 @@ Currently, there are `r length(unique(distr()$distr))` distributions available.
 The list of supported distribution can be obtained by the `distr()` function:
 
 ``` {r distr}
-print(distr(), right = FALSE, row.names = FALSE)
+distr() %>%
+  arrange(!default, param) %>%
+  select(distr, distr_title, dim, type, param) %>%
+  group_by(distr, distr_title, dim, type) %>%
+  summarize(param = paste(param, collapse = ", ")) %>%
+  ungroup() %>%
+  arrange(distr) %>%
+  print(right = FALSE, row.names = FALSE)
 ```
 
 Details of each distribution, including its density function, expected value, variance, score, and Fisher information, can be found in vignette `distributions`.

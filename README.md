@@ -53,11 +53,18 @@ examples:
 
 ## Installation
 
-You can install the development version of `gasmodel` from GitHub using
-package `devtools` as:
+To install the `gasmodel` package from CRAN, you can use:
 
 ``` r
-install_github("vladimirholy/gasmodel")
+install.packages("gasmodel")
+```
+
+To install the development version of the `gasmodel` package from
+GitHub, you can use:
+
+``` r
+install.packages("devtools")
+devtools::install_github("vladimirholy/gasmodel")
 ```
 
 ## Example
@@ -129,44 +136,41 @@ The list of supported distribution can be obtained by the `distr()`
 function:
 
 ``` r
-print(distr(), right = FALSE, row.names = FALSE)
-#>  distr_title                     param_title        distr     param     type     dim   orthog default
-#>  Bernoulli                       Probabilistic      bernoulli prob      binary   uni    TRUE   TRUE  
-#>  Beta                            Concentration      beta      conc      interval uni   FALSE   TRUE  
-#>  Beta                            Mean-Size          beta      meansize  interval uni   FALSE  FALSE  
-#>  Beta                            Mean-Variance      beta      meanvar   interval uni   FALSE  FALSE  
-#>  Categorical                     Worth              cat       worth     cat      multi FALSE   TRUE  
-#>  Dirichlet                       Concentration      dirichlet conc      comp     multi FALSE   TRUE  
-#>  Double Poisson                  Mean               dpois     mean      count    uni    TRUE   TRUE  
-#>  Exponential                     Rate               exp       rate      duration uni    TRUE  FALSE  
-#>  Exponential                     Scale              exp       scale     duration uni    TRUE   TRUE  
-#>  Gamma                           Rate               gamma     rate      duration uni   FALSE  FALSE  
-#>  Gamma                           Scale              gamma     scale     duration uni   FALSE   TRUE  
-#>  Generalized Gamma               Rate               gengamma  rate      duration uni   FALSE  FALSE  
-#>  Generalized Gamma               Scale              gengamma  scale     duration uni   FALSE   TRUE  
-#>  Geometric                       Mean               geom      mean      count    uni    TRUE   TRUE  
-#>  Geometric                       Probabilistic      geom      prob      count    uni    TRUE  FALSE  
-#>  Laplace                         Mean-Scale         laplace   meanscale real     uni    TRUE   TRUE  
-#>  Multivariate Normal             Mean-Variance      mvnorm    meanvar   real     multi FALSE   TRUE  
-#>  Multivariate Student‘s t        Mean-Variance      mvt       meanvar   real     multi FALSE   TRUE  
-#>  Negative Binomial               NB2                negbin    nb2       count    uni    TRUE   TRUE  
-#>  Negative Binomial               Probabilistic      negbin    prob      count    uni   FALSE  FALSE  
-#>  Normal                          Mean-Variance      norm      meanvar   real     uni    TRUE   TRUE  
-#>  Plackett-Luce                   Worth              pluce     worth     ranking  multi FALSE   TRUE  
-#>  Poisson                         Mean               pois      mean      count    uni    TRUE   TRUE  
-#>  Skellam                         Difference         skellam   diff      integer  uni   FALSE  FALSE  
-#>  Skellam                         Mean-Dispersion    skellam   meandisp  integer  uni   FALSE  FALSE  
-#>  Skellam                         Mean-Variance      skellam   meanvar   integer  uni   FALSE   TRUE  
-#>  Student‘s t                     Mean-Variance      t         meanvar   real     uni   FALSE   TRUE  
-#>  von Mises                       Mean-Concentration vonmises  meanconc  circular uni    TRUE   TRUE  
-#>  Weibull                         Rate               weibull   rate      duration uni   FALSE  FALSE  
-#>  Weibull                         Scale              weibull   scale     duration uni   FALSE   TRUE  
-#>  Zero-Inflated Geometric         Mean               zigeom    mean      count    uni   FALSE   TRUE  
-#>  Zero-Inflated Negative Binomial NB2                zinegbin  nb2       count    uni   FALSE   TRUE  
-#>  Zero-Inflated Poisson           Mean               zipois    mean      count    uni   FALSE   TRUE  
-#>  Zero-Inflated Skellam           Difference         ziskellam diff      integer  uni   FALSE  FALSE  
-#>  Zero-Inflated Skellam           Mean-Dispersion    ziskellam meandisp  integer  uni   FALSE  FALSE  
-#>  Zero-Inflated Skellam           Mean-Variance      ziskellam meanvar   integer  uni   FALSE   TRUE
+distr() %>%
+  arrange(!default, param) %>%
+  select(distr, distr_title, dim, type, param) %>%
+  group_by(distr, distr_title, dim, type) %>%
+  summarize(param = paste(param, collapse = ", ")) %>%
+  ungroup() %>%
+  arrange(distr) %>%
+  print(right = FALSE, row.names = FALSE)
+#> # A tibble: 24 × 5
+#>    distr     distr_title                     dim   type     param                  
+#>    <chr>     <chr>                           <fct> <fct>    <chr>                  
+#>  1 bernoulli Bernoulli                       uni   binary   prob                   
+#>  2 beta      Beta                            uni   interval conc, meansize, meanvar
+#>  3 cat       Categorical                     multi cat      worth                  
+#>  4 dirichlet Dirichlet                       multi comp     conc                   
+#>  5 dpois     Double Poisson                  uni   count    mean                   
+#>  6 exp       Exponential                     uni   duration scale, rate            
+#>  7 gamma     Gamma                           uni   duration scale, rate            
+#>  8 gengamma  Generalized Gamma               uni   duration scale, rate            
+#>  9 geom      Geometric                       uni   count    mean, prob             
+#> 10 laplace   Laplace                         uni   real     meanscale              
+#> 11 mvnorm    Multivariate Normal             multi real     meanvar                
+#> 12 mvt       Multivariate Student‘s t        multi real     meanvar                
+#> 13 negbin    Negative Binomial               uni   count    nb2, prob              
+#> 14 norm      Normal                          uni   real     meanvar                
+#> 15 pluce     Plackett-Luce                   multi ranking  worth                  
+#> 16 pois      Poisson                         uni   count    mean                   
+#> 17 skellam   Skellam                         uni   integer  meanvar, diff, meandisp
+#> 18 t         Student‘s t                     uni   real     meanvar                
+#> 19 vonmises  von Mises                       uni   circular meanconc               
+#> 20 weibull   Weibull                         uni   duration scale, rate            
+#> 21 zigeom    Zero-Inflated Geometric         uni   count    mean                   
+#> 22 zinegbin  Zero-Inflated Negative Binomial uni   count    nb2                    
+#> 23 zipois    Zero-Inflated Poisson           uni   count    mean                   
+#> 24 ziskellam Zero-Inflated Skellam           uni   integer  meanvar, diff, meandisp
 ```
 
 Details of each distribution, including its density function, expected
