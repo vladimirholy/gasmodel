@@ -1,3 +1,5 @@
+# gasmodel (development version)
+
 # gasmodel 0.3.0
 * Added diagonal and full Fisher information matrix scalings.
 * Added the Beta distribution.
