@@ -78,8 +78,6 @@ distr_vonmises_meanconc_fisher <- function(f) {
   v <- f[, 2, drop = FALSE]
   res_fisher <- array(0, dim = c(t, 2L, 2L))
   res_fisher[, 1, 1] <- v * besselI(v, nu = 1) / besselI(v, nu = 0)
-  res_fisher[, 1, 2] <- 0
-  res_fisher[, 2, 1] <- 0
   res_fisher[, 2, 2] <- 1 / 2 - besselI(v, nu = 1)^2 / besselI(v, nu = 0)^2 + besselI(v, nu = 2) / (2 * besselI(v, nu = 0))
   return(res_fisher)
 }

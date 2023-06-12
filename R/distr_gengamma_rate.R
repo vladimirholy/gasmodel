@@ -91,7 +91,7 @@ distr_gengamma_rate_fisher <- function(f) {
   res_fisher[, 3, 1] <- res_fisher[, 1, 3]
   res_fisher[, 2, 2] <- trigamma(a)
   res_fisher[, 2, 3] <- -digamma(a) / b
-  res_fisher[, 3, 2] <- res_fisher[, 3, 2]
+  res_fisher[, 3, 2] <- res_fisher[, 2, 3]
   res_fisher[, 3, 3] <- (a * digamma(a)^2 + a * trigamma(a) + 2 * digamma(a) + 1) / b^2
   return(res_fisher)
 }

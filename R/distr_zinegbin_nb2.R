@@ -93,7 +93,7 @@ distr_zinegbin_nb2_fisher <- function(f) {
   res_fisher[, 2, 2] <- (log(1 + s * m) + digamma(1 / s) - digamma(m + 1 / s))^2 / s^4 * (1 - p - (1 - p) * (1 + s * m)^(-1 / s)) + ((1 - p)^2 * ((1 + s * m) * log(1 + s * m) - s * m)) / (s^4 * (1 + s * m)^(2 + 1 / s) * (1 + p * (1 + s * m)^(1 / s) - p))
   res_fisher[, 2, 3] <- -((1 / (m * s + 1))^(1 / s) * m * s - (m * s + 1) * (1 / (m * s + 1))^(1 / s) * log(m * s + 1)) / (m * p * s^3 + p * s^2 - ((m * p - m) * s^3 + (p - 1) * s^2) * (1 / (m * s + 1))^(1 / s))
   res_fisher[, 3, 1] <- res_fisher[, 1, 3]
-  res_fisher[, 3, 2] <- res_fisher[, 3, 2]
+  res_fisher[, 3, 2] <- res_fisher[, 2, 3]
   res_fisher[, 3, 3] <- ((1 / (m * s + 1))^(1 / s) - 1) / (p^2 - (p^2 - 2 * p + 1) * (1 / (m * s + 1))^(1 / s) - p)
   return(res_fisher)
 }
