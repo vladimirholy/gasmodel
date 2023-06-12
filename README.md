@@ -130,7 +130,7 @@ the following case studies in the form of vignettes:
 
 ## Supported Distributions
 
-Currently, there are 24 distributions available.
+Currently, there are 25 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
@@ -144,33 +144,34 @@ distr() %>%
   ungroup() %>%
   arrange(distr) %>%
   print(right = FALSE, row.names = FALSE)
-#> # A tibble: 24 × 5
+#> # A tibble: 25 × 5
 #>    distr     distr_title                     dim   type     param                  
 #>    <chr>     <chr>                           <fct> <fct>    <chr>                  
-#>  1 bernoulli Bernoulli                       uni   binary   prob                   
-#>  2 beta      Beta                            uni   interval conc, meansize, meanvar
-#>  3 cat       Categorical                     multi cat      worth                  
-#>  4 dirichlet Dirichlet                       multi comp     conc                   
-#>  5 dpois     Double Poisson                  uni   count    mean                   
-#>  6 exp       Exponential                     uni   duration scale, rate            
-#>  7 gamma     Gamma                           uni   duration scale, rate            
-#>  8 gengamma  Generalized Gamma               uni   duration scale, rate            
-#>  9 geom      Geometric                       uni   count    mean, prob             
-#> 10 laplace   Laplace                         uni   real     meanscale              
-#> 11 mvnorm    Multivariate Normal             multi real     meanvar                
-#> 12 mvt       Multivariate Student‘s t        multi real     meanvar                
-#> 13 negbin    Negative Binomial               uni   count    nb2, prob              
-#> 14 norm      Normal                          uni   real     meanvar                
-#> 15 pluce     Plackett-Luce                   multi ranking  worth                  
-#> 16 pois      Poisson                         uni   count    mean                   
-#> 17 skellam   Skellam                         uni   integer  meanvar, diff, meandisp
-#> 18 t         Student‘s t                     uni   real     meanvar                
-#> 19 vonmises  von Mises                       uni   circular meanconc               
-#> 20 weibull   Weibull                         uni   duration scale, rate            
-#> 21 zigeom    Zero-Inflated Geometric         uni   count    mean                   
-#> 22 zinegbin  Zero-Inflated Negative Binomial uni   count    nb2                    
-#> 23 zipois    Zero-Inflated Poisson           uni   count    mean                   
-#> 24 ziskellam Zero-Inflated Skellam           uni   integer  meanvar, diff, meandisp
+#>  1 alaplace  Asymmetric Laplace              uni   real     meanscale              
+#>  2 bernoulli Bernoulli                       uni   binary   prob                   
+#>  3 beta      Beta                            uni   interval conc, meansize, meanvar
+#>  4 cat       Categorical                     multi cat      worth                  
+#>  5 dirichlet Dirichlet                       multi comp     conc                   
+#>  6 dpois     Double Poisson                  uni   count    mean                   
+#>  7 exp       Exponential                     uni   duration scale, rate            
+#>  8 gamma     Gamma                           uni   duration scale, rate            
+#>  9 gengamma  Generalized Gamma               uni   duration scale, rate            
+#> 10 geom      Geometric                       uni   count    mean, prob             
+#> 11 laplace   Laplace                         uni   real     meanscale              
+#> 12 mvnorm    Multivariate Normal             multi real     meanvar                
+#> 13 mvt       Multivariate Student‘s t        multi real     meanvar                
+#> 14 negbin    Negative Binomial               uni   count    nb2, prob              
+#> 15 norm      Normal                          uni   real     meanvar                
+#> 16 pluce     Plackett-Luce                   multi ranking  worth                  
+#> 17 pois      Poisson                         uni   count    mean                   
+#> 18 skellam   Skellam                         uni   integer  meanvar, diff, meandisp
+#> 19 t         Student‘s t                     uni   real     meanvar                
+#> 20 vonmises  von Mises                       uni   circular meanconc               
+#> 21 weibull   Weibull                         uni   duration scale, rate            
+#> 22 zigeom    Zero-Inflated Geometric         uni   count    mean                   
+#> 23 zinegbin  Zero-Inflated Negative Binomial uni   count    nb2                    
+#> 24 zipois    Zero-Inflated Poisson           uni   count    mean                   
+#> 25 ziskellam Zero-Inflated Skellam           uni   integer  meanvar, diff, meandisp
 ```
 
 Details of each distribution, including its density function, expected
@@ -319,4 +320,4 @@ of Applied Econometrics*, **33**(7), 966–985. doi:
 Koopman, S. J., Lucas, A., and Scharth, M. (2016). Predicting
 Time-Varying Parameters with Parameter-Driven and Observation-Driven
 Models. *Review of Economics and Statistics*, **98**(1), 97–110. doi:
-[10.1162/rest_a\_00533](https://doi.org/10.1162/rest_a_00533).
+[10.1162/rest_a_00533](https://doi.org/10.1162/rest_a_00533).
