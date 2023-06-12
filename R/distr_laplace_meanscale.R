@@ -1,5 +1,5 @@
 
-# NORMAL DISTRIBUTION / MEAN-VARIANCE PARAMETRIZATION
+# LAPLACE DISTRIBUTION / MEAN-SCALE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
