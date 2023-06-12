@@ -35,7 +35,7 @@ data(bookshop_sales)
 data_dur <- bookshop_sales %>%
   mutate(duration = as.numeric(time - lag(time)) / 60) %>%
   mutate(duration = recode(duration, "0" = 0.5)) %>%
-  mutate(just_time = as.vector(as.POSIXct(format(time, "1970-01-01 %H:%M:%S"), tz = "UTC"))) %>%
+  mutate(just = as.vector(as.POSIXct(format(time, "1970-01-01 %H:%M:%S"), tz = "UTC"))) %>%
   drop_na()
 ```
 
@@ -43,7 +43,7 @@ There is a strong diurnal pattern present, as we can see from the following figu
 
 
 ```r
-model_spline <- smooth.spline(data_dur$just_time, data_dur$duration, df = 10)
+model_spline <- smooth.spline(data_dur$just, data_dur$duration, df = 10)
 
 ggplot(mapping = aes(x = model_spline$x, y = model_spline$y)) +
   labs(title = "Diurnal Pattern of Durations", x = "Time", y = "Duration") +
@@ -59,9 +59,9 @@ We adjust the observed durations for this diurnal pattern and extract the time s
 
 ```r
 data_dur <- data_dur %>%
-  mutate(duration_spline = predict(model_spline, x = just_time)$y) %>%
+  mutate(duration_spline = predict(model_spline, x = just)$y) %>%
   mutate(duration_adj = duration / duration_spline) %>%
-  select(-just_time)
+  select(-just)
 
 y <- data_dur$duration_adj
 ```
@@ -101,7 +101,7 @@ Second, we estimate the model based on the Weibull distribution:
 
 
 ```r
-est_weibull <- gas(y = y, distr = "weibull", par_static = c(FALSE, TRUE))
+est_weibull <- gas(y = y, distr = "weibull")
 est_weibull
 #> GAS Model: Weibull Distribution / Scale Parametrization / Unit Scaling 
 #> 
@@ -121,7 +121,7 @@ Third, we estimate the model based on the gamma distribution:
 
 
 ```r
-est_gamma <- gas(y = y, distr = "gamma", par_static = c(FALSE, TRUE))
+est_gamma <- gas(y = y, distr = "gamma")
 est_gamma
 #> GAS Model: Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 
@@ -141,7 +141,7 @@ Fourth, we estimate the model based on the generalized gamma distribution:
 
 
 ```r
-est_gengamma <- gas(y = y, distr = "gengamma", par_static = c(FALSE, TRUE, TRUE))
+est_gengamma <- gas(y = y, distr = "gengamma")
 est_gengamma
 #> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 

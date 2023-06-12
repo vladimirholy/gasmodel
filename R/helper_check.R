@@ -365,8 +365,8 @@ check_my_q <- function(q = NULL, par_num = NULL, group_num = NULL, par_in_group_
 
 # Check Constant Parameters ----------------------------------------------------
 check_my_par_static <- function(par_static = NULL, par_num = NULL, group_num = NULL, par_in_group_num = NULL) {
-  if (is.null(par_static) && !is.null(par_num)) {
-    par_static <- rep(FALSE, par_num)
+  if (is.null(par_static) && !is.null(par_in_group_num)) {
+    par_static <- c(rep(FALSE, par_in_group_num[1]), rep(TRUE, sum(par_in_group_num) - par_in_group_num[1]))
   } else if (is.vector(par_static) && !is.list(par_static) && !is.null(par_num) && length(par_static) == 1L && is.logical(par_static) && !is.na(par_static)) {
     par_static <- rep(par_static, times = par_num)
   } else if (is.vector(par_static) && !is.list(par_static) && !is.null(group_num) && !is.null(par_in_group_num) && length(par_static) == group_num && is.logical(par_static) && all(!is.na(par_static))) {

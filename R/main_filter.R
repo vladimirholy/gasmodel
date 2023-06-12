@@ -80,7 +80,7 @@
 #'
 #' # Estimate GAS model based on the normal distribution with dynamic mean
 #' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
-#'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
+#'   coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 #' est_gas
 #'
 #' # Filter the time-varying parameters by the "simulated_coefs" method

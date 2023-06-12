@@ -46,7 +46,7 @@
 #' @examples
 #' # Simulate GAS model based on the Weibull distribution with dynamic scale
 #' sim_gas <- gas_simulate(t_sim = 50, distr = "weibull",
-#'   par_static = c(FALSE, TRUE), coef_est = c(0.2, 0.1, 0.8, 2.0))
+#'   coef_est = c(0.2, 0.1, 0.8, 2.0))
 #' sim_gas
 #'
 #' # Plot the simulated time series
