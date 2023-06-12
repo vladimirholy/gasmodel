@@ -1,4 +1,5 @@
 # gasmodel (development version)
+* Added the asymmetric Laplace distribution.
 
 # gasmodel 0.3.0
 * Added diagonal and full Fisher information matrix scalings.

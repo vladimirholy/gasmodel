@@ -1582,6 +1582,56 @@ $$
 
 # Real Data
 
+## Asymmetric Laplace Distribution
+
+### Mean-Scale Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Scale parameter $s \in (0, \infty)$
+- Asymmetry parameter $a \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s, a) = \frac{1}{s \left( 1 / a + a\right)}  \exp \left\{- \frac{\lvert y - m \rvert}{s} a^{\mathrm{sign}(y - m)} \right\}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m + s (1 / a - a) \\
+\mathrm{var}[Y] &= s^2 (1 / a^2 + a^2) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, a) &= \frac{\mathrm{sign}(y - m) a^{\mathrm{sign}(y - m)}}{s} \\
+\nabla_{s} (y; m, s, a) &= \frac{\lvert y - m \rvert a^{\mathrm{sign}(y - m)}}{s^2} - \frac{1}{s} \\
+\nabla_{a} (y; m, s, a) &= -\frac{(y - m) a^{\mathrm{sign}(y - m)}}{s} + \frac{1 - a^2}{a + a^3} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s, a) &= \frac{1}{s^2} \\
+\mathcal{I}_{m, s} (m, s, a) &= 0 \\
+\mathcal{I}_{m, a} (m, s, a) &= -\frac{2}{s (1 + a^2)} \\
+\mathcal{I}_{s, s} (m, s, a) &= \frac{1}{s^2} \\
+\mathcal{I}_{s, a} (m, s, a) &= -\frac{1}{s a} \frac{1 - a^2}{1 + a^2} \\
+\mathcal{I}_{a, a} (m, s, a) &= \frac{1}{a^2} + \frac{4}{(1 + a^2)^2} \\
+\end{aligned}
+$$
+
+
+
 ## Laplace Distribution
 
 ### Mean-Scale Parametrization
