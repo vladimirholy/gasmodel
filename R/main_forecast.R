@@ -27,7 +27,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
-#' \item{model$spec}{The specification of the dynamic equation.}
+#' \item{model$regress}{The specification of the regression and dynamic equation.}
 #' \item{model$t}{The length of the time series.}
 #' \item{model$t_ahead}{The length of the out-of-sample time series.}
 #' \item{model$n}{The dimension of the model.}
@@ -66,7 +66,7 @@
 #' x <- 1:length(y)
 #'
 #' # Estimate GAS model based on the normal distribution with dynamic mean
-#' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+#' est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
 #'   coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 #' est_gas
 #'
@@ -81,9 +81,9 @@
 #' lines(99:120, fcst_gas$forecast$y_ahead_quant[, 2], col = "blue")
 #'
 #' @export
-gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
+gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
   if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
-    gas_forecast(gas_object = NULL, method = method, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, spec = gas_object$model$spec, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
+    gas_forecast(gas_object = NULL, method = method, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, regress = gas_object$model$regress, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
@@ -91,7 +91,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
     model$distr <- check_my_distr(distr = distr)
     model$param <- check_my_param(param = param, distr = model$distr)
     model$scaling <- check_my_scaling(scaling = scaling)
-    model$spec <- check_my_spec(spec = spec)
+    model$regress <- check_my_regress(regress = regress)
     info_distr <- info_distribution(distr = model$distr, param = model$param)
     data <- list()
     data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
@@ -162,7 +162,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
         }
         comp$score_tv[comp$idx_ok_ahead, ] <- 0
-      } else if (model$spec == "joint") {
+      } else if (model$regress == "joint") {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
           comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
@@ -191,7 +191,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           }
           comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
         }
-      } else if (model$spec == "reg_err") {
+      } else if (model$regress == "sep") {
         comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
         comp$err_init <- model$par_init
         comp$par_init <- model$par_init
@@ -268,7 +268,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
           comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
         }
-      } else if (model$spec == "joint") {
+      } else if (model$regress == "joint") {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
           comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
@@ -308,7 +308,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
           comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
         }
-      } else if (model$spec == "reg_err") {
+      } else if (model$regress == "sep") {
         comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
         comp$err_init <- model$par_init
         comp$par_init <- model$par_init

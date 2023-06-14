@@ -210,17 +210,17 @@ check_my_scaling <- function(scaling = NULL) {
 
 
 # Check Equation ---------------------------------------------------------------
-check_my_spec <- function(spec = NULL) {
-  if (is.null(spec)) {
-    spec <- "joint"
-  } else if (is.vector(spec) && !is.list(spec) && length(spec) == 1L && spec == "joint") {
-    spec <- "joint"
-  } else if (is.vector(spec) && !is.list(spec) && length(spec) == 1L && (spec == "reg_err")) {
-    spec <- "reg_err"
+check_my_regress <- function(regress = NULL) {
+  if (is.null(regress)) {
+    regress <- "joint"
+  } else if (is.vector(regress) && !is.list(regress) && length(regress) == 1L && regress == "joint") {
+    regress <- "joint"
+  } else if (is.vector(regress) && !is.list(regress) && length(regress) == 1L && regress == "sep") {
+    regress <- "sep"
   } else {
-    stop("Unknown specification of the dynamic equation given by argument spec.")
+    stop("Unknown specification of the dynamic equation given by argument regress.")
   }
-  return(spec)
+  return(regress)
 }
 # ------------------------------------------------------------------------------
 

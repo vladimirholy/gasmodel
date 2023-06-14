@@ -16,12 +16,12 @@
 #' @param distr A conditional distribution. See \code{\link[gasmodel:distr]{distr()}} for available distributions.
 #' @param param A parametrization of the conditional distribution. If \code{NULL}, default parametrization is used. See \code{\link[gasmodel:distr]{distr()}} for available parametrizations.
 #' @param scaling A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}). The latter two scalings use the Fisher information for the time-varying parameters only. For the full Fisher information matrix for both time-varying and static parameters, there are the \code{"full_fisher_inv"} and \code{"full_fisher_inv_sqrt"} scalings. For the individual Fisher information for each parameter, there are the \code{"diag_fisher_inv"} and \code{"diag_fisher_inv_sqrt"} scalings. Note that when the parametrization is orthogonal (see \code{\link[gasmodel:distr]{distr()}}), there are no differences between these scaling variants.
-#' @param spec A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.
+#' @param regress A specification of the regression and dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{regress = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{regress = "sep"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.
 #' @param p A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.
 #' @param q An autoregressive order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.
 #' @param par_static An optional logical vector indicating static parameters. Overrides \code{x}, \code{p}, and \code{q}.
 #' @param par_link An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.
-#' @param par_init An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{spec = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.
+#' @param par_init An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{regress = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.
 #' @param lik_skip A numeric value specifying the number of skipped observations at the beginning of the time series or after \code{NA} values in the likelihood computation. Defaults to \code{0L}, i.e. the full likelihood. If \code{NULL}, it is selected as \code{max(p,q)}, i.e. the conditional likelihood.
 #' @param coef_fix_value An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent oecfficients to be estimated.
 #' @param coef_fix_other An optional square numeric matrix of multiples of the estimated coefficients, which are to be added to the fixed coefficients. This allows the fixed coefficients to be linear combinations of the estimated coefficients. A coefficient given by row is fixed on coefficient given by column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Furthermore, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.
@@ -69,7 +69,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
-#' \item{model$spec}{The specification of the dynamic equation.}
+#' \item{model$regress}{The specification of the regression and dynamic equation.}
 #' \item{model$t}{The length of the time series.}
 #' \item{model$n}{The dimension of the model.}
 #' \item{model$m}{The number of exogenous variables.}
@@ -168,7 +168,7 @@
 #' x <- 1:length(y)
 #'
 #' # Estimate GAS model based on the normal distribution with dynamic mean
-#' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+#' est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
 #'   coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 #' est_gas
 #'
@@ -187,12 +187,12 @@
 #' confint(est_gas)
 #'
 #' @export
-gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
+gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
   model <- list()
   model$distr <- check_my_distr(distr = distr)
   model$param <- check_my_param(param = param, distr = model$distr)
   model$scaling <- check_my_scaling(scaling = scaling)
-  model$spec <- check_my_spec(spec = spec)
+  model$regress <- check_my_regress(regress = regress)
   info_distr <- info_distribution(distr = model$distr, param = model$param)
   data <- list()
   data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
@@ -308,9 +308,9 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "join
   fit$coef_sd <- be_silent(sqrt(diag(fit$coef_vcov)))
   fit$coef_zstat <- fit$coef_est / fit$coef_sd
   fit$coef_pval <- 2 * stats::pnorm(-abs(fit$coef_zstat))
-  if (model$spec == "joint") {
+  if (model$regress == "joint") {
     fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega / (1 - sum(e$phi)) }), info_par$par_names)
-  } else if (model$spec == "reg_err") {
+  } else if (model$regress == "sep") {
     fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega }), info_par$par_names)
   }
   fit$par_tv <- name_matrix(comp$eval_tv$par, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))

@@ -4,10 +4,10 @@
 \alias{gas}
 \title{Estimate GAS Model}
 \usage{
-gas(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint",
-  p = 1L, q = 1L, par_static = NULL, par_link = NULL,
-  par_init = NULL, lik_skip = 0L, coef_fix_value = NULL,
-  coef_fix_other = NULL, coef_fix_special = NULL,
+gas(y, x = NULL, distr, param = NULL, scaling = "unit",
+  regress = "joint", p = 1L, q = 1L, par_static = NULL,
+  par_link = NULL, par_init = NULL, lik_skip = 0L,
+  coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL,
   coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL,
   optim_function = wrapper_optim_nloptr, optim_arguments = list(opts =
   list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0, maxeval = 1e+06)),
@@ -25,7 +25,7 @@ gas(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint",
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}). The latter two scalings use the Fisher information for the time-varying parameters only. For the full Fisher information matrix for both time-varying and static parameters, there are the \code{"full_fisher_inv"} and \code{"full_fisher_inv_sqrt"} scalings. For the individual Fisher information for each parameter, there are the \code{"diag_fisher_inv"} and \code{"diag_fisher_inv_sqrt"} scalings. Note that when the parametrization is orthogonal (see \code{\link[gasmodel:distr]{distr()}}), there are no differences between these scaling variants.}
 
-\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+\item{regress}{A specification of the regression and dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{regress = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{regress = "sep"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
 
 \item{p}{A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
 
@@ -35,7 +35,7 @@ gas(y, x = NULL, distr, param = NULL, scaling = "unit", spec = "joint",
 
 \item{par_link}{An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.}
 
-\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{spec = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
+\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{regress = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
 
 \item{lik_skip}{A numeric value specifying the number of skipped observations at the beginning of the time series or after \code{NA} values in the likelihood computation. Defaults to \code{0L}, i.e. the full likelihood. If \code{NULL}, it is selected as \code{max(p,q)}, i.e. the conditional likelihood.}
 
@@ -68,7 +68,7 @@ A \code{list} of S3 class \code{gas} with components:
 \item{model$distr}{The conditional distribution.}
 \item{model$param}{The parametrization of the conditional distribution.}
 \item{model$scaling}{The scaling function.}
-\item{model$spec}{The specification of the dynamic equation.}
+\item{model$regress}{The specification of the regression and dynamic equation.}
 \item{model$t}{The length of the time series.}
 \item{model$n}{The dimension of the model.}
 \item{model$m}{The number of exogenous variables.}
@@ -155,8 +155,8 @@ y <- LakeHuron - 570
 x <- 1:length(y)
 
 # Estimate GAS model based on the normal distribution with dynamic mean
-est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
-  par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
+est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
+  coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 est_gas
 
 # Obtain the estimated coefficients

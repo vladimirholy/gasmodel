@@ -41,7 +41,7 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
     for (j in idx_ok) {
       tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
     }
-  } else if (model$spec == "joint") {
+  } else if (model$regress == "joint") {
     par_init <- model$par_init
     if (any(is.na(model$par_init))) {
       par_unc <- sapply(1:info_par$par_num, function(i) { (omega_vector[i] + colMeans(data$x[[i]], na.rm = TRUE) %*% beta_list[[i]]) / (1 - sum(phi_list[[i]])) })
@@ -66,7 +66,7 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
       tv_f[j, ] <- tv_f[j, ] + cur_e
       tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
     }
-  } else if (model$spec == "reg_err") {
+  } else if (model$regress == "sep") {
     err_init <- model$par_init
     par_init <- model$par_init
     if (any(is.na(model$par_init))) {

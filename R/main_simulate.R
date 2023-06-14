@@ -22,7 +22,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
-#' \item{model$spec}{The specification of the dynamic equation.}
+#' \item{model$regress}{The specification of the regression and dynamic equation.}
 #' \item{model$t_sim}{The length of the simulated time series.}
 #' \item{model$n}{The dimension of the model.}
 #' \item{model$m}{The number of exogenous variables.}
@@ -53,9 +53,9 @@
 #' plot(sim_gas$simulation$y_sim, type = "b")
 #'
 #' @export
-gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", n = NULL, p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
+gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", n = NULL, p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
   if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
-    gas_simulate(gas_object = NULL, t_sim = t_sim, x_sim = x_sim, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, spec = gas_object$model$spec, n = gas_object$model$n, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
+    gas_simulate(gas_object = NULL, t_sim = t_sim, x_sim = x_sim, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, regress = gas_object$model$regress, n = gas_object$model$n, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
@@ -63,7 +63,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
     model$distr <- check_my_distr(distr = distr)
     model$param <- check_my_param(param = param, distr = model$distr)
     model$scaling <- check_my_scaling(scaling = scaling)
-    model$spec <- check_my_spec(spec = spec)
+    model$regress <- check_my_regress(regress = regress)
     info_distr <- info_distribution(distr = model$distr, param = model$param)
     model$t_sim <- check_my_t(t = t_sim)
     model$n <- check_my_n(n = n, dim = info_distr$dim)
@@ -128,7 +128,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
       for (j in comp$idx_ok) {
         comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
       }
-    } else if (model$spec == "joint") {
+    } else if (model$regress == "joint") {
       comp$par_init <- model$par_init
       if (any(is.na(comp$par_init))) {
         comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
@@ -151,7 +151,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
         comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
         comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
       }
-    } else if (model$spec == "reg_err") {
+    } else if (model$regress == "sep") {
       comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
       comp$err_init <- model$par_init
       comp$par_init <- model$par_init

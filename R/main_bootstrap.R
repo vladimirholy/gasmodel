@@ -23,7 +23,7 @@
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
 #' \item{model$scaling}{The scaling function.}
-#' \item{model$spec}{The specification of the dynamic equation.}
+#' \item{model$regress}{The specification of the regression and dynamic equation.}
 #' \item{model$t}{The length of the time series.}
 #' \item{model$n}{The dimension of the model.}
 #' \item{model$m}{The number of exogenous variables.}
@@ -62,7 +62,7 @@
 #' x <- 1:length(y)
 #'
 #' # Estimate GAS model based on the normal distribution with dynamic mean
-#' est_gas <- gas(y = y, x = x, distr = "norm", spec = "reg_err",
+#' est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
 #'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 #' est_gas
 #'
@@ -71,9 +71,9 @@
 #' boot_gas}
 #'
 #' @export
-gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", spec = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6))) {
+gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6))) {
   if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
-    gas_bootstrap(gas_object = NULL, method = method, rep_boot = rep_boot, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, spec = gas_object$model$spec, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, lik_skip = gas_object$model$lik_skip, coef_fix_value = gas_object$model$coef_fix_value, coef_fix_other = gas_object$model$coef_fix_other, coef_fix_special = gas_object$model$coef_fix_special, coef_bound_lower = gas_object$model$coef_bound_lower, coef_bound_upper = gas_object$model$coef_bound_upper, coef_est = gas_object$fit$coef_est, optim_function = gas_object$control$optim_function, optim_arguments = gas_object$control$optim_arguments)
+    gas_bootstrap(gas_object = NULL, method = method, rep_boot = rep_boot, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, regress = gas_object$model$regress, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, lik_skip = gas_object$model$lik_skip, coef_fix_value = gas_object$model$coef_fix_value, coef_fix_other = gas_object$model$coef_fix_other, coef_fix_special = gas_object$model$coef_fix_special, coef_bound_lower = gas_object$model$coef_bound_lower, coef_bound_upper = gas_object$model$coef_bound_upper, coef_est = gas_object$fit$coef_est, optim_function = gas_object$control$optim_function, optim_arguments = gas_object$control$optim_arguments)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
@@ -81,7 +81,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     model$distr <- check_my_distr(distr = distr)
     model$param <- check_my_param(param = param, distr = model$distr)
     model$scaling <- check_my_scaling(scaling = scaling)
-    model$spec <- check_my_spec(spec = spec)
+    model$regress <- check_my_regress(regress = regress)
     info_distr <- info_distribution(distr = model$distr, param = model$param)
     data <- list()
     data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
@@ -172,7 +172,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
           bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         }
-      } else if (model$spec == "joint") {
+      } else if (model$regress == "joint") {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
           comp$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$omega_vector[i] + comp$average_x[[i]] %*% comp$beta_list[[i]]) / (1 - sum(comp$phi_list[[i]])) })
@@ -200,7 +200,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details, print_progress = FALSE), control$optim_arguments))
           bootstrap$coef_set[b, ] <- convert_theta_vector_to_coef_vector(comp$result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         }
-      } else if (model$spec == "reg_err") {
+      } else if (model$regress == "sep") {
         comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
         comp$err_init <- model$par_init
         comp$par_init <- model$par_init

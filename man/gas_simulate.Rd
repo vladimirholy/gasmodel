@@ -5,9 +5,9 @@
 \title{Simulate GAS Model}
 \usage{
 gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
-  param = NULL, scaling = "unit", spec = "joint", n = NULL, p = 1L,
-  q = 1L, par_static = NULL, par_link = NULL, par_init = NULL,
-  coef_est = NULL)
+  param = NULL, scaling = "unit", regress = "joint", n = NULL,
+  p = 1L, q = 1L, par_static = NULL, par_link = NULL,
+  par_init = NULL, coef_est = NULL)
 }
 \arguments{
 \item{gas_object}{An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.}
@@ -22,7 +22,7 @@ gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}). The latter two scalings use the Fisher information for the time-varying parameters only. For the full Fisher information matrix for both time-varying and static parameters, there are the \code{"full_fisher_inv"} and \code{"full_fisher_inv_sqrt"} scalings. For the individual Fisher information for each parameter, there are the \code{"diag_fisher_inv"} and \code{"diag_fisher_inv_sqrt"} scalings. Note that when the parametrization is orthogonal (see \code{\link[gasmodel:distr]{distr()}}), there are no differences between these scaling variants.}
 
-\item{spec}{A specification of the dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{spec = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{spec = "reg_err"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+\item{regress}{A specification of the regression and dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{regress = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{regress = "sep"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
 
 \item{n}{A dimension of the model. Required only for multivariate models.}
 
@@ -34,7 +34,7 @@ gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
 
 \item{par_link}{An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.}
 
-\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{spec = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
+\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{regress = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
 
 \item{coef_est}{A numeric vector of estimated coefficients.}
 }
@@ -44,7 +44,7 @@ A \code{list} with components:
 \item{model$distr}{The conditional distribution.}
 \item{model$param}{The parametrization of the conditional distribution.}
 \item{model$scaling}{The scaling function.}
-\item{model$spec}{The specification of the dynamic equation.}
+\item{model$regress}{The specification of the regression and dynamic equation.}
 \item{model$t_sim}{The length of the simulated time series.}
 \item{model$n}{The dimension of the model.}
 \item{model$m}{The number of exogenous variables.}
@@ -65,7 +65,7 @@ Instead of supplying arguments about the model, the function can be applied to t
 \examples{
 # Simulate GAS model based on the Weibull distribution with dynamic scale
 sim_gas <- gas_simulate(t_sim = 50, distr = "weibull",
-  par_static = c(FALSE, TRUE), coef_est = c(0.2, 0.1, 0.8, 2.0))
+  coef_est = c(0.2, 0.1, 0.8, 2.0))
 sim_gas
 
 # Plot the simulated time series
