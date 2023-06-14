@@ -1,6 +1,7 @@
 # gasmodel (development version)
 * Added the asymmetric Laplace distribution.
-* Changing the default value of par_static. Now, the first group of parameters (usually just the first parameter for univariate distributions) is dynamic while the rest are static.
+* Changed the default value of par_static. Now, the first group of parameters (usually just the first parameter for univariate distributions) is dynamic while the rest are static.
+* Renamed the "spec" argument to "regress". One of its value, "reg_err", renamed to "sep".
 * Corrected the Fisher information for the generalized gamma and zero-inflated negative binomial distributions.
 
 # gasmodel 0.3.0
