@@ -115,7 +115,7 @@ distr_alaplace_meanscale_start <- function(y) {
   y_var <- stats::var(y, na.rm = TRUE)
   y_skew <- mean((y - y_mean)^3) / y_var^(3 / 2)
   a <- 1
-  try_and_be_silent(a <- uniroot(function (x) { 2 * (1 - x^6) / (1 + x^4)^(3 / 2) - min(max(y_skew, -1.99), 1.99)}, lower = 0.01, upper = 100, tol = 1e-3)$root)
+  try_and_be_silent(a <- stats::uniroot(function (x) { 2 * (1 - x^6) / (1 + x^4)^(3 / 2) - min(max(y_skew, -1.99), 1.99)}, lower = 0.01, upper = 100, tol = 1e-3)$root)
   s <- max(sqrt(y_var / (1 + a^4) * a^2), 1e-6)
   m <- y_mean - s * (1 - a^2) / a
   res_start <- c(m, s, a)
