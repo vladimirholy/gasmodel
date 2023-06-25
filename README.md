@@ -225,11 +225,10 @@ of Bollerslev (1986), the autoregressive conditional duration (ACD)
 model of Engle and Russel (1998), and the Poisson count model of Davis
 et al. (2003). More recently, a variety of novel score-driven models has
 been proposed, such as the Beta-t-(E)GARCH model of Harvey and
-Chakravarty (2008), the discrete price changes model of Koopman et
-al. (2018), the directional model of Harvey (2019), the bivariate
-Poisson model of Koopman and Lit (2019), and the ranking model of Holý
-and Zouhar (2022). For an overview of various GAS models, see Harvey
-(2022).
+Chakravarty (2008), a Skellam model of Koopman et al. (2018), a
+directional model of Harvey (2019), a bivariate Poisson model of Koopman
+and Lit (2019), and a ranking model of Holý and Zouhar (2022). For an
+overview of various GAS models, see Harvey (2022).
 
 The extensive GAS literature is listed on
 [www.gasmodel.com](http://www.gasmodel.com).
