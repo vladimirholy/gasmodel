@@ -18,7 +18,7 @@ International Ice Hockey Federation (\href{https://www.iihf.com/}{www.iihf.com})
 ice_hockey_championships
 }
 \description{
-The dataset contains the results of the annual men's Ice Hockey World Championships from 1998 to 2021.
+The dataset contains the results of the annual men's Ice Hockey World Championships from 1998 to 2023.
 In 1998, the International Ice Hockey Federation set the number of teams participating in the championships at 16.
 Since 1998, a total of 24 teams have qualified for the championship division.
 This dataset is analyzed in Holý and Zouhar (2022).
