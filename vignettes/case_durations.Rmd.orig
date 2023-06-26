@@ -1,6 +1,6 @@
 ---
 title: "Case Study: Bookshop Orders"
-author: "Vladimír Holý"
+author: "Vladimír Holý & Petra Tomanová"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -35,19 +35,18 @@ We loosely follow Tomanová and Holý (2021) and analyze the timing of orders fr
 
 A strand of financial econometrics is devoted to analyzing the timing of transactions by the so-called autoregressive conditional duration (ACD) model introduced by Engle and Russell (1998). For a textbook treatment of such financial point processes, see e.g. Hautsch (2012).
 
-```{r setup, warning = FALSE, message = FALSE}
+## Data Preparation
+
+Let us prepare the analyzed data. We use the `bookshop_sales` dataset containing times of orders from June 8, 2018 to December 20, 2018. We calculate differences of subsequent times, i.e. durations. To avoid zero durations, we set them to 0.5 second.
+
+``` {r data}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(gasmodel)
-```
 
-## Data Preparation
-
-Let us prepare the analyzed data. We use data `bookshop_sales` containing times of orders from June 8, 2018 to December 20, 2018. We calculate differences of subsequent times, i.e. durations. To avoid zero durations, we set them to 0.5 second.
-
-``` {r data}
 data(bookshop_sales)
+
 data_dur <- bookshop_sales %>%
   mutate(duration = as.numeric(time - lag(time)) / 60) %>%
   mutate(duration = recode(duration, "0" = 0.5)) %>%
@@ -55,21 +54,13 @@ data_dur <- bookshop_sales %>%
   drop_na()
 ```
 
-There is a strong diurnal pattern present, as we can see from the following figure:
+## Diurnal Adjustment
+
+We adjust the observed durations for diurnal pattern and extract the time series to be analyzed.
 
 ``` {r diurnal}
 model_spline <- smooth.spline(data_dur$just, data_dur$duration, df = 10)
 
-ggplot(mapping = aes(x = model_spline$x, y = model_spline$y)) +
-  labs(title = "Diurnal Pattern of Durations", x = "Time", y = "Duration") +
-  geom_line(color = "#2E67C5") +
-  scale_x_time(breaks = seq(from = 0, to = 24 * 60 * 60, by = 6 * 60 * 60)) +
-  theme_bw()
-```
-
-We adjust the observed durations for this diurnal pattern and extract the time series to be analyzed:
-
-``` {r variables}
 data_dur <- data_dur %>%
   mutate(duration_spline = predict(model_spline, x = just)$y) %>%
   mutate(duration_adj = duration / duration_spline) %>%
@@ -80,43 +71,74 @@ y <- data_dur$duration_adj
 
 ## Model Estimation
 
+The following distributions are available for our data type. We utilize the generalized gamma family.
+
 ``` {r distr}
-distr(filter_type = "duration", filter_dim = "uni", filter_default = TRUE)[, 1:3]
+distr(filter_type = "duration", filter_dim = "uni")
 ```
 
-First, we estimate the model based on the exponential distribution:
+First, we estimate the model based on the exponential distribution. By default, the logarithmic link for the time-varying scale parameter is adopted. In this particular case, the Fisher information is constant and the three scalings are therefore equivalent.
 
 ``` {r exp}
 est_exp <- gas(y = y, distr = "exp")
 est_exp
 ```
 
-Second, we estimate the model based on the Weibull distribution:
+Second, we estimate the model based on the Weibull distribution. Compared to the exponential distribution, it has an additional shape parameter. By default, the first parameter is assumed time-varying while the remaining are assumed static. In our case, the model features the time-varying scale parameter with the constant shape parameter. However, it is possible to modify this behavior using the `par_static` argument.
 
 ``` {r weibull}
 est_weibull <- gas(y = y, distr = "weibull")
 est_weibull
 ```
 
-Third, we estimate the model based on the gamma distribution:
+Third, we estimate the model based on the gamma distribution. This is another generalization of the exponential distribution with an additional shape parameter.
 
 ``` {r gamma}
 est_gamma <- gas(y = y, distr = "gamma")
 est_gamma
 ```
 
-Fourth, we estimate the model based on the generalized gamma distribution:
+Fourth, we estimate the model based on the generalized gamma distribution. The generalized gamma distribution encompasses all three aforementioned distributions as special cases.
 
 ``` {r gengamma}
 est_gengamma <- gas(y = y, distr = "gengamma")
 est_gengamma
 ```
 
-By comparing the Akaike information criterion (AIC), we find that the most general model, i.e. the one based on the generalized gamma distribution, is the most suitable.
+By comparing the Akaike information criterion (AIC), we find that the most general model, i.e. the one based on the generalized gamma distribution, is the most suitable. For this purpose, we use generic function `AIC()`. Alternatively, the AIC of an estimated model is stored in `est_gengamma$fit$aic`.
 
 ``` {r aic}
 AIC(est_exp, est_weibull, est_gamma, est_gengamma)
 ```
+
+## Bootstrapping
+
+To assess the suitability of standard deviations based on asymptotics for our finite sample, we employ the `gas_bootstrap()` function. This function conducts a parametric bootstrap, allowing us to calculate standard errors and quantiles. It's important to note that this could be computationally very intensive, depending on the number of repetitions, the quantity of observations, the complexity of the model structure, and the optimizer used.
+
+``` {r boot}
+set.seed(42)
+boot_gengamma <- gas_bootstrap(est_gengamma)
+boot_gengamma
+```
+
+Given that the number of observations in our model is 5752 (accessible through `est_gengamma$model$t`), it is reasonable to anticipate that standard deviations based on asymptotics would yield precise results. Fortunately, this holds true in our scenario. Note that standard deviations can also be obtained using the `vcov()` generic function for both `est_gengamma` and `boot_gengamma`.
+
+``` {r sd}
+est_gengamma$fit$coef_sd - boot_gengamma$bootstrap$coef_sd
+```
+
+## Simulation
+
+Lastly, we highlight the utilization of simulation techniques. Simulation is executed using the `gas_simulate()` function, which can be supplied with either an estimated model or a custom model structure.
+
+``` {r sim}
+set.seed(42)
+sim_gengamma <- gas_simulate(est_gengamma, t_sim = 20)
+sim_gengamma
+```
+
+The simulated time series can be employed, for example, to assess the impact of order arrivals on queuing systems, as demonstrated by Tomanová and Holý (2021).
+
 
 ## References
 
