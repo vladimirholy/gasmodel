@@ -1,5 +1,5 @@
 
-test_that("lake", {
+test_that("distr_bisa_scale", {
 
   f <- c(2, 3)
   by <- 1e-4
