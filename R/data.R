@@ -38,7 +38,7 @@
 #' Market capitalization is reported in billions of euros and covers the period 1994–2021.
 #'
 #' @source
-#' Thomson Reuters (\href{https://www.thomsonreuters.com/}{www.thomsonreuters.com}).
+#' Thomson Reuters (\href{https://www.thomsonreuters.com/en.html}{www.thomsonreuters.com}).
 #'
 #' @format
 #' A data frame with columns:

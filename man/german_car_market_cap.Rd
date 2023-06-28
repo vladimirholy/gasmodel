@@ -13,7 +13,7 @@ A data frame with columns:
 }
 }
 \source{
-Thomson Reuters (\href{https://www.thomsonreuters.com/}{www.thomsonreuters.com}).
+Thomson Reuters (\href{https://www.thomsonreuters.com/en.html}{www.thomsonreuters.com}).
 }
 \usage{
 german_car_market_cap
