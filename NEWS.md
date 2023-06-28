@@ -1,4 +1,4 @@
-# gasmodel (development version)
+# gasmodel 0.4.0
 * Added the asymmetric Laplace distribution.
 * Added the Birnbaum–Saunders distribution.
 * Changed the default value of par_static. Now, the first group of parameters (usually just the first parameter for univariate distributions) is dynamic while the rest are static.
