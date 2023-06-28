@@ -6,7 +6,7 @@
 #' @title Bootstrap GAS Model
 #'
 #' @description
-#' A function for bootsrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
+#' A function for bootstrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 #' Method \code{"parametric"} repeatedly simulates time series using the parametric model and re-estimates coefficients.
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 #'
@@ -41,10 +41,10 @@
 #' \item{model$coef_est}{The estimated coefficients.}
 #' \item{bootstrap$method}{The method used for bootstrapping.}
 #' \item{bootstrap$coef_set}{The bootstrapped sets of coefficients.}
-#' \item{bootstrap$coef_mean}{The mean of boostrapped coefficients.}
-#' \item{bootstrap$coef_vcov}{The variance-covariance matrix of boostrapped coefficients.}
-#' \item{bootstrap$coef_sd}{The standard deviation of boostrapped coefficients.}
-#' \item{bootstrap$coef_quant}{The quantiles of boostrapped coefficients.}
+#' \item{bootstrap$coef_mean}{The mean of bootstrapped coefficients.}
+#' \item{bootstrap$coef_vcov}{The variance-covariance matrix of bootstrapped coefficients.}
+#' \item{bootstrap$coef_sd}{The standard deviation of bootstrapped coefficients.}
+#' \item{bootstrap$coef_quant}{The quantiles of bootstrapped coefficients.}
 #'
 #' @references
 #' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.

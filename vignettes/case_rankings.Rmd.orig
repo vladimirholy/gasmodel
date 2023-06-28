@@ -35,7 +35,7 @@ We present the empirical study of Holý and Zouhar (2022) which analyzes the res
 
 ## Data Preparation
 
-Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as Holý and Zouhar (2022). In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was cancelled due to Covid-19 pandemic. We start by creating two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
+Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as Holý and Zouhar (2022). In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was canceled due to Covid-19 pandemic. We start by creating two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
 
 ``` {r data}
 library(dplyr)
