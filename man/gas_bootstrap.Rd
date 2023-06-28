@@ -32,7 +32,7 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 
 \item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}). The latter two scalings use the Fisher information for the time-varying parameters only. For the full Fisher information matrix for both time-varying and static parameters, there are the \code{"full_fisher_inv"} and \code{"full_fisher_inv_sqrt"} scalings. For the individual Fisher information for each parameter, there are the \code{"diag_fisher_inv"} and \code{"diag_fisher_inv_sqrt"} scalings. Note that when the parametrization is orthogonal (see \code{\link[gasmodel:distr]{distr()}}), there are no differences between these scaling variants.}
 
-\item{regress}{A specification of the regression and dynamic equation with regard to exogeneous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{regress = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{regress = "sep"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
+\item{regress}{A specification of the regression and dynamic equation with regard to exogenous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{regress = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{regress = "sep"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
 
 \item{p}{A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
 
@@ -46,7 +46,7 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 
 \item{lik_skip}{A numeric value specifying the number of skipped observations at the beginning of the time series or after \code{NA} values in the likelihood computation. Defaults to \code{0L}, i.e. the full likelihood. If \code{NULL}, it is selected as \code{max(p,q)}, i.e. the conditional likelihood.}
 
-\item{coef_fix_value}{An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent oecfficients to be estimated.}
+\item{coef_fix_value}{An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent coefficients to be estimated.}
 
 \item{coef_fix_other}{An optional square numeric matrix of multiples of the estimated coefficients, which are to be added to the fixed coefficients. This allows the fixed coefficients to be linear combinations of the estimated coefficients. A coefficient given by row is fixed on coefficient given by column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Furthermore, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.}
 
@@ -87,13 +87,13 @@ A list with components:
 \item{model$coef_est}{The estimated coefficients.}
 \item{bootstrap$method}{The method used for bootstrapping.}
 \item{bootstrap$coef_set}{The bootstrapped sets of coefficients.}
-\item{bootstrap$coef_mean}{The mean of boostrapped coefficients.}
-\item{bootstrap$coef_vcov}{The variance-covariance matrix of boostrapped coefficients.}
-\item{bootstrap$coef_sd}{The standard deviation of boostrapped coefficients.}
-\item{bootstrap$coef_quant}{The quantiles of boostrapped coefficients.}
+\item{bootstrap$coef_mean}{The mean of bootstrapped coefficients.}
+\item{bootstrap$coef_vcov}{The variance-covariance matrix of bootstrapped coefficients.}
+\item{bootstrap$coef_sd}{The standard deviation of bootstrapped coefficients.}
+\item{bootstrap$coef_quant}{The quantiles of bootstrapped coefficients.}
 }
 \description{
-A function for bootsrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
+A function for bootstrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 Method \code{"parametric"} repeatedly simulates time series using the parametric model and re-estimates coefficients.
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 }
