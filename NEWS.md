@@ -1,3 +1,5 @@
+# gasmodel (development version)
+
 # gasmodel 0.4.0
 * Added the asymmetric Laplace distribution.
 * Added the Birnbaum–Saunders distribution.
