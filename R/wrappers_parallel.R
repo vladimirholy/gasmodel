@@ -7,7 +7,7 @@
 #'
 #' @description
 #' Wrappers of common R parallelization functions.
-#' Their purpose is to be passed as the \code{parallel_function} argument in the \code{\link[gasmodel:gas]{gas_bootstrap()}} function.
+#' Their purpose is to be passed as the \code{parallel_function} argument in the \code{\link[gasmodel:gas_bootstrap]{gas_bootstrap()}} function.
 #'
 #' @param run_num A number of iterations.
 #' @param run_fun A function to be computed.
@@ -17,7 +17,7 @@
 #' @return A list containing computed values.
 #'
 #' @seealso
-#' \code{\link[gasmodel:gas]{gas_bootstrap()}}
+#' \code{\link[gasmodel:gas_bootstrap]{gas_bootstrap()}}
 #' \code{\link[gasmodel:wrappers_optim]{wrappers_optim}}
 #' \code{\link[gasmodel:wrappers_hessian]{wrappers_hessian}}
 #'
