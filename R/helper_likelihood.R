@@ -113,11 +113,11 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
 
 
 # Compute Objective Function ---------------------------------------------------
-likelihood_objective <- function(theta, est_details, print_progress) {
+likelihood_objective <- function(theta, est_details) {
   coef <- convert_theta_vector_to_coef_vector(theta_vec = theta, coef_fix_value = est_details$model$coef_fix_value, coef_fix_other = est_details$model$coef_fix_other)
   eval_tv <- be_silent(likelihood_evaluate(coef = coef, data = est_details$data, model = est_details$model, fun = est_details$fun, info_distr = est_details$info_distr, info_par = est_details$info_par, info_coef = est_details$info_coef))
   lik_mean <- mean(eval_tv$lik, na.rm = TRUE)
-  if (print_progress) {
+  if (est_details$print_progress) {
     message("Theta: ", paste(formatC(theta, digits = 9, format = "f"), collapse = ", "), "; Log-Likelihood: ", formatC(lik_mean, digits = 9, format = "f"))
   }
   obj <- min(-lik_mean, 1e100, na.rm = TRUE)

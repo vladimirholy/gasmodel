@@ -26,9 +26,9 @@ starting_theta <- function(theta_start, theta_bound_lower, theta_bound_upper, da
   try_theta <- try_theta[!duplicated(try_theta), , drop = FALSE]
   try_num <- nrow(try_theta)
   try_obj <- rep(NA_real_, length = try_num)
-  est_details <- list(data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, info_theta = info_theta)
+  est_details <- list(data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, info_theta = info_theta, print_progress = print_progress)
   for (i in 1:try_num) {
-    try_obj[i] <- likelihood_objective(theta = try_theta[i, ], est_details = est_details, print_progress = print_progress)
+    try_obj[i] <- likelihood_objective(theta = try_theta[i, ], est_details = est_details)
   }
   if (any(try_obj < 1e100)) {
     status_start <- "success"
