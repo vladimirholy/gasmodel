@@ -44,6 +44,7 @@
 #' \item{bootstrap$coef_mean}{The mean of bootstrapped coefficients.}
 #' \item{bootstrap$coef_vcov}{The variance-covariance matrix of bootstrapped coefficients.}
 #' \item{bootstrap$coef_sd}{The standard deviation of bootstrapped coefficients.}
+#' \item{bootstrap$coef_pval}{The p-value of bootstrapped coefficients.}
 #' \item{bootstrap$coef_quant}{The quantiles of bootstrapped coefficients.}
 #'
 #' @references
@@ -241,6 +242,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     bootstrap$coef_mean <- colMeans(bootstrap$coef_set)
     bootstrap$coef_vcov <- stats::cov(bootstrap$coef_set)
     bootstrap$coef_sd <- sqrt(diag(bootstrap$coef_vcov))
+    bootstrap$coef_pval <- apply(bootstrap$coef_set, MARGIN = 2, FUN = function(x) { 1 - 2 * abs(mean(x >= 0) - 0.5) })
     bootstrap$coef_quant <- name_matrix(t(matrix(apply(bootstrap$coef_set, 2, stats::quantile, probs = comp$quant), ncol = info_coef$coef_num)), info_coef$coef_names, paste0(comp$quant * 100, "%"), drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
     report <- list(data = data, model = model, bootstrap = bootstrap)
     class(report) <- "gas_bootstrap"
@@ -260,7 +262,7 @@ print.gas_bootstrap <- function(x, ...) {
   cat("\n")
   cat("Number of Bootstrap Samples:", nrow(x$bootstrap$coef_set), "\n")
   cat("\n")
-  coef_table <- cbind("Original" = x$model$coef_est, "Mean" = x$bootstrap$coef_mean, "Std. Error" = x$bootstrap$coef_sd, x$bootstrap$coef_quant)
+  coef_table <- cbind("Original" = x$model$coef_est, "Mean" = x$bootstrap$coef_mean, "Std. Error" = x$bootstrap$coef_sd, "P-Value" = x$bootstrap$coef_pval, x$bootstrap$coef_quant)
   cat("Bootstrapped Coefficients:", "\n")
   print(coef_table)
   invisible(x)
