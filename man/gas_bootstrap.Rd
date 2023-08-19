@@ -11,7 +11,8 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
   coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL,
   coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL,
   optim_function = wrapper_optim_nloptr, optim_arguments = list(opts =
-  list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0, maxeval = 1e+06)))
+  list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0, maxeval = 1e+06)),
+  parallel_function = NULL, parallel_arguments = list())
 }
 \arguments{
 \item{gas_object}{An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.}
@@ -61,6 +62,10 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 \item{optim_function}{An optimization function. For suitable wrappers of common R optimization functions, see \code{\link[gasmodel:wrappers_optim]{wrappers_optim}}. Can be set to \code{NULL} if the optimal solution should not be computed, which can be useful if the goal is only to evaluate the fit for the coefficients specified in argument \code{coef_start}.}
 
 \item{optim_arguments}{An optional list of arguments to be passed to the optimization function.}
+
+\item{parallel_function}{A parallelization function. For suitable wrappers of common R parallelization functions, see \code{\link[gasmodel:wrappers_parallel]{wrappers_parallel}}. Can be set to \code{NULL} if no parallelization is to be used.}
+
+\item{parallel_arguments}{An optional list of arguments to be passed to the optimization function.}
 }
 \value{
 A list with components:
@@ -90,12 +95,14 @@ A list with components:
 \item{bootstrap$coef_mean}{The mean of bootstrapped coefficients.}
 \item{bootstrap$coef_vcov}{The variance-covariance matrix of bootstrapped coefficients.}
 \item{bootstrap$coef_sd}{The standard deviation of bootstrapped coefficients.}
+\item{bootstrap$coef_pval}{The p-value of bootstrapped coefficients.}
 \item{bootstrap$coef_quant}{The quantiles of bootstrapped coefficients.}
 }
 \description{
 A function for bootstrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 Method \code{"parametric"} repeatedly simulates time series using the parametric model and re-estimates coefficients.
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
+The function enables parallelization.
 }
 \examples{
 # Load Level of Lake Huron dataset
@@ -120,4 +127,5 @@ Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With 
 }
 \seealso{
 \code{\link[gasmodel:gas]{gas()}}
+\code{\link[gasmodel:wrappers_parallel]{wrappers_parallel}}
 }
