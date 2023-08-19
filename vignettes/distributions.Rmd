@@ -1600,7 +1600,7 @@ $$
 $$
 \begin{aligned}
 \mathrm{E}[Y] &= s \Gamma \left(1 + b^{-1} \right) \\
-\mathrm{var}[Y] &= s^2 \left( \Gamma \left(a + 2 b^{-1} \right) -  \Gamma \left(1 + b^{-1} \right)^2 \right) \\
+\mathrm{var}[Y] &= s^2 \left( \Gamma \left(1 + 2 b^{-1} \right) -  \Gamma \left(1 + b^{-1} \right)^2 \right) \\
 \end{aligned}
 $$
 
