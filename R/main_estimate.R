@@ -369,6 +369,15 @@ vcov.gas <- function(object, ...) {
 # ------------------------------------------------------------------------------
 
 
+# Obtain Fitted Values ---------------------------------------------------------
+#' @export
+fitted.gas <- function(object, ...) {
+  mean_tv <- object$fit$mean_tv
+  return(mean_tv)
+}
+# ------------------------------------------------------------------------------
+
+
 # Obtain Residuals -------------------------------------------------------------
 #' @export
 residuals.gas <- function(object, ...) {
@@ -386,6 +395,47 @@ logLik.gas <- function(object, ...) {
   attr(loglik_sum, "df") <- object$model$num_coef
   class(loglik_sum) <- "logLik"
   return(loglik_sum)
+}
+# ------------------------------------------------------------------------------
+
+
+# Plot Time-Varying Parameters -------------------------------------------------
+#' @importFrom ggplot2 .data
+#' @export
+plot.gas <- function(x, ...) {
+  m <- x$model$m
+  par_tv <- x$fit$par_tv
+  par_unc <- x$fit$par_unc
+  par_names <- names(par_unc)
+  par_num <- length(par_unc)
+  be_silent(ts_index <- as.numeric(rownames(par_tv)))
+  if (any(is.na(ts_index)) || any(diff(ts_index) <= 0)) {
+    ts_index <- 1:nrow(par_tv)
+  }
+  gg_list <- list()
+  for (i in 1:par_num) {
+    gg_data <- data.frame(x = ts_index, y = par_tv[, i])
+    if (m[i] > 0) {
+      gg_list[[i]] <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$x, .data$y)) +
+        ggplot2::geom_line(color = "#800000") +
+        ggplot2::labs(title = paste("Parameter", par_names[i]), x = "Time Index", y = "Parameter Value")
+    }
+    else {
+      gg_list[[i]] <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$x, .data$y)) +
+        ggplot2::geom_hline(yintercept = par_unc[i], linetype = "dashed") +
+        ggplot2::geom_line(color = "#800000") +
+        ggplot2::labs(title = paste("Parameter", par_names[i]), x = "Time Index", y = "Parameter Value")
+    }
+  }
+  print(gg_list[[1]])
+  if (par_num > 1) {
+    old_par <- grDevices::devAskNewPage(ask = TRUE)
+    for (i in 2:par_num) {
+      print(gg_list[[i]])
+    }
+    on.exit(grDevices::devAskNewPage(ask = old_par))
+  }
+  invisible(gg_list)
 }
 # ------------------------------------------------------------------------------
 

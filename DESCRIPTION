@@ -24,6 +24,7 @@ Imports:
     abind,
     arrangements,
     CircStats,
+    ggplot2,
     Matrix,
     mvnfast,
     nloptr,
@@ -31,7 +32,6 @@ Imports:
     pracma
 Suggests:
     dplyr,
-    ggplot2,
     knitr,
     rmarkdown,
     testthat,
