@@ -71,7 +71,7 @@ check_my_y <- function(y = NULL, t = NULL, n = NULL, dim = NULL, type = NULL) {
 # ------------------------------------------------------------------------------
 
 
-# Check Exogeneous Variables ---------------------------------------------------
+# Check Exogenous Variables ---------------------------------------------------
 check_my_x <- function(x = NULL, t = NULL, m = NULL, par_num = NULL, group_num = NULL, par_in_group_num = NULL) {
   if (is.null(x) && !is.null(t) && t == 0L && !is.null(m)) {
     x <- lapply(m, FUN = function(i) { matrix(NA_real_, nrow = 0, ncol = i) })
@@ -98,25 +98,25 @@ check_my_x <- function(x = NULL, t = NULL, m = NULL, par_num = NULL, group_num =
     x[m == 0L] <- list(matrix(NA_real_, nrow = nrow(x[[1]]), ncol = 0L))
   }
   if (length(unique(sapply(x, FUN = nrow))) > 1L) {
-    stop("Different lengths of exogeneous variables x.")
+    stop("Different lengths of exogenous variables x.")
   }
   if (!is.null(t) && any(sapply(x, FUN = nrow) != t)) {
-    stop("Invalid length of exogeneous variables x.")
+    stop("Invalid length of exogenous variables x.")
   }
   if (!is.null(par_num) && length(x) != par_num) {
-    stop("Ivalid number of exogeneous variables x.")
+    stop("Invalid number of exogenous variables x.")
   }
   if (!is.null(m) && length(x) != length(m)) {
-    stop("Ivalid number of exogeneous variables x.")
+    stop("Invalid number of exogenous variables x.")
   }
   if (!is.null(m) && any(sapply(x, FUN = ncol) != m)) {
-    stop("Ivalid number of exogeneous variables x.")
+    stop("Invalid number of exogenous variables x.")
   }
   if (any(!sapply(x, is.numeric))) {
-    stop("Exogeneous variables x must be numeric.")
+    stop("Exogenous variables x must be numeric.")
   }
   if (nrow(x[[1]]) > 0L && all(rowSums(as.matrix(sapply(x, function(e) { rowSums(is.na(e)) }))) > 0L)) {
-    stop("All periods have at least one exogeneous variable with missing value.")
+    stop("All periods have at least one exogenous variable with missing value.")
   }
   return(x)
 }
@@ -292,7 +292,7 @@ check_my_n <- function(n = NULL, y = NULL, f = NULL, distr = NULL, param = NULL,
 # ------------------------------------------------------------------------------
 
 
-# Check Number of Exogeneous Variables -----------------------------------------
+# Check Number of Exogenous Variables -----------------------------------------
 check_my_m <- function(m = NULL, x = NULL, par_num = NULL, group_num = NULL, par_in_group_num = NULL) {
   if (is.null(m) && !is.null(par_num)) {
     m <- rep(0L, times = par_num)
@@ -308,13 +308,13 @@ check_my_m <- function(m = NULL, x = NULL, par_num = NULL, group_num = NULL, par
     stop("Invalid type of argument m.")
   }
   if (!is.null(par_num) && length(m) != par_num) {
-    stop("Ivalid number of elements in argument m.")
+    stop("Invalid number of elements in argument m.")
   }
   if (!is.null(x) && length(m) != length(x)) {
-    stop("Ivalid number of elements in argument m.")
+    stop("Invalid number of elements in argument m.")
   }
   if (!is.null(x) && any(m != sapply(x, ncol))) {
-    stop("Ivalid number of elements in argument m.")
+    stop("Invalid number of elements in argument m.")
   }
   return(m)
 }
@@ -335,7 +335,7 @@ check_my_p <- function(p = NULL, par_num = NULL, group_num = NULL, par_in_group_
     stop("Invalid type of argument p.")
   }
   if (!is.null(par_num) && length(p) != par_num) {
-    stop("Ivalid number of elements in argument p.")
+    stop("Invalid number of elements in argument p.")
   }
   return(p)
 }
@@ -356,7 +356,7 @@ check_my_q <- function(q = NULL, par_num = NULL, group_num = NULL, par_in_group_
     stop("Invalid type of argument q.")
   }
   if (!is.null(par_num) && length(q) != par_num) {
-    stop("Ivalid number of elements in argument q.")
+    stop("Invalid number of elements in argument q.")
   }
   return(q)
 }
@@ -377,7 +377,7 @@ check_my_par_static <- function(par_static = NULL, par_num = NULL, group_num = N
     stop("Invalid type of argument par_static.")
   }
   if (!is.null(par_num) && length(par_static) != par_num) {
-    stop("Ivalid number of elements in argument par_static.")
+    stop("Invalid number of elements in argument par_static.")
   }
   return(par_static)
 }
@@ -400,7 +400,7 @@ check_my_par_link <- function(par_link = NULL, par_static = NULL, par_num = NULL
     stop("Invalid type of argument par_link.")
   }
   if (!is.null(par_num) && length(par_link) != par_num) {
-    stop("Ivalid number of elements in argument par_link")
+    stop("Invalid number of elements in argument par_link")
   }
   return(par_link)
 }
