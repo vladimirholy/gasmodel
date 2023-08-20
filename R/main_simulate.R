@@ -54,7 +54,7 @@
 #'
 #' @export
 gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", n = NULL, p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
-  if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
+  if (!is.null(gas_object) && inherits(gas_object, "gas")) {
     gas_simulate(gas_object = NULL, t_sim = t_sim, x_sim = x_sim, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, regress = gas_object$model$regress, n = gas_object$model$n, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, coef_est = gas_object$fit$coef_est)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
