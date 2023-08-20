@@ -2,8 +2,6 @@
 # DOCUMENTATION OF PACKAGE
 
 # Package Documentation --------------------------------------------------------
-#' @title gasmodel: Generalized Autoregressive Score Models
-#'
 #' @description
 #' This package offers tools for estimation, forecasting, and simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models.
 #'
@@ -13,16 +11,15 @@
 #' The list of supported distributions can be obtained by \code{\link[gasmodel:distr]{distr()}}.
 #' The functions working with distributions are \code{\link[gasmodel:distr_density]{distr_density()}} which computes the density, \code{\link[gasmodel:distr_mean]{distr_mean()}} which computes the mean, \code{\link[gasmodel:distr_var]{distr_var()}} which computes the variance, \code{\link[gasmodel:distr_score]{distr_score()}} which computes the score, \code{\link[gasmodel:distr_fisher]{distr_fisher()}} which computes the Fisher information, and \code{\link[gasmodel:distr_random]{distr_random()}} which generates random observations.
 #'
-#' The included datasets are \code{\link[gasmodel:bookshop_sales]{bookshop_sales}} which contains times of antiquarian bookshop sales, \code{\link[gasmodel:ice_hockey_championships]{ice_hockey_championships}} which contains the results of the Ice Hockey World Championships, and \code{\link[gasmodel:sp500_daily]{sp500_daily}} which contains daily S&P 500 prices.
+#' The included datasets are \code{\link[gasmodel:bookshop_sales]{bookshop_sales}} which contains times of antiquarian bookshop sales, \code{\link[gasmodel:german_car_market_cap]{german_car_market_cap}} which contains market capitalization of German car manufacturers, \code{\link[gasmodel:ice_hockey_championships]{ice_hockey_championships}} which contains the results of the Ice Hockey World Championships, and \code{\link[gasmodel:sp500_daily]{sp500_daily}} which contains daily S&P 500 prices.
 #'
 #' @references
 #' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 #'
 #' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
 #'
-#' @docType package
-#' @name gasmodel
-NULL
+#' @keywords internal
+"_PACKAGE"
 # ------------------------------------------------------------------------------
 
 
