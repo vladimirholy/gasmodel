@@ -12,8 +12,7 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
   coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL,
   optim_function = wrapper_optim_nloptr, optim_arguments = list(opts =
   list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0, maxeval = 1e+06)),
-  parallel_function = NULL, parallel_arguments = list(),
-  print_progress = FALSE)
+  parallel_function = NULL, parallel_arguments = list())
 }
 \arguments{
 \item{gas_object}{An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.}
@@ -67,8 +66,6 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 \item{parallel_function}{A parallelization function. For suitable wrappers of common R parallelization functions, see \code{\link[gasmodel:wrappers_parallel]{wrappers_parallel}}. Can be set to \code{NULL} if no parallelization is to be used.}
 
 \item{parallel_arguments}{An optional list of arguments to be passed to the optimization function.}
-
-\item{print_progress}{A logical value indicating whether to progressively print a detailed report on computation.}
 }
 \value{
 A list with components:

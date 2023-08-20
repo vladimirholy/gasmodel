@@ -76,9 +76,9 @@
 #' boot_gas}
 #'
 #' @export
-gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), parallel_function = NULL, parallel_arguments = list(), print_progress = FALSE) {
+gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), parallel_function = NULL, parallel_arguments = list()) {
   if (!is.null(gas_object) && "gas" %in% class(gas_object)) {
-    gas_bootstrap(gas_object = NULL, method = method, rep_boot = rep_boot, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, regress = gas_object$model$regress, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, lik_skip = gas_object$model$lik_skip, coef_fix_value = gas_object$model$coef_fix_value, coef_fix_other = gas_object$model$coef_fix_other, coef_fix_special = gas_object$model$coef_fix_special, coef_bound_lower = gas_object$model$coef_bound_lower, coef_bound_upper = gas_object$model$coef_bound_upper, coef_est = gas_object$fit$coef_est, optim_function = gas_object$control$optim_function, optim_arguments = gas_object$control$optim_arguments, parallel_function = parallel_function, parallel_arguments = parallel_arguments, print_progress = print_progress)
+    gas_bootstrap(gas_object = NULL, method = method, rep_boot = rep_boot, quant = quant, y = gas_object$data$y, x = gas_object$data$x, distr = gas_object$model$distr, param = gas_object$model$param, scaling = gas_object$model$scaling, regress = gas_object$model$regress, p = gas_object$model$p, q = gas_object$model$q, par_static = gas_object$model$par_static, par_link = gas_object$model$par_link, par_init = gas_object$model$par_init, lik_skip = gas_object$model$lik_skip, coef_fix_value = gas_object$model$coef_fix_value, coef_fix_other = gas_object$model$coef_fix_other, coef_fix_special = gas_object$model$coef_fix_special, coef_bound_lower = gas_object$model$coef_bound_lower, coef_bound_upper = gas_object$model$coef_bound_upper, coef_est = gas_object$fit$coef_est, optim_function = gas_object$control$optim_function, optim_arguments = gas_object$control$optim_arguments, parallel_function = parallel_function, parallel_arguments = parallel_arguments)
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
@@ -144,7 +144,6 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     comp$theta_start <- convert_coef_vector_to_theta_vector(model$coef_est, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
     comp$theta_bound_lower <- convert_coef_vector_to_theta_vector(model$coef_bound_lower, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
     comp$theta_bound_upper <- convert_coef_vector_to_theta_vector(model$coef_bound_upper, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
-    comp$print_progress <- check_generic_logical_scalar(arg = print_progress, arg_name = "print_progress")
     comp$est_details <- list(data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, print_progress = FALSE)
     if (bootstrap$method == "parametric") {
       comp$pre_num <- max(c(model$p, model$q, 1L))
@@ -178,9 +177,6 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           control <- run_details$control
           info_par <- run_details$info_par
           comp <- run_details$comp
-          if (comp$print_progress) {
-            message("Computing bootstrap sample #", id)
-          }
           comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
           if (any(model$m > 0L)) {
             comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
@@ -210,9 +206,6 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           control <- run_details$control
           info_par <- run_details$info_par
           comp <- run_details$comp
-          if (comp$print_progress) {
-            message("Computing bootstrap sample #", id)
-          }
           comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
           if (any(model$m > 0L)) {
             comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
@@ -251,9 +244,6 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           control <- run_details$control
           info_par <- run_details$info_par
           comp <- run_details$comp
-          if (comp$print_progress) {
-            message("Computing bootstrap sample #", id)
-          }
           comp$par_tv[comp$idx_ok, ] <- matrix(comp$omega_vector, nrow = length(comp$idx_ok), ncol = info_par$par_num, byrow = TRUE)
           if (any(model$m > 0L)) {
             comp$par_tv[comp$idx_ok, ] <- comp$par_tv[comp$idx_ok, ] + sapply(1L:info_par$par_num, function(i) { comp$x[[i]][comp$idx_ok, , drop = FALSE] %*% comp$beta_list[[i]] })
