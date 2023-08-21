@@ -113,7 +113,7 @@
 #' \item{fit$bic}{The Bayesian information criterion.}
 #'
 #' @note
-#' Supported generic functions for S3 class \code{gas} include \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:residuals]{residuals()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
+#' Supported generic functions for S3 class \code{gas} include \code{\link[base:summary]{summary()}}, \code{\link[base:plot]{plot()}}, \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:fitted]{fitted()}}, \code{\link[stats:residuals]{residuals()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
 #'
 #' @references
 #' Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. \emph{Electronic Journal of Statistics}, \strong{12}(1), 1019–1052. \doi{10.1214/18-ejs1416}.
@@ -347,6 +347,21 @@ print.gas <- function(x, ...) {
   cat(", BIC:", format(x$fit$bic))
   cat("\n")
   invisible(x)
+}
+# ------------------------------------------------------------------------------
+
+
+# Summarize Estimate -----------------------------------------------------------
+#' @export
+summary.gas <- function(object, ...) {
+  print(object)
+  cat("\n")
+  cat("Unconditional Parameters:", "\n")
+  print(object$fit$par_unc)
+  cat("\n")
+  cat("Time-Varying Parameters:", "\n")
+  print(object$fit$par_tv)
+  invisible(object)
 }
 # ------------------------------------------------------------------------------
 

@@ -67,7 +67,7 @@ gas_filter(gas_object = NULL, method = "simulated_coefs",
 \item{coef_vcov}{A numeric matrix of estimated covariances between coefficients.}
 }
 \value{
-A \code{list} with components:
+A \code{list} of S3 class \code{gas_filter} with components:
 \item{data$y}{The time series.}
 \item{data$x}{The exogenous variables.}
 \item{data$x_ahead}{The out-of-sample exogenous variables. Only when \code{t_ahead > 0}.}
@@ -113,6 +113,9 @@ It captures parameter uncertainty and can also be used for forecasting.
 Method \code{"simulated_coefs"} computes a path of time-varying parameters for each simulated coefficient set under assumption of asymptotic normality with given variance-covariance matrix (see Blasques et al., 2016).
 Method \code{"given_coefs"} computes a path of time-varying parameters for each supplied coefficient set.
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
+}
+\note{
+Supported generic functions for S3 class \code{gas_filter} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 }
 \examples{
 # Load Level of Lake Huron dataset

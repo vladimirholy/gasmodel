@@ -20,7 +20,7 @@
 #' @param rep_ahead A number of simulation repetitions for \code{method = "simulated_paths"}.
 #' @param quant A numeric vector of probabilities determining quantiles for \code{method = "simulated_paths"}.
 #'
-#' @return A \code{list} with components:
+#' @return A \code{list} of S3 class \code{gas_forecast} with components:
 #' \item{data$y}{The time series.}
 #' \item{data$x}{The exogenous variables.}
 #' \item{data$x_ahead}{The out-of-sample exogenous variables.}
@@ -48,6 +48,9 @@
 #' \item{forecast$score_tv_ahead_mean}{The mean of the forecasted scores.}
 #' \item{forecast$score_tv_ahead_sd}{The standard deviation of the forecasted scores. Only for \code{method = "simulated_paths"}.}
 #' \item{forecast$score_tv_ahead_quant}{The quantiles of the forecasted scores. Only for \code{method = "simulated_paths"}.}
+#'
+#' @note
+#' Supported generic functions for S3 class \code{gas_forecast} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 #'
 #' @references
 #' Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. \doi{10.1016/j.ijforecast.2015.11.018}.
@@ -389,6 +392,18 @@ print.gas_forecast <- function(x, ...) {
   cat("Forecasts: \n")
   print(x$forecast$y_ahead_mean)
   invisible(x)
+}
+# ------------------------------------------------------------------------------
+
+
+# Summarize Forecasts ----------------------------------------------------------
+#' @export
+summary.gas_forecast <- function(object, ...) {
+  print(object)
+  cat("\n")
+  cat("Time-Varying Parameters:", "\n")
+  print(object$forecast$par_tv_ahead_mean)
+  invisible(object)
 }
 # ------------------------------------------------------------------------------
 

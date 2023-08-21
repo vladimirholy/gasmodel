@@ -39,7 +39,7 @@ gas_simulate(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL,
 \item{coef_est}{A numeric vector of estimated coefficients.}
 }
 \value{
-A \code{list} with components:
+A \code{list} of S3 class \code{gas_simulate} with components:
 \item{data$x_sim}{The exogenous variables used in simulation.}
 \item{model$distr}{The conditional distribution.}
 \item{model$param}{The parametrization of the conditional distribution.}
@@ -61,6 +61,9 @@ A \code{list} with components:
 \description{
 A function for simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
+}
+\note{
+Supported generic functions for S3 class \code{gas_simulate} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 }
 \examples{
 # Simulate GAS model based on the Weibull distribution with dynamic scale

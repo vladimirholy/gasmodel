@@ -20,7 +20,7 @@
 #' @param parallel_function A parallelization function. For suitable wrappers of common R parallelization functions, see \code{\link[gasmodel:wrappers_parallel]{wrappers_parallel}}. Can be set to \code{NULL} if no parallelization is to be used.
 #' @param parallel_arguments An optional list of arguments to be passed to the optimization function.
 #'
-#' @return A list with components:
+#' @return A \code{list} of S3 class \code{gas_bootstrap} with components:
 #' \item{data$y}{The time series.}
 #' \item{data$x}{The exogenous variables.}
 #' \item{model$distr}{The conditional distribution.}
@@ -50,11 +50,13 @@
 #' \item{bootstrap$coef_pval}{The p-value of bootstrapped coefficients.}
 #' \item{bootstrap$coef_quant}{The quantiles of bootstrapped coefficients.}
 #'
+#' @note
+#' Supported generic functions for S3 class \code{gas_bootstrap} include \code{\link[base:summary]{summary()}}, \code{\link[base:plot]{plot()}}, \code{\link[stats:coef]{coef()}}, and \code{\link[stats:vcov]{vcov()}}.
+#'
 #' @references
 #' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
 #'
 #' Harvey, A. C. (2013). \emph{Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}. Cambridge University Press. \doi{10.1017/cbo9781139540933}.
-#'
 #'
 #' @seealso
 #' \code{\link[gasmodel:gas]{gas()}}
@@ -297,6 +299,18 @@ print.gas_bootstrap <- function(x, ...) {
   cat("Bootstrapped Coefficients:", "\n")
   print(coef_table)
   invisible(x)
+}
+# ------------------------------------------------------------------------------
+
+
+# Summarize Bootstrap Coefficients ---------------------------------------------
+#' @export
+summary.gas_bootstrap <- function(object, ...) {
+  print(object)
+  cat("\n")
+  cat("Bootstrapped Variance-Covariance Matrix:", "\n")
+  print(object$bootstrap$coef_vcov)
+  invisible(object)
 }
 # ------------------------------------------------------------------------------
 

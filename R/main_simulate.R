@@ -17,7 +17,7 @@
 #' @param n A dimension of the model. Required only for multivariate models.
 #' @param coef_est A numeric vector of estimated coefficients.
 #'
-#' @return A \code{list} with components:
+#' @return A \code{list} of S3 class \code{gas_simulate} with components:
 #' \item{data$x_sim}{The exogenous variables used in simulation.}
 #' \item{model$distr}{The conditional distribution.}
 #' \item{model$param}{The parametrization of the conditional distribution.}
@@ -35,6 +35,9 @@
 #' \item{simulation$y_sim}{The simulated time series.}
 #' \item{simulation$par_tv_sim}{The simulated time-varying parameters.}
 #' \item{simulation$score_tv_sim}{The simulated scores.}
+#'
+#' @note
+#' Supported generic functions for S3 class \code{gas_simulate} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 #'
 #' @references
 #' Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.
@@ -203,6 +206,18 @@ print.gas_simulate <- function(x, ...) {
   cat("Simulations: \n")
   print(x$simulation$y_sim)
   invisible(x)
+}
+# ------------------------------------------------------------------------------
+
+
+# Summarize Simulations --------------------------------------------------------
+#' @export
+summary.gas_simulate <- function(object, ...) {
+  print(object)
+  cat("\n")
+  cat("Time-Varying Parameters:", "\n")
+  print(object$simulation$par_tv_sim)
+  invisible(object)
 }
 # ------------------------------------------------------------------------------
 

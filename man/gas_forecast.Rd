@@ -48,7 +48,7 @@ gas_forecast(gas_object = NULL, method = "mean_path", t_ahead = 1L,
 \item{coef_est}{A numeric vector of estimated coefficients.}
 }
 \value{
-A \code{list} with components:
+A \code{list} of S3 class \code{gas_forecast} with components:
 \item{data$y}{The time series.}
 \item{data$x}{The exogenous variables.}
 \item{data$x_ahead}{The out-of-sample exogenous variables.}
@@ -82,6 +82,9 @@ A function for forecasting of generalized autoregressive score (GAS) models of C
 Method \code{"mean_path"} filters time-varying parameters based on zero score and then generates mean of time series.
 Method \code{"simulated_paths"} repeatedly simulates time series, simultaneously filters time-varying parameters, and then estimates mean, standard deviation, and quantiles (see Blasques et al., 2016).
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
+}
+\note{
+Supported generic functions for S3 class \code{gas_forecast} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 }
 \examples{
 # Load Level of Lake Huron dataset

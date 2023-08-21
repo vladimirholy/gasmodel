@@ -68,7 +68,7 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 \item{parallel_arguments}{An optional list of arguments to be passed to the optimization function.}
 }
 \value{
-A list with components:
+A \code{list} of S3 class \code{gas_bootstrap} with components:
 \item{data$y}{The time series.}
 \item{data$x}{The exogenous variables.}
 \item{model$distr}{The conditional distribution.}
@@ -103,6 +103,9 @@ A function for bootstrapping coefficients of generalized autoregressive score (G
 Method \code{"parametric"} repeatedly simulates time series using the parametric model and re-estimates coefficients.
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 The function enables parallelization.
+}
+\note{
+Supported generic functions for S3 class \code{gas_bootstrap} include \code{\link[base:summary]{summary()}}, \code{\link[base:plot]{plot()}}, \code{\link[stats:coef]{coef()}}, and \code{\link[stats:vcov]{vcov()}}.
 }
 \examples{
 # Load Level of Lake Huron dataset

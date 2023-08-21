@@ -22,7 +22,7 @@
 #' @param quant A numeric vector of probabilities determining quantiles.
 #' @param coef_vcov A numeric matrix of estimated covariances between coefficients.
 #'
-#' @return A \code{list} with components:
+#' @return A \code{list} of S3 class \code{gas_filter} with components:
 #' \item{data$y}{The time series.}
 #' \item{data$x}{The exogenous variables.}
 #' \item{data$x_ahead}{The out-of-sample exogenous variables. Only when \code{t_ahead > 0}.}
@@ -61,6 +61,9 @@
 #' \item{filter$score_tv_ahead_mean}{The mean of the forecasted scores. Only when \code{t_ahead > 0}.}
 #' \item{filter$score_tv_ahead_sd}{The standard deviation of the forecasted scores. Only when \code{t_ahead > 0}.}
 #' \item{filter$score_tv_ahead_quant}{The quantiles of the forecasted scores. Only when \code{t_ahead > 0}.}
+#'
+#' @note
+#' Supported generic functions for S3 class \code{gas_filter} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 #'
 #' @references
 #' Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. \doi{10.1016/j.ijforecast.2015.11.018}.
@@ -350,6 +353,15 @@ print.gas_filter <- function(x, ...) {
   cat("Filtered Parameters: \n")
   print(abind::abind(x$filter$par_tv_quant, x$filter$par_tv_ahead_quant, along = 1L))
   invisible(x)
+}
+# ------------------------------------------------------------------------------
+
+
+# Summarize Filter -------------------------------------------------------------
+#' @export
+summary.gas_filter <- function(object, ...) {
+  print(object)
+  invisible(object)
 }
 # ------------------------------------------------------------------------------
 
