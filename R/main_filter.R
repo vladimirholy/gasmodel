@@ -354,3 +354,65 @@ print.gas_filter <- function(x, ...) {
 # ------------------------------------------------------------------------------
 
 
+# Plot Filtered Time-Varying Parameters ----------------------------------------
+#' @importFrom ggplot2 .data
+#' @export
+plot.gas_filter <- function(x, ...) {
+  t <- x$model$t
+  par_static <- x$model$par_static
+  if(is.null(x$filter$par_tv_ahead_mean)) {
+    par_tv_mean <- as.matrix(x$filter$par_tv_mean)
+    if (length(dim(x$filter$par_tv_quant)) == 3) {
+      par_tv_low <- x$filter$par_tv_quant[, , 1]
+      par_tv_high <- x$filter$par_tv_quant[, , 2]
+    } else {
+      par_tv_low <- as.matrix(x$filter$par_tv_quant[, 1])
+      par_tv_high <- as.matrix(x$filter$par_tv_quant[, 2])
+    }
+    ts_divide <- NA
+  } else {
+    par_tv_mean <- rbind(as.matrix(x$filter$par_tv_mean), as.matrix(x$filter$par_tv_ahead_mean))
+    if (length(dim(x$filter$par_tv_quant)) == 3) {
+      par_tv_low <- rbind(x$filter$par_tv_quant[, , 1], x$filter$par_tv_ahead_quant[, , 1])
+      par_tv_high <- rbind(x$filter$par_tv_quant[, , 2], x$filter$par_tv_ahead_quant[, , 2])
+    } else {
+      par_tv_low <- rbind(as.matrix(x$filter$par_tv_quant[, 1]), as.matrix(x$filter$par_tv_ahead_quant[, 1]))
+      par_tv_high <- rbind(as.matrix(x$filter$par_tv_quant[, 2]), as.matrix(x$filter$par_tv_ahead_quant[, 2]))
+    }
+    ts_divide <- nrow(x$filter$par_tv_mean) + 0.5
+  }
+  par_names <- colnames(par_tv_mean)
+  par_num <- ncol(par_tv_mean)
+  ts_index <- 1:nrow(par_tv_mean)
+  gg_list <- list()
+  for (i in which(!par_static)) {
+    gg_data <- data.frame(index = ts_index, value_mean = par_tv_mean[, i], value_low = par_tv_low[, i], value_high = par_tv_high[, i])
+    if (is.na(ts_divide)) {
+      gg_fig <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$index, .data$value_mean)) +
+        ggplot2::geom_ribbon(ggplot2::aes(.data$index, ymax = .data$value_low, ymin = .data$value_high), fill = "#FFAAAA") +
+        ggplot2::geom_line(color = "#800000") +
+        ggplot2::geom_point(color = "#800000") +
+        ggplot2::labs(title = paste("Time-Varying Parameter", par_names[i]), x = "Time Index", y = "Parameter Value")
+    } else {
+      gg_fig <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$index, .data$value_mean)) +
+        ggplot2::geom_ribbon(ggplot2::aes(.data$index, ymax = .data$value_low, ymin = .data$value_high), fill = "#FFAAAA") +
+        ggplot2::geom_vline(xintercept = ts_divide, linetype = "dotted") +
+        ggplot2::geom_line(color = "#800000") +
+        ggplot2::geom_point(color = "#800000") +
+        ggplot2::labs(title = paste("Time-Varying Parameter", par_names[i]), x = "Time Index", y = "Parameter Value")
+    }
+    gg_list <- append(gg_list, list(gg_fig))
+  }
+  print(gg_list[[1]])
+  if (length(gg_list) > 1) {
+    old_par <- grDevices::devAskNewPage(ask = TRUE)
+    for (i in 2:length(gg_list)) {
+      print(gg_list[[i]])
+    }
+    on.exit(grDevices::devAskNewPage(ask = old_par))
+  }
+  invisible(gg_list)
+}
+# ------------------------------------------------------------------------------
+
+

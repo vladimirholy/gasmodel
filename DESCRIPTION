@@ -24,18 +24,19 @@ Imports:
     abind,
     arrangements,
     CircStats,
+    dplyr,
     ggplot2,
     Matrix,
     mvnfast,
     nloptr,
     numDeriv,
-    pracma
+    pracma,
+    scales,
+    tidyr
 Suggests:
-    dplyr,
     knitr,
     rmarkdown,
-    testthat,
-    tidyr
+    testthat
 RoxygenNote: 7.2.3
 Roxygen: list(old_usage = TRUE)
 Depends: 

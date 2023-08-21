@@ -319,3 +319,21 @@ vcov.gas_bootstrap <- function(object, ...) {
 # ------------------------------------------------------------------------------
 
 
+# Plot Bootstrapped Coefficients -----------------------------------------------
+#' @importFrom dplyr %>%
+#' @importFrom ggplot2 .data
+#' @export
+plot.gas_bootstrap <- function(x, ...) {
+  gg_data <- x$bootstrap$coef_set %>%
+    dplyr::as_tibble() %>%
+    tidyr::pivot_longer(cols = dplyr::everything(), names_to = "coef", values_to = "value") %>%
+    dplyr::mutate(coef = factor(.data$coef, levels = unique(.data$coef)))
+  gg_fig <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$coef, .data$value)) +
+    ggplot2::geom_boxplot(color = "#800000", fill = "#FFAAAA") +
+    ggplot2::labs(title = "Bootstrapped Coefficients", x = "Coefficient", y = "Coefficient Value")
+  print(gg_fig)
+  invisible(gg_fig)
+}
+# ------------------------------------------------------------------------------
+
+

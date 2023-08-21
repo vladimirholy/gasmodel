@@ -393,3 +393,57 @@ print.gas_forecast <- function(x, ...) {
 # ------------------------------------------------------------------------------
 
 
+# Plot Forecasted Time Series ---------------------------------------------------
+#' @importFrom dplyr %>%
+#' @importFrom ggplot2 .data
+#' @export
+plot.gas_forecast <- function(x, ...) {
+  y <- x$data$y
+  y_fcst <- x$forecast$y_ahead_mean
+  if (is.vector(y)) {
+    y_full <- c(y, y_fcst)
+    ts_index <- 1:length(y_full)
+    ts_divide <- length(y) + 0.5
+    gg_data <- dplyr::tibble(index = ts_index, value = y_full)
+    gg_fig <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$index, .data$value)) +
+      ggplot2::geom_vline(xintercept = ts_divide, linetype = "dotted") +
+      ggplot2::geom_line(color = "#800000") +
+      ggplot2::geom_point(color = "#800000") +
+      ggplot2::labs(title = "Forecasted Time Series", x = "Time Index", y = "Observation Value")
+    print(gg_fig)
+    gg_list <- list(gg_fig)
+  } else {
+    y_full <- rbind(y, y_fcst)
+    ser_names <- colnames(y_full)
+    ts_index <- 1:nrow(y_full)
+    ts_divide <- nrow(y) + 0.5
+    gg_col <- c(rep("#CCCCCC", times = ncol(y_full) - 1), "#800000")
+    gg_list <- list()
+    for (i in 1:length(ser_names)) {
+      gg_levels <- c(ser_names[-i], ser_names[i])
+      gg_data <-  y_full %>%
+        dplyr::as_tibble() %>%
+        dplyr::mutate(index = ts_index) %>%
+        tidyr::pivot_longer(cols = -dplyr::last_col(), names_to = "ser", values_to = "value") %>%
+        dplyr::mutate(ser = factor(.data$ser, levels = gg_levels, ordered = TRUE)) %>%
+        dplyr::arrange(.data$ser)
+      gg_fig <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$index, .data$value, group = .data$ser, color = .data$ser)) +
+        ggplot2::geom_vline(xintercept = ts_divide, linetype = "dotted") +
+        ggplot2::geom_line(show.legend = FALSE) +
+        ggplot2::geom_point(show.legend = FALSE) +
+        ggplot2::scale_colour_manual(values = gg_col) +
+        ggplot2::labs(title = paste("Forecasted Time Series", ser_names[i]), x = "Time Index", y = "Observation Value")
+      gg_list <- append(gg_list, list(gg_fig))
+    }
+    print(gg_list[[1]])
+    old_par <- grDevices::devAskNewPage(ask = TRUE)
+    for (i in 2:length(gg_list)) {
+      print(gg_list[[i]])
+    }
+    on.exit(grDevices::devAskNewPage(ask = old_par))
+  }
+  invisible(gg_list)
+}
+# ------------------------------------------------------------------------------
+
+
