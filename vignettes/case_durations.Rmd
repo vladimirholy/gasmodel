@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Bookshop Orders"
 author: "Vladimír Holý & Petra Tomanová"
-date: "2023-06-25"
+date: "2023-08-23"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Bookshop Orders}
@@ -164,9 +164,21 @@ AIC(est_exp, est_weibull, est_gamma, est_gengamma)
 #> est_gengamma  5 11134.18
 ```
 
+Let us take a look on the time-varying parameters of the generalized gamma model.
+
+
+```r
+plot(est_gengamma)
+```
+
+<div class="figure" style="text-align: center">
+<img src="durations_tv-1.png" alt="Time-varying parameters based on the generalized gamma model." width="75%" />
+<p class="caption">Time-varying parameters based on the generalized gamma model.</p>
+</div>
+
 ## Bootstrapping
 
-To assess the suitability of standard deviations based on asymptotics for our finite sample, we employ the `gas_bootstrap()` function. This function conducts a parametric bootstrap, allowing us to calculate standard errors and quantiles. It's important to note that this could be computationally very intensive, depending on the number of repetitions, the quantity of observations, the complexity of the model structure, and the optimizer used.
+To assess the suitability of standard deviations based on asymptotics for our finite sample, we employ the `gas_bootstrap()` function. This function conducts a parametric bootstrap, allowing us to calculate standard errors and quantiles. It's important to note that this could be computationally very intensive, depending on the number of repetitions, the quantity of observations, the complexity of the model structure, and the optimizer used. Note that the function supports parallelization through arguments `parallel_function` and `parallel_arguments`.
 
 
 ```r
@@ -180,13 +192,31 @@ boot_gengamma
 #> Number of Bootstrap Samples: 1000 
 #> 
 #> Bootstrapped Coefficients: 
-#>                      Original        Mean  Std. Error        2.5%       97.5%
-#> log(scale)_omega  -0.04916436 -0.05108068 0.014553055 -0.08273803 -0.02706646
-#> log(scale)_alpha1  0.06983394  0.07002813 0.008656187  0.05377361  0.08715991
-#> log(scale)_phi1    0.95176106  0.94977473 0.011273494  0.92340871  0.96741980
-#> shape1             1.76436199  1.76852180 0.156548275  1.48360992  2.10490423
-#> shape2             0.68297060  0.68483367 0.035019326  0.61957228  0.75425789
+#>                      Original        Mean  Std. Error P-Value        2.5%       97.5%
+#> log(scale)_omega  -0.04916436 -0.05108068 0.014553055       0 -0.08273803 -0.02706646
+#> log(scale)_alpha1  0.06983394  0.07002813 0.008656187       0  0.05377361  0.08715991
+#> log(scale)_phi1    0.95176106  0.94977473 0.011273494       0  0.92340871  0.96741980
+#> shape1             1.76436199  1.76852180 0.156548275       0  1.48360992  2.10490423
+#> shape2             0.68297060  0.68483367 0.035019326       0  0.61957228  0.75425789
 ```
+
+The results can also be viewed in a boxplot.
+
+
+```r
+plot(boot_gengamma)
+#> Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
+#> ℹ Using compatibility `.name_repair`.
+#> ℹ The deprecated feature was likely used in the gasmodel package.
+#>   Please report the issue at <https://github.com/vladimirholy/gasmodel/issues>.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+```
+
+<div class="figure" style="text-align: center">
+<img src="durations_box-1.png" alt="Boxplot of bootstrapped coefficients based on the generalized gamma model." width="75%" />
+<p class="caption">Boxplot of bootstrapped coefficients based on the generalized gamma model.</p>
+</div>
 
 Given that the number of observations in our model is 5752 (accessible through `est_gengamma$model$t`), it is reasonable to anticipate that standard deviations based on asymptotics would yield precise results. Fortunately, this holds true in our scenario. Note that standard deviations can also be obtained using the `vcov()` generic function for both `est_gengamma` and `boot_gengamma`.
 
@@ -209,16 +239,25 @@ sim_gengamma
 #> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 
 #> Simulations: 
-#>          t1          t2          t3          t4          t5          t6          t7          t8 
-#> 1.274093885 0.884734423 1.433960897 0.140393911 0.320915730 2.925334846 2.854427295 0.920530032 
-#>          t9         t10         t11         t12         t13         t14         t15         t16 
-#> 0.854565486 0.331341832 0.006232464 0.102167045 0.819162543 1.067127343 1.488868243 0.204069391 
+#>          t1          t2          t3          t4          t5          t6          t7          t8          t9         t10         t11         t12         t13         t14         t15         t16 
+#> 1.274093885 0.884734423 1.433960897 0.140393911 0.320915730 2.925334846 2.854427295 0.920530032 0.854565486 0.331341832 0.006232464 0.102167045 0.819162543 1.067127343 1.488868243 0.204069391 
 #>         t17         t18         t19         t20 
 #> 0.162374836 0.131711352 0.858940205 0.285970954
 ```
 
-The simulated time series can be employed, for example, to assess the impact of order arrivals on queuing systems, as demonstrated by Tomanová and Holý (2021).
+The simulated time series can be plotted using the generic `plot()` function.
 
+
+```r
+plot(sim_gengamma)
+```
+
+<div class="figure" style="text-align: center">
+<img src="durations_random-1.png" alt="Simulated time series based on the generalized gamma model." width="75%" />
+<p class="caption">Simulated time series based on the generalized gamma model.</p>
+</div>
+
+The simulated time series can be employed, for example, to assess the impact of order arrivals on queuing systems, as demonstrated by Tomanová and Holý (2021).
 
 ## References
 

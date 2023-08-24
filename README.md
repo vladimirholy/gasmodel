@@ -83,7 +83,6 @@ data <- sp500_daily %>%
   mutate(return = log(close) - log(lag(close))) %>%
   filter(format(sp500_daily$date, "%Y") == "2021") %>%
   select(date, return)
-
 summary(data)
 #>       date                return         
 #>  Min.   :2021-01-04   Min.   :-0.023512  
@@ -94,7 +93,6 @@ summary(data)
 #>  Max.   :2021-12-31   Max.   : 0.026013
 
 model_gas <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
-
 model_gas
 #> GAS Model: Student‘s t Distribution / Mean-Variance Parametrization / Unit Scaling 
 #> 
@@ -110,10 +108,7 @@ model_gas
 #> 
 #> Log-Likelihood: 870.9712, AIC: -1731.942, BIC: -1714.295
 
-ggplot(mapping = aes(x = data$date, y = model_gas$fit$par_tv[, 2])) +
-  labs(title = "Filtered Time-Varying Volatility", x = "Date", y = "log(var)") +
-  geom_line(color = "#771468") +
-  theme_bw()
+plot(model_gas)
 ```
 
 <img src="man/figures/README-example-1.png" width="75%" style="display: block; margin: auto;" />

@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
-date: "2023-06-25"
+date: "2023-08-24"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
@@ -22,14 +22,6 @@ Our analyzed data are supplied in the `ice_hockey_championships` dataset. We res
 
 ```r
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 library(ggplot2)
 library(gasmodel)
 
@@ -193,7 +185,37 @@ tibble(team = colnames(y)) %>%
 
 ## Time-Varying Worth Parameters
 
-Additionally, we can examine the evolution of the worth parameters for individual teams over the years. The point estimates of time-varying parameter values can be directly obtained from the `gas()` function. However, it is important to note that these estimates are subject to uncertainty. To capture the uncertainty, we can utilize simulations by leveraging the `gas_filter()` function, which accepts the output of the `gas()` function as an argument. This allows us to obtain the standard deviations and quantiles for the worth parameter estimates, providing a more comprehensive understanding of the parameter dynamics over time.
+Additionally, we can examine the evolution of the worth parameters for individual teams over the years. The point estimates of time-varying parameter values can be directly obtained from the `gas()` function. Using the generic `plot()` function allows us to visualize the time-varying parameters of individual models. When multiple parameters are time-varying, as in our scenario, the function plots them in sequence. For the purpose of this document, we will only display figures specific to the Canada team.
+
+
+```r
+plot(est_static)
+```
+
+<div class="figure" style="text-align: center">
+<img src="rankings_tv-1.png" alt="Time-varying parameters of the Canada team based on the static model." width="75%" />
+<p class="caption">Time-varying parameters of the Canada team based on the static model.</p>
+</div>
+
+```r
+plot(est_stnry)
+```
+
+<div class="figure" style="text-align: center">
+<img src="rankings_tv-2.png" alt="Time-varying parameters of the Canada team based on the stationary model." width="75%" />
+<p class="caption">Time-varying parameters of the Canada team based on the stationary model.</p>
+</div>
+
+```r
+plot(est_walk)
+```
+
+<div class="figure" style="text-align: center">
+<img src="rankings_tv-3.png" alt="Time-varying parameters of the Canada team based on the random walk model." width="75%" />
+<p class="caption">Time-varying parameters of the Canada team based on the random walk model.</p>
+</div>
+
+However, it is important to note that these estimates are subject to uncertainty. To capture the uncertainty, we can utilize simulations by leveraging the `gas_filter()` function, which accepts the output of the `gas()` function as an argument. This allows us to obtain the standard deviations and quantiles for the worth parameter estimates, providing a more comprehensive understanding of the parameter dynamics over time.
 
 
 ```r
@@ -201,27 +223,16 @@ set.seed(42)
 flt_stnry <- gas_filter(est_stnry)
 ```
 
-We focus on the Canada team and visualize its time-varying worth parameter in the following Figure.
+To visualize time-varying parameters with confidence band, we can use the `plot()` on the `gas_filter` object.
 
 
 ```r
-canada <- tibble(x = 1998:2019,
-  y = est_stnry$fit$par_tv[, 3],
-  y_low = flt_stnry$filter$par_tv_quant[, 3, 1],
-  y_high = flt_stnry$filter$par_tv_quant[, 3, 2])
-
-ggplot(canada) +
-  labs(title = "Strength of the Canada Team", x = "Year", y = "Worth Parameter") +
-  geom_ribbon(aes(x = x, ymin = y_low, ymax = y_high), fill = "#FFAAAA") +
-  geom_hline(yintercept = est_stnry$fit$par_unc[3], linetype = "dashed") +
-  geom_line(aes(x = x, y = y), color = "#800000") +
-  scale_x_continuous(breaks = seq(from = 1998, to = 2019, by = 3)) +
-  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+plot(flt_stnry)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="canada-1.png" alt="plot of chunk canada" width="75%" />
-<p class="caption">plot of chunk canada</p>
+<img src="rankings_band-1.png" alt="Confidence band of time-varying parameters of the Canada team based on the stationary model." width="75%" />
+<p class="caption">Confidence band of time-varying parameters of the Canada team based on the stationary model.</p>
 </div>
 
 ## Forecasting
@@ -266,6 +277,18 @@ tibble(team = colnames(y)) %>%
 #> 23 SVN                -1.95        0.000631               18       Inf
 #> 24 UKR                -1.69        0.000813               17       Inf
 ```
+
+The forecasted values can be displayed using the generic `plot()` function.
+
+
+```r
+plot(fcst_stnry)
+```
+
+<div class="figure" style="text-align: center">
+<img src="rankings_ahead-1.png" alt="One-step ahead forecasts of the Canada team based on the stationary model." width="75%" />
+<p class="caption">One-step ahead forecasts of the Canada team based on the stationary model.</p>
+</div>
 
 ## References
 
