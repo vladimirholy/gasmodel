@@ -31,7 +31,6 @@ Imports:
     nloptr,
     numDeriv,
     pracma,
-    scales,
     tidyr
 Suggests:
     knitr,
