@@ -33,6 +33,7 @@ Imports:
     pracma,
     tidyr
 Suggests:
+    hms,
     knitr,
     rmarkdown,
     testthat

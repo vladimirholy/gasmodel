@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Bookshop Orders"
 author: "Vladimír Holý & Petra Tomanová"
-date: "2023-08-23"
+date: "2023-08-25"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Bookshop Orders}
@@ -26,14 +26,18 @@ Let us prepare the analyzed data. We use the `bookshop_sales` dataset containing
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(hms)
 library(gasmodel)
 
 data(bookshop_sales)
 
 data_dur <- bookshop_sales %>%
-  mutate(duration = as.numeric(time - lag(time)) / 60) %>%
+  as_tibble() %>%
+  rename(datetime = time) %>%
+  mutate(date = as.Date(datetime)) %>%
+  mutate(time = as_hms(datetime)) %>%
+  mutate(duration = as.numeric(datetime - lag(datetime)) / 60) %>%
   mutate(duration = recode(duration, "0" = 0.5)) %>%
-  mutate(just = as.vector(as.POSIXct(format(time, "1970-01-01 %H:%M:%S"), tz = "UTC"))) %>%
   drop_na()
 ```
 
@@ -43,12 +47,11 @@ We adjust the observed durations for diurnal pattern and extract the time series
 
 
 ```r
-model_spline <- smooth.spline(data_dur$just, data_dur$duration, df = 10)
+model_spline <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
 
 data_dur <- data_dur %>%
-  mutate(duration_spline = predict(model_spline, x = just)$y) %>%
-  mutate(duration_adj = duration / duration_spline) %>%
-  select(-just)
+  mutate(duration_spline = predict(model_spline, x = as.vector(time))$y) %>%
+  mutate(duration_adj = duration / duration_spline)
 
 y <- data_dur$duration_adj
 ```
@@ -172,19 +175,116 @@ plot(est_gengamma)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="durations_tv-1.png" alt="Time-varying parameters based on the generalized gamma model." width="75%" />
+<img src="durations_tv_plot-1.png" alt="Time-varying parameters based on the generalized gamma model." width="75%" />
 <p class="caption">Time-varying parameters based on the generalized gamma model.</p>
+</div>
+
+## Trend
+
+We can see a slight negative trend in time-varying parameters. We can try including a trend as an exogenous variable for all four considered distributions.
+
+
+```r
+x <- as.integer(data_dur$date) - as.integer(data_dur$date[1])
+
+est_exp_tr <- gas(y = y, x = x, distr = "exp", reg = "sep")
+est_exp_tr
+#> GAS Model: Exponential Distribution / Scale Parametrization / Unit Scaling 
+#> 
+#> Coefficients: 
+#>                      Estimate  Std. Error  Z-Test  Pr(>|Z|)    
+#> log(scale)_omega   0.29683416  0.04509203  6.5829 4.615e-11 ***
+#> log(scale)_beta1  -0.00304957  0.00037137 -8.2118 < 2.2e-16 ***
+#> log(scale)_alpha1  0.05401728  0.00802442  6.7316 1.678e-11 ***
+#> log(scale)_phi1    0.91358230  0.02146703 42.5575 < 2.2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Log-Likelihood: -5583.723, AIC: 11175.45, BIC: 11202.08
+
+est_weibull_tr <- gas(y = y, x = x, distr = "weibull", reg = "sep")
+est_weibull_tr
+#> GAS Model: Weibull Distribution / Scale Parametrization / Unit Scaling 
+#> 
+#> Coefficients: 
+#>                      Estimate  Std. Error  Z-Test  Pr(>|Z|)    
+#> log(scale)_omega   0.26955739  0.04763575  5.6587 1.525e-08 ***
+#> log(scale)_beta1  -0.00302892  0.00039014 -7.7638 8.244e-15 ***
+#> log(scale)_alpha1  0.06215424  0.00992563  6.2620 3.801e-10 ***
+#> log(scale)_phi1    0.90950196  0.02399584 37.9025 < 2.2e-16 ***
+#> shape              0.94858384  0.00949927 99.8586 < 2.2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Log-Likelihood: -5569.405, AIC: 11148.81, BIC: 11182.1
+
+est_gamma_tr <- gas(y = y, x = x, distr = "gamma", reg = "sep")
+est_gamma_tr
+#> GAS Model: Gamma Distribution / Scale Parametrization / Unit Scaling 
+#> 
+#> Coefficients: 
+#>                      Estimate  Std. Error  Z-Test  Pr(>|Z|)    
+#> log(scale)_omega   0.35024097  0.04910603  7.1323 9.868e-13 ***
+#> log(scale)_beta1  -0.00304957  0.00038142 -7.9954 1.292e-15 ***
+#> log(scale)_alpha1  0.05698059  0.00874363  6.5168 7.182e-11 ***
+#> log(scale)_phi1    0.91358230  0.02204841 41.4353 < 2.2e-16 ***
+#> shape              0.94799429  0.01549052 61.1983 < 2.2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Log-Likelihood: -5578.303, AIC: 11166.61, BIC: 11199.89
+
+est_gengamma_tr <- gas(y = y, x = x, distr = "gengamma", reg = "sep")
+est_gengamma_tr
+#> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
+#> 
+#> Coefficients: 
+#>                      Estimate  Std. Error  Z-Test  Pr(>|Z|)    
+#> log(scale)_omega  -0.70489163  0.19283438 -3.6554 0.0002568 ***
+#> log(scale)_beta1  -0.00292746  0.00039123 -7.4827 7.280e-14 ***
+#> log(scale)_alpha1  0.08164957  0.01387329  5.8854 3.971e-09 ***
+#> log(scale)_phi1    0.87684184  0.03506612 25.0054 < 2.2e-16 ***
+#> shape1             1.76342697  0.15253550 11.5608 < 2.2e-16 ***
+#> shape2             0.68568220  0.03426457 20.0114 < 2.2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Log-Likelihood: -5541.097, AIC: 11094.19, BIC: 11134.14
+```
+
+The trend variable is significant in all cases. The AIC also confirms improvement of the fit.
+
+
+```r
+AIC(est_exp_tr, est_weibull_tr, est_gamma_tr, est_gengamma_tr)
+#>                 df      AIC
+#> est_exp_tr       4 11175.45
+#> est_weibull_tr   5 11148.81
+#> est_gamma_tr     5 11166.61
+#> est_gengamma_tr  6 11094.19
+```
+
+Note that the time-varying parameters returned by the `gas()` function include the effect of exogenous variables. By using the `plot()` function, the now modeled trend can be clearly seen.
+
+
+```r
+plot(est_gengamma_tr)
+```
+
+<div class="figure" style="text-align: center">
+<img src="durations_trend_tv_plot-1.png" alt="Time-varying parameters based on the generalized gamma model with trend." width="75%" />
+<p class="caption">Time-varying parameters based on the generalized gamma model with trend.</p>
 </div>
 
 ## Bootstrapping
 
-To assess the suitability of standard deviations based on asymptotics for our finite sample, we employ the `gas_bootstrap()` function. This function conducts a parametric bootstrap, allowing us to calculate standard errors and quantiles. It's important to note that this could be computationally very intensive, depending on the number of repetitions, the quantity of observations, the complexity of the model structure, and the optimizer used. Note that the function supports parallelization through arguments `parallel_function` and `parallel_arguments`.
+To assess the suitability of standard deviations based on asymptotics for our finite sample, we employ the `gas_bootstrap()` function. This function conducts a parametric bootstrap, allowing us to calculate standard errors and quantiles. It's important to note that this could be computationally very intensive, depending on the number of repetitions, the quantity of observations, the complexity of the model structure, and the optimizer used. Note that the function supports parallelization through arguments `parallel_function` and `parallel_arguments`. For example, for the `snow` parallelization functionality with 4 cores, you can call `gas_bootstrap(est_gengamma_tr, parallel_function = wrapper_parallel_snow, parallel_arguments = list(mc.cores = 4))`.
 
 
 ```r
 set.seed(42)
-boot_gengamma <- gas_bootstrap(est_gengamma)
-boot_gengamma
+boot_gengamma_tr <- gas_bootstrap(est_gengamma_tr)
+boot_gengamma_tr
 #> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 
 #> Method: Parametric Bootstrap 
@@ -192,39 +292,36 @@ boot_gengamma
 #> Number of Bootstrap Samples: 1000 
 #> 
 #> Bootstrapped Coefficients: 
-#>                      Original        Mean  Std. Error P-Value        2.5%       97.5%
-#> log(scale)_omega  -0.04916436 -0.05108068 0.014553055       0 -0.08273803 -0.02706646
-#> log(scale)_alpha1  0.06983394  0.07002813 0.008656187       0  0.05377361  0.08715991
-#> log(scale)_phi1    0.95176106  0.94977473 0.011273494       0  0.92340871  0.96741980
-#> shape1             1.76436199  1.76852180 0.156548275       0  1.48360992  2.10490423
-#> shape2             0.68297060  0.68483367 0.035019326       0  0.61957228  0.75425789
+#>                       Original         Mean   Std. Error P-Value         2.5%       97.5%
+#> log(scale)_omega  -0.704891626 -0.705226357 0.1980063054       0 -1.110703445 -0.34772409
+#> log(scale)_beta1  -0.002927462 -0.002932047 0.0003883289       0 -0.003698968 -0.00217132
+#> log(scale)_alpha1  0.081649573  0.081648774 0.0116918758       0  0.059179321  0.10575927
+#> log(scale)_phi1    0.876841843  0.871223702 0.0297172317       0  0.806282230  0.91973863
+#> shape1             1.763426971  1.765458333 0.1596470324       0  1.476831790  2.09983786
+#> shape2             0.685682201  0.688266197 0.0354034049       0  0.623633255  0.76097862
 ```
 
 The results can also be viewed in a boxplot.
 
 
 ```r
-plot(boot_gengamma)
-#> Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
-#> ℹ Using compatibility `.name_repair`.
-#> ℹ The deprecated feature was likely used in the gasmodel package.
-#>   Please report the issue at <https://github.com/vladimirholy/gasmodel/issues>.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+plot(boot_gengamma_tr)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="durations_box-1.png" alt="Boxplot of bootstrapped coefficients based on the generalized gamma model." width="75%" />
-<p class="caption">Boxplot of bootstrapped coefficients based on the generalized gamma model.</p>
+<img src="durations_boot_plot-1.png" alt="Boxplot of bootstrapped coefficients based on the generalized gamma model with trend." width="75%" />
+<p class="caption">Boxplot of bootstrapped coefficients based on the generalized gamma model with trend.</p>
 </div>
 
-Given that the number of observations in our model is 5752 (accessible through `est_gengamma$model$t`), it is reasonable to anticipate that standard deviations based on asymptotics would yield precise results. Fortunately, this holds true in our scenario. Note that standard deviations can also be obtained using the `vcov()` generic function for both `est_gengamma` and `boot_gengamma`.
+Given that the number of observations in our model is 5752 (accessible through `est_gengamma_tr$model$t`), it is reasonable to anticipate that standard deviations based on asymptotics would yield precise results. Fortunately, this holds true in our scenario. Note that standard deviations can also be obtained using the `vcov()` generic function for both `est_gengamma_tr` and `boot_gengamma_tr`.
 
 
 ```r
-est_gengamma$fit$coef_sd - boot_gengamma$bootstrap$coef_sd
-#>  log(scale)_omega log(scale)_alpha1   log(scale)_phi1            shape1            shape2 
-#>       0.004349924       0.003013722       0.003750529      -0.005789689      -0.001329515
+est_gengamma_tr$fit$coef_sd - boot_gengamma_tr$bootstrap$coef_sd
+#>  log(scale)_omega  log(scale)_beta1 log(scale)_alpha1   log(scale)_phi1            shape1 
+#>     -5.171928e-03      2.900388e-06      2.181417e-03      5.348887e-03     -7.111530e-03 
+#>            shape2 
+#>     -1.138839e-03 
 ```
 
 ## Simulation
@@ -233,28 +330,33 @@ Lastly, we highlight the utilization of simulation techniques. Simulation is exe
 
 
 ```r
+t_sim <- 20
+x_sim <- rep(max(x) + 1, t_sim)
+
 set.seed(42)
-sim_gengamma <- gas_simulate(est_gengamma, t_sim = 20)
-sim_gengamma
+sim_gengamma_tr <- gas_simulate(est_gengamma_tr, t_sim = t_sim, x_sim = x_sim)
+sim_gengamma_tr
 #> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 
 #> Simulations: 
-#>          t1          t2          t3          t4          t5          t6          t7          t8          t9         t10         t11         t12         t13         t14         t15         t16 
-#> 1.274093885 0.884734423 1.433960897 0.140393911 0.320915730 2.925334846 2.854427295 0.920530032 0.854565486 0.331341832 0.006232464 0.102167045 0.819162543 1.067127343 1.488868243 0.204069391 
-#>         t17         t18         t19         t20 
-#> 0.162374836 0.131711352 0.858940205 0.285970954
+#>          t1          t2          t3          t4          t5          t6          t7 
+#> 1.009836881 0.706070572 1.139254609 0.112834862 0.252712188 2.268641670 2.271065825 
+#>          t8          t9         t10         t11         t12         t13         t14 
+#> 0.742231695 0.676595922 0.259042333 0.004836128 0.077080566 0.608510890 0.799449725 
+#>         t15         t16         t17         t18         t19         t20 
+#> 1.126124047 0.157351783 0.124067217 0.100168697 0.648121920 0.219983546 
 ```
 
 The simulated time series can be plotted using the generic `plot()` function.
 
 
 ```r
-plot(sim_gengamma)
+plot(sim_gengamma_tr)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="durations_random-1.png" alt="Simulated time series based on the generalized gamma model." width="75%" />
-<p class="caption">Simulated time series based on the generalized gamma model.</p>
+<img src="durations_sim_plot-1.png" alt="Simulated time series based on the generalized gamma model with trend." width="75%" />
+<p class="caption">Simulated time series based on the generalized gamma model with trend.</p>
 </div>
 
 The simulated time series can be employed, for example, to assess the impact of order arrivals on queuing systems, as demonstrated by Tomanová and Holý (2021).

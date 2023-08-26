@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
-date: "2023-08-24"
+date: "2023-08-25"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
@@ -193,7 +193,7 @@ plot(est_static)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="rankings_tv-1.png" alt="Time-varying parameters of the Canada team based on the static model." width="75%" />
+<img src="rankings_tv_plot-1.png" alt="Time-varying parameters of the Canada team based on the static model." width="75%" />
 <p class="caption">Time-varying parameters of the Canada team based on the static model.</p>
 </div>
 
@@ -202,7 +202,7 @@ plot(est_stnry)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="rankings_tv-2.png" alt="Time-varying parameters of the Canada team based on the stationary model." width="75%" />
+<img src="rankings_tv_plot-2.png" alt="Time-varying parameters of the Canada team based on the stationary model." width="75%" />
 <p class="caption">Time-varying parameters of the Canada team based on the stationary model.</p>
 </div>
 
@@ -211,7 +211,7 @@ plot(est_walk)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="rankings_tv-3.png" alt="Time-varying parameters of the Canada team based on the random walk model." width="75%" />
+<img src="rankings_tv_plot-3.png" alt="Time-varying parameters of the Canada team based on the random walk model." width="75%" />
 <p class="caption">Time-varying parameters of the Canada team based on the random walk model.</p>
 </div>
 
@@ -231,7 +231,7 @@ plot(flt_stnry)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="rankings_band-1.png" alt="Confidence band of time-varying parameters of the Canada team based on the stationary model." width="75%" />
+<img src="rankings_filter_plot-1.png" alt="Confidence band of time-varying parameters of the Canada team based on the stationary model." width="75%" />
 <p class="caption">Confidence band of time-varying parameters of the Canada team based on the stationary model.</p>
 </div>
 
@@ -286,7 +286,7 @@ plot(fcst_stnry)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="rankings_ahead-1.png" alt="One-step ahead forecasts of the Canada team based on the stationary model." width="75%" />
+<img src="rankings_forecast_plot-1.png" alt="One-step ahead forecasts of the Canada team based on the stationary model." width="75%" />
 <p class="caption">One-step ahead forecasts of the Canada team based on the stationary model.</p>
 </div>
 

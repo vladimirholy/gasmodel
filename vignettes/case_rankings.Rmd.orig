@@ -87,14 +87,14 @@ We consider a total of three different models. We incorporate `x` as an explanat
 
 First, we estimate the static model where there are no dynamics involved. In this case, we set both the autoregressive and score orders to zero. Either a single integer can be provided to determine the order for all parameters, or a vector of integers can be supplied to specify the order for individual parameters.
 
-``` {r rankings_static}
+``` {r rankings_model_static}
 est_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
   coef_fix_special = c("zero_sum_intercept", "panel_structure"))
 ```
 
 Second, we estimate the standard mean-reverting GAS model of order one. In order to expedite the numerical optimization process, we incorporate starting values based on the static model.
 
-``` {r rankings_stnry}
+``` {r rankings_model_stnry}
 est_stnry <- gas(y = y, x = x, distr = "pluce",
   coef_fix_special = c("zero_sum_intercept", "panel_structure"),
   coef_start = as.vector(rbind(est_static$fit$par_unc / 2, 0, 0.5, 0.5)))
@@ -102,7 +102,7 @@ est_stnry <- gas(y = y, x = x, distr = "pluce",
 
 Third, we estimate the random walk model. In other words, we set the autoregressive coefficient to 1. The easiest way to specify this is by including the value `random_walk` in the `coef_fix_special` argument. In our random walk model, we consider the initial values of the worth parameters to be parameters to be estimated. While the `par_init` argument does not directly support this, we can set `regress = "sep"` and use cumulative sums of exogenous variables to achieve this initialization for this particular model. However, it is generally not recommended to estimate initial parameter values as it introduces additional variables, lacks reasonable asymptotics, and can lead to overfitting in finite samples. It is important to approach the random walk model with caution, as it is not stationary and the standard maximum likelihood asymptotics are not valid.
 
-``` {r rankings_walk}
+``` {r rankings_model_walk}
 est_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", regress = "sep",
   coef_fix_special = c("zero_sum_intercept", "panel_structure", "random_walk"),
   coef_start = as.vector(rbind(est_static$fit$par_unc, 0, 0.5, 1)))
@@ -134,7 +134,7 @@ AIC(est_static, est_stnry, est_walk)
 
 Our models enable us to construct the ‘ultimate’ or long-run ranking. The rankings produced by both models are in agreement for all but the first three positions. However, the long-term strength estimates for these three teams are very close to each other, making the final ranking less clear-cut.
 
-``` {r rankings_table}
+``` {r rankings_ultimate}
 tibble(team = colnames(y)) %>%
   mutate(stnry_strength = est_stnry$fit$par_unc) %>%
   mutate(stnry_rank = rank(-stnry_strength)) %>%
@@ -147,7 +147,7 @@ tibble(team = colnames(y)) %>%
 
 Additionally, we can examine the evolution of the worth parameters for individual teams over the years. The point estimates of time-varying parameter values can be directly obtained from the `gas()` function. Using the generic `plot()` function allows us to visualize the time-varying parameters of individual models. When multiple parameters are time-varying, as in our scenario, the function plots them in sequence. For the purpose of this document, we will only display figures specific to the Canada team.
 
-``` {r rankings_tv, fig.keep = c(3, 27, 51), fig.cap = c("Time-varying parameters of the Canada team based on the static model.", "Time-varying parameters of the Canada team based on the stationary model.", "Time-varying parameters of the Canada team based on the random walk model.")}
+``` {r rankings_tv_plot, fig.keep = c(3, 27, 51), fig.cap = c("Time-varying parameters of the Canada team based on the static model.", "Time-varying parameters of the Canada team based on the stationary model.", "Time-varying parameters of the Canada team based on the random walk model.")}
 plot(est_static)
 plot(est_stnry)
 plot(est_walk)
@@ -155,14 +155,14 @@ plot(est_walk)
 
 However, it is important to note that these estimates are subject to uncertainty. To capture the uncertainty, we can utilize simulations by leveraging the `gas_filter()` function, which accepts the output of the `gas()` function as an argument. This allows us to obtain the standard deviations and quantiles for the worth parameter estimates, providing a more comprehensive understanding of the parameter dynamics over time.
 
-``` {r rankings_filter}
+``` {r rankings_filter_comp}
 set.seed(42)
 flt_stnry <- gas_filter(est_stnry)
 ```
 
 To visualize time-varying parameters with confidence band, we can use the `plot()` on the `gas_filter` object.
 
-``` {r rankings_band, fig.keep = 3, fig.cap = "Confidence band of time-varying parameters of the Canada team based on the stationary model."}
+``` {r rankings_filter_plot, fig.keep = 3, fig.cap = "Confidence band of time-varying parameters of the Canada team based on the stationary model."}
 plot(flt_stnry)
 ```
 
@@ -170,7 +170,7 @@ plot(flt_stnry)
 
 Finally, we perform one-year-ahead forecasts. We use the `gas_forecast()` function, which can again take the estimated model as an argument.
 
-``` {r rankings_forecast}
+``` {r rankings_forecast_comp}
 fcst_stnry <- gas_forecast(est_stnry, t_ahead = 1, x_ahead = 0)
 
 tibble(team = colnames(y)) %>%
@@ -183,7 +183,7 @@ tibble(team = colnames(y)) %>%
 
 The forecasted values can be displayed using the generic `plot()` function.
 
-``` {r rankings_ahead, fig.keep = 3, fig.cap = "One-step ahead forecasts of the Canada team based on the stationary model."}
+``` {r rankings_forecast_plot, fig.keep = 3, fig.cap = "One-step ahead forecasts of the Canada team based on the stationary model."}
 plot(fcst_stnry)
 ```
 
