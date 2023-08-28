@@ -231,7 +231,7 @@ plot(flt_stnry)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="rankings_filter_plot-1.png" alt="Confidence band of time-varying parameters of the Canada team based on the stationary model." width="75%" />
+<img src="rankings_filter_plot-1.png" alt="Confidence bands of time-varying parameters of the Canada team based on the stationary model." width="75%" />
 <p class="caption">Confidence band of time-varying parameters of the Canada team based on the stationary model.</p>
 </div>
 

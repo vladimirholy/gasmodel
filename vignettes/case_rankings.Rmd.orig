@@ -162,7 +162,7 @@ flt_stnry <- gas_filter(est_stnry)
 
 To visualize time-varying parameters with confidence band, we can use the `plot()` on the `gas_filter` object.
 
-``` {r rankings_filter_plot, fig.keep = 3, fig.cap = "Confidence band of time-varying parameters of the Canada team based on the stationary model."}
+``` {r rankings_filter_plot, fig.keep = 3, fig.cap = "Confidence bands of time-varying parameters of the Canada team based on the stationary model."}
 plot(flt_stnry)
 ```
 
