@@ -1,3 +1,5 @@
+# gasmodel (development version)
+
 # gasmodel 0.5.0
 * Added support for summarize() and plot() generic functions.
 * Added computation of p-values in the gas_bootstrap() function.
