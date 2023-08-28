@@ -35,7 +35,7 @@ Their purpose is to be passed as the \code{parallel_function} argument in the \c
 
 \item \code{wrapper_parallel_multicore()}: Wrapper for parallelization function \code{\link[parallel:mclapply]{parallel::mclapply()}}.
 
-\item \code{wrapper_parallel_snow()}: Wrapper for parallelization function \code{\link[parallel:mclapply]{parallel::parLapply()}}.
+\item \code{wrapper_parallel_snow()}: Wrapper for parallelization function \code{\link[parallel:parLapply]{parallel::parLapply()}}.
 
 }}
 \seealso{

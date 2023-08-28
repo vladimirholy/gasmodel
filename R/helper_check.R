@@ -631,6 +631,21 @@ check_my_coef_start <- function(coef_start = NULL, coef_bound_lower = NULL, coef
 # ------------------------------------------------------------------------------
 
 
+# Check for Block Length ------------------------------------
+check_my_block_length <- function(block_length = NULL, t = NULL) {
+  if (is.vector(block_length) && !is.list(block_length) && length(block_length) == 1L && is.numeric(block_length) && !is.na(block_length) && block_length >= 1L) {
+    block_length <- as.integer(block_length)
+  } else {
+    stop("Invalid type of argument block_length.")
+  }
+  if (!is.null(t) && block_length > t) {
+    stop("Block length must not be higher than the length of time series.")
+  }
+  return(block_length)
+}
+# ------------------------------------------------------------------------------
+
+
 # Check for Generic Logical Scalar ---------------------------------------------
 check_generic_logical_scalar <- function(arg, arg_name) {
   if (is.vector(arg) && !is.list(arg) && length(arg) == 1L && is.logical(arg) && !is.na(arg)) {

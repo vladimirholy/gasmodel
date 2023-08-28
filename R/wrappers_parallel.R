@@ -47,12 +47,13 @@ wrapper_parallel_multicore <- function(run_num, run_fun, run_details, ...) {
 
 
 # Wrap the snow Parallelization Function from parallel Package -----------------
-#' @describeIn wrappers_parallel Wrapper for parallelization function \code{\link[parallel:mclapply]{parallel::parLapply()}}.
+#' @describeIn wrappers_parallel Wrapper for parallelization function \code{\link[parallel:parLapply]{parallel::parLapply()}}.
 #' @export
 wrapper_parallel_snow <- function(run_num, run_fun, run_details, ...) {
   cluster <- parallel::makeCluster(...)
   run_list <- parallel::parLapply(cl = cluster, X = 1:run_num, fun = run_fun, run_details = run_details)
   parallel::stopCluster(cluster)
+  return(run_list)
 }
 # ------------------------------------------------------------------------------
 

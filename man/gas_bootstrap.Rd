@@ -5,10 +5,11 @@
 \title{Bootstrap GAS Model}
 \usage{
 gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
-  quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL,
-  param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L,
-  par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L,
-  coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL,
+  block_length = NULL, quant = c(0.025, 0.975), y = NULL, x = NULL,
+  distr = NULL, param = NULL, scaling = "unit", regress = "joint",
+  p = 1L, q = 1L, par_static = NULL, par_link = NULL,
+  par_init = NULL, lik_skip = 0L, coef_fix_value = NULL,
+  coef_fix_other = NULL, coef_fix_special = NULL,
   coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL,
   optim_function = wrapper_optim_nloptr, optim_arguments = list(opts =
   list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0, maxeval = 1e+06)),
@@ -17,9 +18,11 @@ gas_bootstrap(gas_object = NULL, method = "parametric", rep_boot = 1000L,
 \arguments{
 \item{gas_object}{An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.}
 
-\item{method}{A method used for bootstrapping. Currently, the only supported method is \code{"parametric"}.}
+\item{method}{A method used for bootstrapping. Supported methods are \code{"parametric"}, \code{"simple_block"}, \code{"moving_block"}, and \code{"stationary_block"}.}
 
 \item{rep_boot}{A number of bootstrapping repetitions.}
+
+\item{block_length}{A length of blocks for methods \code{"simple_block"} and \code{"moving_block"}. A mean length of blocks for method \code{"stationary_block"}.}
 
 \item{quant}{A numeric vector of probabilities determining quantiles.}
 
@@ -101,6 +104,7 @@ A \code{list} of S3 class \code{gas_bootstrap} with components:
 \description{
 A function for bootstrapping coefficients of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 Method \code{"parametric"} repeatedly simulates time series using the parametric model and re-estimates coefficients.
+Methods \code{"simple_block"}, \code{"moving_block"}, and \code{"stationary_block"} perform the standard variations of the circular block bootstrap.
 Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 The function enables parallelization.
 }

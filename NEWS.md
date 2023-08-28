@@ -1,4 +1,5 @@
 # gasmodel (development version)
+* Aded block bootstrap methods.
 
 # gasmodel 0.5.0
 * Added support for summarize() and plot() generic functions.
