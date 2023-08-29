@@ -1,4 +1,4 @@
-# gasmodel (development version)
+# gasmodel 0.5.1
 * Aded block bootstrap methods.
 
 # gasmodel 0.5.0
