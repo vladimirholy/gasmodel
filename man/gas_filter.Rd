@@ -132,6 +132,9 @@ est_gas
 flt_gas <- gas_filter(est_gas, rep_gen	= 100)
 flt_gas
 
+# Plot the time-varying parameters with confidence bands
+plot(flt_gas)
+
 }
 \references{
 Blasques, F., Koopman, S. J., Łasak, K., and Lucas, A. (2016). In-Sample Confidence Bands and Out-of-Sample Forecast Bands for Time-Varying Parameters in Observation-Driven Models. \emph{International Journal of Forecasting}, \strong{32}(3), 875–887. \doi{10.1016/j.ijforecast.2015.11.018}.

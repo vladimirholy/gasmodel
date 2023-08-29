@@ -126,6 +126,9 @@ est_gas
 \donttest{boot_gas <- gas_bootstrap(est_gas, rep_boot = 10)
 boot_gas}
 
+# Plot boxplot of bootstrapped coefficients
+\donttest{plot(boot_gas)}
+
 }
 \references{
 Creal, D., Koopman, S. J., and Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, \strong{28}(5), 777–795. \doi{10.1002/jae.1279}.

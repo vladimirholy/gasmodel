@@ -79,6 +79,9 @@
 #' \donttest{boot_gas <- gas_bootstrap(est_gas, rep_boot = 10)
 #' boot_gas}
 #'
+#' # Plot boxplot of bootstrapped coefficients
+#' \donttest{plot(boot_gas)}
+#'
 #' @export
 gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, block_length = NULL, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), parallel_function = NULL, parallel_arguments = list()) {
   if (!is.null(gas_object) && inherits(gas_object, "gas")) {

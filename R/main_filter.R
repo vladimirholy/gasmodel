@@ -90,6 +90,9 @@
 #' flt_gas <- gas_filter(est_gas, rep_gen	= 100)
 #' flt_gas
 #'
+#' # Plot the time-varying parameters with confidence bands
+#' plot(flt_gas)
+#'
 #' @export
 gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set = NULL, rep_gen = 1000L, t_ahead = 0L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, coef_vcov = NULL) {
   if (!is.null(gas_object) && inherits(gas_object, "gas")) {

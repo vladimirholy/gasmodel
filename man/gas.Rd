@@ -173,6 +173,9 @@ BIC(est_gas)
 # Obtain the confidence intervals of coefficients
 confint(est_gas)
 
+# Plot the time-varying parameters
+plot(est_gas)
+
 }
 \references{
 Blasques, F., Gorgi, P., Koopman, S. J., and Wintenberger, O. (2018). Feasible Invertibility Conditions and Maximum Likelihood Estimation for Observation-Driven Models. \emph{Electronic Journal of Statistics}, \strong{12}(1), 1019–1052. \doi{10.1214/18-ejs1416}.

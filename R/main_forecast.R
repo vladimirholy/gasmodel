@@ -73,15 +73,13 @@
 #'   coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
 #' est_gas
 #'
-#' # Forecast the model by the "simulated_paths" method
-#' fcst_gas <- gas_forecast(est_gas, method = "simulated_paths",
-#'   t_ahead = 22, x_ahead = 99:120, rep_ahead = 100)
+#' # Forecast the model by the "mean_paths" method
+#' fcst_gas <- gas_forecast(est_gas, method = "mean_path",
+#'   t_ahead = 22, x_ahead = 99:120)
 #' fcst_gas
 #'
-#' # Plot the forecasted expected value with the confidence interval
-#' plot(c(fcst_gas$data$y, fcst_gas$forecast$y_ahead_mean), type = "b")
-#' lines(99:120, fcst_gas$forecast$y_ahead_quant[, 1], col = "blue")
-#' lines(99:120, fcst_gas$forecast$y_ahead_quant[, 2], col = "blue")
+#' # Plot the forecasted expected value
+#' plot(fcst_gas)
 #'
 #' @export
 gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {

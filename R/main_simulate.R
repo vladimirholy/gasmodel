@@ -53,7 +53,7 @@
 #' sim_gas
 #'
 #' # Plot the simulated time series
-#' plot(sim_gas$simulation$y_sim, type = "b")
+#' plot(sim_gas)
 #'
 #' @export
 gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", n = NULL, p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {

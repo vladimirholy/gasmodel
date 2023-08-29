@@ -72,7 +72,7 @@ sim_gas <- gas_simulate(t_sim = 50, distr = "weibull",
 sim_gas
 
 # Plot the simulated time series
-plot(sim_gas$simulation$y_sim, type = "b")
+plot(sim_gas)
 
 }
 \references{
