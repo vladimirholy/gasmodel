@@ -1,7 +1,7 @@
 Package: gasmodel
 Type: Package
 Title: Generalized Autoregressive Score Models
-Version: 0.5.1
+Version: 0.5.1.9000
 Authors@R:
     c(person(given = "Vladimír",
              family = "Holý",
