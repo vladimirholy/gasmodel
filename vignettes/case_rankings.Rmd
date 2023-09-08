@@ -21,11 +21,11 @@ Our analyzed data are supplied in the `ice_hockey_championships` dataset. We res
 
 
 ```r
-library(dplyr)
-library(ggplot2)
-library(gasmodel)
+library("dplyr")
+library("ggplot2")
+library("gasmodel")
 
-data(ice_hockey_championships)
+data("ice_hockey_championships")
 
 t <- 22
 n <- ncol(ice_hockey_championships$host)
@@ -244,38 +244,38 @@ Finally, we perform one-year-ahead forecasts. We use the `gas_forecast()` functi
 fcst_stnry <- gas_forecast(est_stnry, t_ahead = 1, x_ahead = 0)
 
 tibble(team = colnames(y)) %>%
-  mutate(forecasted_strength = fcst_stnry$forecast$par_tv_ahead_mean[1, ]) %>%
-  mutate(forecasted_gold = exp(forecasted_strength) / sum(exp(forecasted_strength))) %>%
-  mutate(forecasted_rank = rank(-forecasted_strength)) %>%
+  mutate(fcst_strength = fcst_stnry$forecast$par_tv_ahead_mean[1, ]) %>%
+  mutate(fcst_gold = exp(fcst_strength) / sum(exp(fcst_strength))) %>%
+  mutate(fcst_rank = rank(-fcst_strength)) %>%
   mutate(real_rank = ice_hockey_championships$rankings[24, ]) %>%
   arrange(real_rank)
 #> # A tibble: 24 × 5
-#>    team  forecasted_strength forecasted_gold forecasted_rank real_rank
-#>    <chr>               <dbl>           <dbl>           <dbl>     <dbl>
-#>  1 CAN                 3.97        0.234                   2         1
-#>  2 FIN                 3.97        0.235                   1         2
-#>  3 USA                 2.09        0.0356                  6         3
-#>  4 DEU                 0.742       0.00929                10         4
-#>  5 RUS                 3.43        0.137                   3         5
-#>  6 CHE                 1.82        0.0272                  7         6
-#>  7 CZE                 3.41        0.134                   4         7
-#>  8 SVK                 1.58        0.0214                  8         8
-#>  9 SWE                 3.40        0.133                   5         9
-#> 10 KAZ                -2.05        0.000569               19        10
-#> 11 LVA                 0.978       0.0117                  9        11
-#> 12 DNK                 0.229       0.00556                11        12
-#> 13 NOR                 0.125       0.00501                12        13
-#> 14 GBR                -3.55        0.000127               22        14
-#> 15 BLR                -0.704       0.00219                14        15
-#> 16 ITA                -0.957       0.00170                16        16
-#> 17 AUT                -0.832       0.00192                15       Inf
-#> 18 FRA                -0.490       0.00271                13       Inf
-#> 19 HUN                -3.31        0.000162               21       Inf
-#> 20 JPN                -2.21        0.000486               20       Inf
-#> 21 KOR                -3.81        0.0000982              23       Inf
-#> 22 POL                -3.99        0.0000821              24       Inf
-#> 23 SVN                -1.95        0.000631               18       Inf
-#> 24 UKR                -1.69        0.000813               17       Inf
+#>    team  fcst_strength fcst_gold fcst_rank real_rank
+#>    <chr>         <dbl>     <dbl>     <dbl>     <dbl>
+#>  1 CAN           3.97  0.234             2         1
+#>  2 FIN           3.97  0.235             1         2
+#>  3 USA           2.09  0.0356            6         3
+#>  4 DEU           0.742 0.00929          10         4
+#>  5 RUS           3.43  0.137             3         5
+#>  6 CHE           1.82  0.0272            7         6
+#>  7 CZE           3.41  0.134             4         7
+#>  8 SVK           1.58  0.0214            8         8
+#>  9 SWE           3.40  0.133             5         9
+#> 10 KAZ          -2.05  0.000569         19        10
+#> 11 LVA           0.978 0.0117            9        11
+#> 12 DNK           0.229 0.00556          11        12
+#> 13 NOR           0.125 0.00501          12        13
+#> 14 GBR          -3.55  0.000127         22        14
+#> 15 BLR          -0.704 0.00219          14        15
+#> 16 ITA          -0.957 0.00170          16        16
+#> 17 AUT          -0.832 0.00192          15       Inf
+#> 18 FRA          -0.490 0.00271          13       Inf
+#> 19 HUN          -3.31  0.000162         21       Inf
+#> 20 JPN          -2.21  0.000486         20       Inf
+#> 21 KOR          -3.81  0.0000982        23       Inf
+#> 22 POL          -3.99  0.0000821        24       Inf
+#> 23 SVN          -1.95  0.000631         18       Inf
+#> 24 UKR          -1.69  0.000813         17       Inf
 ```
 
 The forecasted values can be displayed using the generic `plot()` function.

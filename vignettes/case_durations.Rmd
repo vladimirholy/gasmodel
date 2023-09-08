@@ -23,13 +23,13 @@ Let us prepare the analyzed data. We use the `bookshop_sales` dataset containing
 
 
 ```r
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(hms)
-library(gasmodel)
+library("dplyr")
+library("tidyr")
+library("ggplot2")
+library("hms")
+library("gasmodel")
 
-data(bookshop_sales)
+data("bookshop_sales")
 
 data_dur <- bookshop_sales %>%
   as_tibble() %>%
@@ -47,11 +47,11 @@ We adjust the observed durations for diurnal pattern and extract the time series
 
 
 ```r
-model_spline <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
+model_spl <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
 
 data_dur <- data_dur %>%
-  mutate(duration_spline = predict(model_spline, x = as.vector(time))$y) %>%
-  mutate(duration_adj = duration / duration_spline)
+  mutate(duration_spl = predict(model_spl, x = as.vector(time))$y) %>%
+  mutate(duration_adj = duration / duration_spl)
 
 y <- data_dur$duration_adj
 ```

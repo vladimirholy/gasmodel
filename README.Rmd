@@ -83,9 +83,9 @@ devtools::install_github("vladimirholy/gasmodel")
 As a simple example, let us model volatility of daily S&P 500 prices in 2021 in the fashion of GARCH models. We estimate the GAS model based on the Student's t-distribution with time-varying volatility and plot the filtered time-varying parameters:
 
 ``` {r example, warning = FALSE, message = FALSE}
-library(dplyr)
-library(ggplot2)
-library(gasmodel)
+library("dplyr")
+library("ggplot2")
+library("gasmodel")
 
 data <- sp500_daily %>%
   mutate(return = log(close) - log(lag(close))) %>%

@@ -75,9 +75,9 @@ the Student’s t-distribution with time-varying volatility and plot the
 filtered time-varying parameters:
 
 ``` r
-library(dplyr)
-library(ggplot2)
-library(gasmodel)
+library("dplyr")
+library("ggplot2")
+library("gasmodel")
 
 data <- sp500_daily %>%
   mutate(return = log(close) - log(lag(close))) %>%
