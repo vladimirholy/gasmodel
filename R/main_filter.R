@@ -372,7 +372,7 @@ summary.gas_filter <- function(object, ...) {
 # Plot Filtered Time-Varying Parameters ----------------------------------------
 #' @importFrom ggplot2 .data
 #' @export
-plot.gas_filter <- function(x, ...) {
+plot.gas_filter <- function(x, which = NULL, ...) {
   t <- x$model$t
   par_static <- x$model$par_static
   if(is.null(x$filter$par_tv_ahead_mean)) {
@@ -418,11 +418,17 @@ plot.gas_filter <- function(x, ...) {
     }
     gg_list <- append(gg_list, list(gg_fig))
   }
-  print(gg_list[[1]])
-  if (length(gg_list) > 1) {
+  gg_which <- 1:length(gg_list)
+  if (!is.null(which)) {
+    gg_which <- gg_which[gg_which %in% which]
+  }
+  if (length(gg_which) == 1) {
+    print(gg_list[[gg_which[1]]])
+  } else if (length(gg_which) > 1) {
+    print(gg_list[[gg_which[1]]])
     old_par <- grDevices::devAskNewPage(ask = TRUE)
-    for (i in 2:length(gg_list)) {
-      print(gg_list[[i]])
+    for (i in 2:length(gg_which)) {
+      print(gg_list[[gg_which[i]]])
     }
     on.exit(grDevices::devAskNewPage(ask = old_par))
   }

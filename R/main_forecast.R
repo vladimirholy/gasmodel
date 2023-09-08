@@ -410,7 +410,7 @@ summary.gas_forecast <- function(object, ...) {
 #' @importFrom dplyr %>%
 #' @importFrom ggplot2 .data
 #' @export
-plot.gas_forecast <- function(x, ...) {
+plot.gas_forecast <- function(x, which = NULL, ...) {
   y <- x$data$y
   y_fcst <- x$forecast$y_ahead_mean
   if (is.vector(y)) {
@@ -423,7 +423,6 @@ plot.gas_forecast <- function(x, ...) {
       ggplot2::geom_line(color = "#800000") +
       ggplot2::geom_point(color = "#800000") +
       ggplot2::labs(title = "Forecasted Time Series", x = "Time Index", y = "Observation Value")
-    print(gg_fig)
     gg_list <- list(gg_fig)
   } else {
     y_full <- rbind(y, y_fcst)
@@ -448,10 +447,18 @@ plot.gas_forecast <- function(x, ...) {
         ggplot2::labs(title = paste("Forecasted Time Series", ser_names[i]), x = "Time Index", y = "Observation Value")
       gg_list <- append(gg_list, list(gg_fig))
     }
-    print(gg_list[[1]])
+  }
+  gg_which <- 1:length(gg_list)
+  if (!is.null(which)) {
+    gg_which <- gg_which[gg_which %in% which]
+  }
+  if (length(gg_which) == 1) {
+    print(gg_list[[gg_which[1]]])
+  } else if (length(gg_which) > 1) {
+    print(gg_list[[gg_which[1]]])
     old_par <- grDevices::devAskNewPage(ask = TRUE)
-    for (i in 2:length(gg_list)) {
-      print(gg_list[[i]])
+    for (i in 2:length(gg_which)) {
+      print(gg_list[[gg_which[i]]])
     }
     on.exit(grDevices::devAskNewPage(ask = old_par))
   }

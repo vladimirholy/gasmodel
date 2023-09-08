@@ -147,10 +147,10 @@ tibble(team = colnames(y)) %>%
 
 Additionally, we can examine the evolution of the worth parameters for individual teams over the years. The point estimates of time-varying parameter values can be directly obtained from the `gas()` function. Using the generic `plot()` function allows us to visualize the time-varying parameters of individual models. When multiple parameters are time-varying, as in our scenario, the function plots them in sequence. For the purpose of this document, we will only display figures specific to the Canada team.
 
-``` {r rankings_tv_plot, fig.keep = c(3, 27, 51), fig.cap = c("Time-varying parameters of the Canada team based on the static model.", "Time-varying parameters of the Canada team based on the stationary model.", "Time-varying parameters of the Canada team based on the random walk model.")}
-plot(est_static)
-plot(est_stnry)
-plot(est_walk)
+``` {r rankings_tv_plot, fig.cap = c("Time-varying parameters of the Canada team based on the static model.", "Time-varying parameters of the Canada team based on the stationary model.", "Time-varying parameters of the Canada team based on the random walk model.")}
+plot(est_static, which = 3)
+plot(est_stnry, which = 3)
+plot(est_walk, which = 3)
 ```
 
 However, it is important to note that these estimates are subject to uncertainty. To capture the uncertainty, we can utilize simulations by leveraging the `gas_filter()` function, which accepts the output of the `gas()` function as an argument. This allows us to obtain the standard deviations and quantiles for the worth parameter estimates, providing a more comprehensive understanding of the parameter dynamics over time.
@@ -162,8 +162,8 @@ flt_stnry <- gas_filter(est_stnry)
 
 To visualize time-varying parameters with confidence band, we can use the `plot()` on the `gas_filter` object.
 
-``` {r rankings_filter_plot, fig.keep = 3, fig.cap = "Confidence bands of time-varying parameters of the Canada team based on the stationary model."}
-plot(flt_stnry)
+``` {r rankings_filter_plot, fig.cap = "Confidence bands of time-varying parameters of the Canada team based on the stationary model."}
+plot(flt_stnry, which = 3)
 ```
 
 ## Forecasting
@@ -183,8 +183,8 @@ tibble(team = colnames(y)) %>%
 
 The forecasted values can be displayed using the generic `plot()` function.
 
-``` {r rankings_forecast_plot, fig.keep = 3, fig.cap = "One-step ahead forecasts of the Canada team based on the stationary model."}
-plot(fcst_stnry)
+``` {r rankings_forecast_plot, fig.cap = "One-step ahead forecasts of the Canada team based on the stationary model."}
+plot(fcst_stnry, which = 3)
 ```
 
 ## References

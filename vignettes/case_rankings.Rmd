@@ -189,7 +189,7 @@ Additionally, we can examine the evolution of the worth parameters for individua
 
 
 ```r
-plot(est_static)
+plot(est_static, which = 3)
 ```
 
 <div class="figure" style="text-align: center">
@@ -198,7 +198,7 @@ plot(est_static)
 </div>
 
 ```r
-plot(est_stnry)
+plot(est_stnry, which = 3)
 ```
 
 <div class="figure" style="text-align: center">
@@ -207,7 +207,7 @@ plot(est_stnry)
 </div>
 
 ```r
-plot(est_walk)
+plot(est_walk, which = 3)
 ```
 
 <div class="figure" style="text-align: center">
@@ -227,7 +227,7 @@ To visualize time-varying parameters with confidence band, we can use the `plot(
 
 
 ```r
-plot(flt_stnry)
+plot(flt_stnry, which = 3)
 ```
 
 <div class="figure" style="text-align: center">
@@ -282,7 +282,7 @@ The forecasted values can be displayed using the generic `plot()` function.
 
 
 ```r
-plot(fcst_stnry)
+plot(fcst_stnry, which = 3)
 ```
 
 <div class="figure" style="text-align: center">
