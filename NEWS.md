@@ -1,4 +1,5 @@
 # gasmodel (development version)
+* Corrected the log-likelihood function for the zero-inflated geometric distribution.
 
 # gasmodel 0.5.1
 * Added block bootstrap methods.

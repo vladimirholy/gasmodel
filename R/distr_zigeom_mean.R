@@ -29,8 +29,7 @@ distr_zigeom_mean_loglik <- function(y, f) {
   t <- nrow(f)
   m <- f[, 1, drop = FALSE]
   p <- f[, 2, drop = FALSE]
-  y_pos <- y > 0L
-  res_loglik <- rep(NA_real_, length(y))
+  res_loglik <- matrix(0, nrow = t, ncol = 1)
   res_loglik[y > 0L, ] <- log(1 - p[y > 0L, ]) + be_silent(stats::dgeom(y[y > 0L, ], prob = 1 / (1 + m[y > 0L, ]), log = TRUE))
   res_loglik[y == 0L, ] <- log(p[y == 0L, ] + (1 - p[y == 0L, ]) * be_silent(stats::dgeom(0L, prob = 1 / (1 + m[y == 0L, ]))))
   return(res_loglik)
