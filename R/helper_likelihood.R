@@ -21,6 +21,8 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
   beta_list <- lapply(struc, function(e) { e$beta })
   alpha_list <- lapply(struc, function(e) { e$alpha })
   phi_list <- lapply(struc, function(e) { e$phi })
+  alpha_seq <- lapply(alpha_list, function(e) { seq_along(e) })
+  phi_seq <- lapply(phi_list, function(e) { seq_along(e) })
   if (all(model$p + model$q == 0L)) {
     par_init <- model$par_init
     if (any(is.na(model$par_init))) {
@@ -58,13 +60,20 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
     if (any(model$m > 0L)) {
       tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
     }
-    cur_e <- rep(NA_real_, info_par$par_num)
-    for (j in idx_ok) {
-      for (i in 1:info_par$par_num) {
-        cur_e[i] <- sum(tv_f[j - seq_along(phi_list[[i]]), i] * phi_list[[i]]) + sum(tv_s[j - seq_along(alpha_list[[i]]), i] * alpha_list[[i]])
+    if (info_par$par_num == 1L) {
+      for (j in idx_ok) {
+        tv_f[j, ] <- tv_f[j, ] + sum(tv_f[j - phi_seq[[1]], 1] * phi_list[[1]]) + sum(tv_s[j - alpha_seq[[1]], 1] * alpha_list[[1]])
+        tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
       }
-      tv_f[j, ] <- tv_f[j, ] + cur_e
-      tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
+    } else {
+      cur_e <- rep(NA_real_, info_par$par_num)
+      for (j in idx_ok) {
+        for (i in 1:info_par$par_num) {
+          cur_e[i] <- sum(tv_f[j - phi_seq[[i]], i] * phi_list[[i]]) + sum(tv_s[j - alpha_seq[[i]], i] * alpha_list[[i]])
+        }
+        tv_f[j, ] <- tv_f[j, ] + cur_e
+        tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
+      }
     }
   } else if (model$regress == "sep") {
     err_init <- model$par_init
@@ -87,14 +96,22 @@ likelihood_evaluate <- function(coef, data, model, fun, info_distr, info_par, in
     if (any(model$m > 0L)) {
       tv_f[idx_ok, ] <- tv_f[idx_ok, ] + sapply(1L:info_par$par_num, function(i) { data$x[[i]][idx_ok, , drop = FALSE] %*% beta_list[[i]] })
     }
-    cur_e <- rep(NA_real_, info_par$par_num)
-    for (j in idx_ok) {
-      for (i in 1:info_par$par_num) {
-        cur_e[i] <- sum(tv_e[j - seq_along(phi_list[[i]]), i] * phi_list[[i]]) + sum(tv_s[j - seq_along(alpha_list[[i]]), i] * alpha_list[[i]])
+    if (info_par$par_num == 1L) {
+      for (j in idx_ok) {
+        tv_e[j, ] <- sum(tv_e[j - phi_seq[[1]], 1] * phi_list[[1]]) + sum(tv_s[j - alpha_seq[[1]], 1] * alpha_list[[1]])
+        tv_f[j, ] <- tv_f[j, ] + tv_e[j, ]
+        tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
       }
-      tv_e[j, ] <- cur_e
-      tv_f[j, ] <- tv_f[j, ] + cur_e
-      tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
+    } else {
+      cur_e <- rep(NA_real_, info_par$par_num)
+      for (j in idx_ok) {
+        for (i in 1:info_par$par_num) {
+          cur_e[i] <- sum(tv_e[j - phi_seq[[i]], i] * phi_list[[i]]) + sum(tv_s[j - alpha_seq[[i]], i] * alpha_list[[i]])
+        }
+        tv_e[j, ] <- cur_e
+        tv_f[j, ] <- tv_f[j, ] + cur_e
+        tv_s[j, ] <- fun$score(y = data$y[j, , drop = FALSE], f = tv_f[j, , drop = FALSE])
+      }
     }
   }
   tv_l[idx_lik] <- -Inf
