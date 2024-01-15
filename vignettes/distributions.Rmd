@@ -1269,6 +1269,58 @@ $$
 
 - Lemonte, A. J. (2021). A Note on the Fisher Information Matrix of the Birnbaum–Saunders Distribution. *Journal of Statistical Theory and Applications*, **15**(2), 196–205. doi: [10.2991/jsta.2016.15.2.9](https://doi.org/10.2991/jsta.2016.15.2.9).
 
+## Burr Distribution
+
+### Scale Parametrization
+
+#### Parameters
+
+- Scale parameter $s \in (0, \infty)$
+- First shape parameter $a \in (0, \infty)$
+- Second shape parameter $b \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | s, a, b) = \frac{a b}{s} \left( \frac{y}{s} \right)^{a - 1} \left( 1 + \left( \frac{y}{s} \right)^a \right)^{-b - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= s b B \left( b - \frac{1}{a}, 1 + \frac{1}{a} \right), & \quad \text{for } a &> 1 \\
+\mathrm{var}[Y] &= s^2 b B \left( b - \frac{2}{a}, 1 + \frac{2}{a} \right) - s^2 b^2 B \left( b - \frac{1}{a}, 1 + \frac{1}{a} \right)^2, & \quad \text{for } a &> 2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{s} (y; s, a, b) &= \frac{a}{s} \left(b \left (\frac{y}{s} \right)^a - 1 \right) \left( \left( \frac{y}{s} \right)^a + 1 \right)^{-1} \\
+\nabla_{a} (y; s, a, b) &= \frac{1}{a} - \left( b \left( \frac{y}{s} \right)^a - 1 \right) \ln \left( \frac{y}{s} \right) \left( \left( \frac{y}{s} \right)^a + 1 \right)^{-1} \\
+\nabla_{b} (y; s, a, b) &= \frac{1}{b} - \ln \left( \left( \frac{y}{s} \right)^a + 1 \right) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{s, s} (s, a, b) &= \frac{a^2 b}{s^2 (b + 2)} \\
+\mathcal{I}_{s, a} (s, a, b) &= - \frac{b ( 1 - \gamma - \psi_0(b + 1))}{s (b + 2)} \\
+\mathcal{I}_{s, b} (s, a, b) &= - \frac{a}{s (b + 1)} \\
+\mathcal{I}_{a, a} (s, a, b) &= \frac{1}{\alpha^2} \left( 1 + \frac{b}{b + 2} \left( \frac{\pi^2}{6} + \gamma^2 - 2 \gamma + 2 (\gamma - 1) \psi_0(b + 1) + \psi_0(b + 1)^2 + \psi_1(b + 1) \right) \right) \\
+\mathcal{I}_{a, b} (s, a, b) &= \frac{1 - \gamma - \psi_0(b)}{a (b + 1)} \\
+\mathcal{I}_{b, b} (s, a, b) &= \frac{1}{b^2} \\
+\end{aligned}
+$$
+
+### Further Reading
+
+- Watkins, A. J. (1997). A Note on Expected Fisher Information for the Burr XII Distribution. *Microelectronics Reliability*, **37**(12), 1849–1852. doi: [10.1016/s0026-2714(97)00030-9](https://doi.org/10.1016/s0026-2714(97)00030-9).
+
 ## Exponential Distribution
 
 ### Rate Parametrization
@@ -1348,6 +1400,49 @@ $$
 ### Further Reading
 
 - Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
+
+## Fisk Distribution
+
+### Scale Parametrization
+
+#### Parameters
+
+- Scale parameter $s \in (0, \infty)$
+- Shape parameter $a \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | s, a) = \frac{a}{s} \left( \frac{y}{s} \right)^{a - 1} \left( 1 + \left ( \frac{y}{s} \right)^a \right)^{-2}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= s \frac{\pi / a}{\sin(\pi / a)}, & \quad \text{for } a &> 1 \\
+\mathrm{var}[Y] &= s^2  \left( \frac{2 \pi / a}{\sin(2 \pi / a)} - \frac{\pi^2 / a^2}{\sin(\pi / a)^2} \right), & \quad \text{for } a &> 2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{s} (y; s, a) &= \frac{a}{s} \left( \left( \frac{y}{s} \right)^a - 1 \right) \left( \left( \frac{y}{s} \right)^a + 1 \right)^{-1} \\
+\nabla_{a} (y; s, a) &= \frac{1}{a} - \left( \left( \frac{y}{s} \right)^a - 1 \right) \ln \left( \frac{y}{s} \right) \left( \left( \frac{y}{s} \right)^a + 1 \right)^{-1} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{s, s} (s, a) &= \frac{a^2}{3 s^2} \\
+\mathcal{I}_{s, a} (s, a) &= 0 \\
+\mathcal{I}_{a, a} (s, a) &= \frac{\pi^2 + 3}{9 a^2} \\
+\end{aligned}
+$$
 
 ## Gamma Distribution
 
@@ -1538,6 +1633,49 @@ $$
 - Stacy, E. W. (1962). A Generalization of the Gamma Distribution. *The Annals of Mathematical Statistics*, **33**(3), 1187–1192. doi: [10.1214/aoms/1177704481](https://doi.org/10.1214/aoms/1177704481).
 
 - Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
+
+## Lomax Distribution
+
+### Scale Parametrization
+
+#### Parameters
+
+- Scale parameter $s \in (0, \infty)$
+- Shape parameter $b \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | s, b) = \frac{b}{s} \left( 1 + \frac{y}{s} \right)^{-b - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= \frac{s}{b - 1}, & \quad \text{for } a &> 1 \\
+\mathrm{var}[Y] &= \frac{s^2 b}{(b - 1)^2 (b - 2)}, & \quad \text{for } a &> 2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{s} (y; s, b) &= \frac{1}{s} \left( b \frac{y}{s} - 1 \right) \left( \frac{y}{s} + 1 \right)^{-1} \\
+\nabla_{b} (y; s, b) &= \frac{1}{b} - \ln \left( \frac{y}{s} + 1 \right) \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{s, s} (s, b) &= \frac{b}{s^2 (b + 2)} \\
+\mathcal{I}_{s, b} (s, b) &= - \frac{1}{s (b + 1)} \\
+\mathcal{I}_{b, b} (s, b) &= \frac{1}{b^2} \\
+\end{aligned}
+$$
 
 ## Weibull Distribution
 
