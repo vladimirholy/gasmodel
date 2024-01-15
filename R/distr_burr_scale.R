@@ -1,5 +1,5 @@
 
-# GENERALIZED GAMMA DISTRIBUTION / SCALE PARAMETRIZATION
+# BURR DISTRIBUTION / SCALE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------

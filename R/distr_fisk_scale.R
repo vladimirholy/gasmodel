@@ -1,5 +1,5 @@
 
-# GENERALIZED GAMMA DISTRIBUTION / SCALE PARAMETRIZATION
+# FISK DISTRIBUTION / SCALE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------

@@ -1,5 +1,5 @@
 
-# BETA DISTRIBUTION / CONCENTRATION PARAMETRIZATION
+# KUMARASWAMY DISTRIBUTION / CONCENTRATION PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------

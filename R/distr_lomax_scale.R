@@ -1,5 +1,5 @@
 
-# GENERALIZED GAMMA DISTRIBUTION / SCALE PARAMETRIZATION
+# LOMAX DISTRIBUTION / SCALE PARAMETRIZATION
 
 
 # Parameters Function ----------------------------------------------------------
