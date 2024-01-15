@@ -1175,6 +1175,53 @@ $$
 \end{aligned}
 $$
 
+## Kumaraswamy Distribution
+
+### Concentration Parametrization
+
+#### Parameters
+
+- First concentration parameter $a \in (0, \infty)$
+- Second concentration parameter $b \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | a, b) = a b y^{a - 1} \left(1 - y^a \right)^{b - 1}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= b B \left(1 + \frac{1}{a}, b \right) \\
+\mathrm{var}[Y] &= b B \left(1 + \frac{2}{a}, b \right) - b^2 B \left(1 + \frac{1}{a}, b \right)^2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{a} (y; a, b) &= \frac{(b - 1) \ln(y)}{y^a - 1} + b \ln(y) + \frac{1}{a} \\
+\nabla_{b} (y; a, b) &= \ln \left( 1 - y^a \right) + \frac{1}{b} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{a, a} (a, b) &= \frac{1}{a^2} + \frac{b}{a^2 (b - 2)} \left( \left(\psi_0(b) - \psi_0(2) \right)^2 - \left( \psi_1(b) - \psi_1(2) \right) \right) \\
+\mathcal{I}_{a, b} (a, b) &= - \frac{\psi_0(b + 1) - \psi_0(2)}{a (b - 1)} \\
+\mathcal{I}_{b, b} (a, b) &= \frac{1}{b^2} \\
+\end{aligned}
+$$
+
+### Further Reading
+
+- Jones, M. C. (2009). Kumaraswamy's Distribution: A Beta-Type Distribution with Some Tractability Advantages. *Statistical Methodology*, **6**(1), 70–81. doi: [10.1016/j.stamet.2008.04.001](https://doi.org/10.1016/j.stamet.2008.04.001).
+
 # Compositional Data
 
 ## Dirichlet Distribution
