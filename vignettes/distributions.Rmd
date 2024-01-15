@@ -1860,6 +1860,49 @@ $$
 \end{aligned}
 $$
 
+## Logistic Distribution
+
+### Mean-Scale Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Scale parameter $s \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s) = \frac{1}{s} \exp \left( - \frac{x - m}{s} \right) \left( 1 + \exp \left( - \frac{x - m}{s} \right) \right)^{-2}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= \frac{\pi^2}{3} s^2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{1}{s} \tanh \left( \frac{y - m}{2 s} \right) \\
+\nabla_{s} (y; m, s) &= \frac{y - m}{s^2} \tanh \left( \frac{y - m}{2 s} \right) - \frac{1}{s} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{1}{3 s^2} \\
+\mathcal{I}_{m, s} (m, s) &= 0 \\
+\mathcal{I}_{s, s} (m, s) &= \frac{1}{3 s^2} \left( \frac{\pi^2}{3} + 1 \right) \\
+\end{aligned}
+$$
+
 ## Normal Distribution
 
 ### Mean-Variance Parametrization
