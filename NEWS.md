@@ -4,6 +4,7 @@
 * Added the Kumaraswamy distribution.
 * Added the logistic distribution.
 * Added the Lomax distribution.
+* Added the Rayleigh distribution.
 * Increased the running speed of the estimation.
 * Corrected the log-likelihood function for the zero-inflated geometric distribution.
 

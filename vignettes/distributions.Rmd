@@ -1724,6 +1724,45 @@ $$
 \end{aligned}
 $$
 
+## Rayleigh Distribution
+
+### Scale Parametrization
+
+#### Parameter
+
+- Scale parameter $s \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | s) =  \frac{y}{s^2} \exp \left(- \frac{y^2}{2 s^2} \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= s \sqrt{\frac{\pi}{2}} \\
+\mathrm{var}[Y] &= s^2 \frac{4 - \pi}{2}\\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{s} (y; s) &= \frac{y^2 - 2 s^2}{s^3} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{s, s} (s) &= \frac{4}{s^2} \\
+\end{aligned}
+$$
+
 ## Weibull Distribution
 
 ### Rate Parametrization
