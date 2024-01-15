@@ -1,6 +1,8 @@
 # gasmodel (development version)
 * Added the Burr distribution.
 * Added the Fisk distribution.
+* Added the Kumaraswamy distribution.
+* Added the logistic distribution.
 * Added the Lomax distribution.
 * Increased the running speed of the estimation.
 * Corrected the log-likelihood function for the zero-inflated geometric distribution.
