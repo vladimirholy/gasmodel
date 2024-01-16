@@ -1222,6 +1222,53 @@ $$
 
 - Jones, M. C. (2009). Kumaraswamy's Distribution: A Beta-Type Distribution with Some Tractability Advantages. *Statistical Methodology*, **6**(1), 70–81. doi: [10.1016/j.stamet.2008.04.001](https://doi.org/10.1016/j.stamet.2008.04.001).
 
+## Logit-Normal Distribution
+
+### Logit-Mean-Variance Parametrization
+
+#### Parameters
+
+- Logit-mean parameter $m \in \mathbb{R}$
+- Logit-variance parameter $s \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s) = \frac{1}{y (1 - y)}\frac{1}{\sqrt{2 \pi s}} \exp \left( - \frac{1}{2 s} \left( \ln \left( \frac{y}{1-y} \right) - m \right)^2 \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &\approx \frac{1}{K - 1} \sum_{k = 1}^{K - 1} \frac{1}{1 + \exp( - \Phi^{-1}_{m,s} (k / K)} \\
+\mathrm{var}[Y] &\approx \frac{1}{K - 1} \sum_{k = 1}^{K - 1} \left( \frac{1}{1 + \exp( - \Phi^{-1}_{m,s} (k / K)} \right)^2 - \left( \frac{1}{K - 1} \sum_{k = 1}^{K - 1} \frac{1}{1 + \exp( - \Phi^{-1}_{m,s} (k / K)} \right)^2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{1}{s} \left( \ln \left( \frac{y}{1-y} \right) - m \right) \\
+\nabla_{s} (y; m, s) &= \frac{1}{2 s^2} \left( \ln \left( \frac{y}{1-y} \right) - m \right)^2 - \frac{1}{2s} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{1}{s} \\
+\mathcal{I}_{m, s} (m, s) &= 0 \\
+\mathcal{I}_{s, s} (m, s) &= \frac{1}{2 s^2} \\
+\end{aligned}
+$$
+
+### Note
+
+- The mean and variance have no analytic solution. We use the quasi Monte Carlo approximation with $K=1000$. 
+
 # Compositional Data
 
 ## Dirichlet Distribution
@@ -1680,6 +1727,49 @@ $$
 - Stacy, E. W. (1962). A Generalization of the Gamma Distribution. *The Annals of Mathematical Statistics*, **33**(3), 1187–1192. doi: [10.1214/aoms/1177704481](https://doi.org/10.1214/aoms/1177704481).
 
 - Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
+
+## Log-Normal Distribution
+
+### Log-Mean-Variance Parametrization
+
+#### Parameters
+
+- Log-mean parameter $m \in \mathbb{R}$
+- Log-variance parameter $s \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s) = \frac{1}{y}\frac{1}{\sqrt{2 \pi s}} \exp \left( - \frac{\left( \ln(y) - m \right)^2}{2 s} \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= \exp \left( m + \frac{s}{2} \right) \\
+\mathrm{var}[Y] &= \left( \exp(s) - 1 \right) \exp \left( 2 m + s \right) \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s) &= \frac{\ln(y) - m}{s}  \\
+\nabla_{s} (y; m, s) &= \frac{\left( \ln(y) - m \right)^2}{2 s^2} - \frac{1}{2s} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{m, m} (m, s) &= \frac{1}{s} \\
+\mathcal{I}_{m, s} (m, s) &= 0 \\
+\mathcal{I}_{s, s} (m, s) &= \frac{1}{2 s^2} \\
+\end{aligned}
+$$
 
 ## Lomax Distribution
 
