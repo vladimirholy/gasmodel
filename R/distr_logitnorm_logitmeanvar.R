@@ -41,7 +41,8 @@ distr_logitnorm_logitmeanvar_mean <- function(f) {
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
   k <- 1000L
-  res_mean <- 1 / (k - 1) * sum(1 / (1 + exp(-qnorm((1:(k - 1)) / k, mean = m, sd = sqrt(s)))))
+  q <- stats::qnorm((1:(k - 1)) / k, mean = m, sd = sqrt(s))
+  res_mean <- 1 / (k - 1) * sum(1 / (1 + exp(-q)))
   return(res_mean)
 }
 # ------------------------------------------------------------------------------
@@ -53,7 +54,8 @@ distr_logitnorm_logitmeanvar_var <- function(f) {
   m <- f[, 1, drop = FALSE]
   s <- f[, 2, drop = FALSE]
   k <- 1000L
-  res_var <- 1 / (k - 1) * sum(1 / (1 + exp(-qnorm((1:(k - 1)) / k, mean = m, sd = sqrt(s))))^2) - (1 / (k - 1) * sum(1 / (1 + exp(-qnorm((1:(k - 1)) / k, mean = m, sd = sqrt(s))))))^2
+  q <- stats::qnorm((1:(k - 1)) / k, mean = m, sd = sqrt(s))
+  res_var <- 1 / (k - 1) * sum(1 / (1 + exp(-q))^2) - (1 / (k - 1) * sum(1 / (1 + exp(-q))))^2
   res_var <- array(res_var, dim = c(t, 1, 1))
   return(res_var)
 }
