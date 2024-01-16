@@ -1,0 +1,109 @@
+
+# LOG-NORMAL DISTRIBUTION / LOG-MEAN-VARIANCE PARAMETRIZATION
+
+
+# Parameters Function ----------------------------------------------------------
+distr_lognorm_logmeanvar_parameters <- function(n) {
+  group_of_par_names <- c("logmean", "logvar")
+  par_names <- c("logmean", "logvar")
+  par_support <- c("real", "positive")
+  res_parameters <- list(group_of_par_names = group_of_par_names, par_names = par_names, par_support = par_support)
+  return(res_parameters)
+}
+# ------------------------------------------------------------------------------
+
+
+# Density Function -------------------------------------------------------------
+distr_lognorm_logmeanvar_density <- function(y, f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  s <- f[, 2, drop = FALSE]
+  res_density <- be_silent(stats::dlnorm(y, meanlog = m, sdlog = sqrt(s)))
+  return(res_density)
+}
+# ------------------------------------------------------------------------------
+
+
+# Log-Likelihood Function ------------------------------------------------------
+distr_lognorm_logmeanvar_loglik <- function(y, f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  s <- f[, 2, drop = FALSE]
+  res_loglik <- be_silent(stats::dlnorm(y, meanlog = m, sdlog = sqrt(s), log = TRUE))
+  return(res_loglik)
+}
+# ------------------------------------------------------------------------------
+
+
+# Mean Function ----------------------------------------------------------------
+distr_lognorm_logmeanvar_mean <- function(f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  s <- f[, 2, drop = FALSE]
+  res_mean <- exp(m + s / 2)
+  return(res_mean)
+}
+# ------------------------------------------------------------------------------
+
+
+# Variance Function ------------------------------------------------------------
+distr_lognorm_logmeanvar_var <- function(f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  s <- f[, 2, drop = FALSE]
+  res_var <- (exp(s) - 1) * exp(2 * m + s)
+  res_var <- array(res_var, dim = c(t, 1, 1))
+  return(res_var)
+}
+# ------------------------------------------------------------------------------
+
+
+# Score Function ---------------------------------------------------------------
+distr_lognorm_logmeanvar_score <- function(y, f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  s <- f[, 2, drop = FALSE]
+  res_score <- matrix(0, nrow = t, ncol = 2L)
+  res_score[, 1] <- (log(y) - m) / s
+  res_score[, 2] <- (log(y) - m)^2 / (2 * s^2) - 1 / (2 * s)
+  return(res_score)
+}
+# ------------------------------------------------------------------------------
+
+
+# Fisher Information Function --------------------------------------------------
+distr_lognorm_logmeanvar_fisher <- function(f) {
+  t <- nrow(f)
+  m <- f[, 1, drop = FALSE]
+  s <- f[, 2, drop = FALSE]
+  res_fisher <- array(0, dim = c(t, 2L, 2L))
+  res_fisher[, 1, 1] <- 1 / s
+  res_fisher[, 2, 2] <- 1 / (2 * s^2)
+  return(res_fisher)
+}
+# ------------------------------------------------------------------------------
+
+
+# Random Generation Function ---------------------------------------------------
+distr_lognorm_logmeanvar_random <- function(t, f) {
+  m <- f[1]
+  s <- f[2]
+  res_random <- be_silent(stats::rlnorm(t, meanlog = m, sdlog = sqrt(s)))
+  res_random <- matrix(res_random, nrow = t, ncol = 1L)
+  return(res_random)
+}
+# ------------------------------------------------------------------------------
+
+
+# Starting Estimates Function --------------------------------------------------
+distr_lognorm_logmeanvar_start <- function(y) {
+  ly_mean <- mean(log(y), na.rm = TRUE)
+  ly_var <- stats::var(log(y), na.rm = TRUE)
+  m <- ly_mean
+  s <- max(ly_var, 1e-6)
+  res_start <- c(m, s)
+  return(res_start)
+}
+# ------------------------------------------------------------------------------
+
+

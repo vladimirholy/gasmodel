@@ -2,6 +2,7 @@
 * Added the Burr distribution.
 * Added the Fisk distribution.
 * Added the Kumaraswamy distribution.
+* Added the log-normal distribution.
 * Added the logistic distribution.
 * Added the Lomax distribution.
 * Added the Rayleigh distribution.
