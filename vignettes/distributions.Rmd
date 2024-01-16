@@ -1495,6 +1495,53 @@ $$
 
 - Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
 
+## Exponential-Logarithmic Distribution
+
+### Rate Parametrization
+
+#### Parameters
+
+- Rate parameter $r \in (0, \infty)$
+- Shape parameter $p \in (0, 1)$
+
+#### Density Function
+
+$$
+f(y | r, p) = \frac{r}{- \ln(p)} \frac{(1 - p) \exp(-r y)}{1 - (1 - p) \exp(-r y)}
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= - \frac{\mathrm{Li}_2(1 - p)}{r \ln(p)} \\
+\mathrm{var}[Y] &= - 2 \frac{\mathrm{Li}_3(1 - p)}{r^2 \ln(p)} - \left( \frac{\mathrm{Li}_2(1 - p)}{r \ln(p)} \right)^2
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{r} (y; r, p) &= \frac{1}{r} - y - \frac{y (1 - p) \exp(-r y)}{1 - (1 - p) \exp(-r y)} \\
+\nabla_{p} (y; r, p) &= -\frac{1}{p log(p)} - \frac{1}{1 - p} - \frac{\exp(-r y)}{1 - (1 - p) \exp(-r y)} \\
+\end{aligned}
+$$
+
+#### Fisher Information
+
+$$
+\begin{aligned}
+\mathcal{I}_{r, r} (r, p) &= -\frac{\mathrm{Li}_2(1 - p)}{r^2 \ln(p)} \\
+\mathcal{I}_{r, p} (r, p) &= \frac{1 - p + p \ln(p)}{2 r p (1 - p) \ln(p)} \\
+\mathcal{I}_{p, p} (r, p) &= \frac{1}{(1 - p)^2} - \frac{\ln(p) + 1}{(p \ln(p))^2} + \frac{1 - 4 p + 3 p^2 - 2 p^2 \ln(p)}{2 p^2 (1 - p)^2 \ln(p)} \\
+\end{aligned}
+$$
+
+### Further Reading
+
+- Tahmasbi, R. and Rezaei, S. (2008). A Two-Parameter Lifetime Distribution with Decreasing Failure Rate. *Computational Statistics and Data Analysis*, **52**(8), 3889–3901 doi: [10.1016/j.csda.2007.12.002](https://doi.org/10.1016/j.csda.2007.12.002).
+
 ## Fisk Distribution
 
 ### Scale Parametrization

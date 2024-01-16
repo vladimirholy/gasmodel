@@ -125,7 +125,7 @@ the following case studies in the form of vignettes:
 
 ## Supported Distributions
 
-Currently, there are 34 distributions available.
+Currently, there are 35 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
@@ -139,7 +139,7 @@ distr() %>%
   ungroup() %>%
   arrange(distr) %>%
   print(right = FALSE, row.names = FALSE)
-#> # A tibble: 34 × 5
+#> # A tibble: 35 × 5
 #>    distr     distr_title                     dim   type     param                  
 #>    <chr>     <chr>                           <fct> <fct>    <chr>                  
 #>  1 alaplace  Asymmetric Laplace              uni   real     meanscale              
@@ -151,31 +151,32 @@ distr() %>%
 #>  7 dirichlet Dirichlet                       multi comp     conc                   
 #>  8 dpois     Double Poisson                  uni   count    mean                   
 #>  9 exp       Exponential                     uni   duration scale, rate            
-#> 10 fisk      Fisk                            uni   duration scale                  
-#> 11 gamma     Gamma                           uni   duration scale, rate            
-#> 12 gengamma  Generalized Gamma               uni   duration scale, rate            
-#> 13 geom      Geometric                       uni   count    mean, prob             
-#> 14 kuma      Kumaraswamy                     uni   interval conc                   
-#> 15 laplace   Laplace                         uni   real     meanscale              
-#> 16 logistic  Logistic                        uni   real     meanscale              
-#> 17 logitnorm Logit-Normal                    uni   interval logitmeanvar           
-#> 18 lognorm   Log-Normal                      uni   duration logmeanvar             
-#> 19 lomax     Lomax                           uni   duration scale                  
-#> 20 mvnorm    Multivariate Normal             multi real     meanvar                
-#> 21 mvt       Multivariate Student‘s t        multi real     meanvar                
-#> 22 negbin    Negative Binomial               uni   count    nb2, prob              
-#> 23 norm      Normal                          uni   real     meanvar                
-#> 24 pluce     Plackett-Luce                   multi ranking  worth                  
-#> 25 pois      Poisson                         uni   count    mean                   
-#> 26 rayleigh  Rayleigh                        uni   duration scale                  
-#> 27 skellam   Skellam                         uni   integer  meanvar, diff, meandisp
-#> 28 t         Student‘s t                     uni   real     meanvar                
-#> 29 vonmises  von Mises                       uni   circular meanconc               
-#> 30 weibull   Weibull                         uni   duration scale, rate            
-#> 31 zigeom    Zero-Inflated Geometric         uni   count    mean                   
-#> 32 zinegbin  Zero-Inflated Negative Binomial uni   count    nb2                    
-#> 33 zipois    Zero-Inflated Poisson           uni   count    mean                   
-#> 34 ziskellam Zero-Inflated Skellam           uni   integer  meanvar, diff, meandisp
+#> 10 explog    Exponential-Logarithmic         uni   duration rate                   
+#> 11 fisk      Fisk                            uni   duration scale                  
+#> 12 gamma     Gamma                           uni   duration scale, rate            
+#> 13 gengamma  Generalized Gamma               uni   duration scale, rate            
+#> 14 geom      Geometric                       uni   count    mean, prob             
+#> 15 kuma      Kumaraswamy                     uni   interval conc                   
+#> 16 laplace   Laplace                         uni   real     meanscale              
+#> 17 logistic  Logistic                        uni   real     meanscale              
+#> 18 logitnorm Logit-Normal                    uni   interval logitmeanvar           
+#> 19 lognorm   Log-Normal                      uni   duration logmeanvar             
+#> 20 lomax     Lomax                           uni   duration scale                  
+#> 21 mvnorm    Multivariate Normal             multi real     meanvar                
+#> 22 mvt       Multivariate Student‘s t        multi real     meanvar                
+#> 23 negbin    Negative Binomial               uni   count    nb2, prob              
+#> 24 norm      Normal                          uni   real     meanvar                
+#> 25 pluce     Plackett-Luce                   multi ranking  worth                  
+#> 26 pois      Poisson                         uni   count    mean                   
+#> 27 rayleigh  Rayleigh                        uni   duration scale                  
+#> 28 skellam   Skellam                         uni   integer  meanvar, diff, meandisp
+#> 29 t         Student‘s t                     uni   real     meanvar                
+#> 30 vonmises  von Mises                       uni   circular meanconc               
+#> 31 weibull   Weibull                         uni   duration scale, rate            
+#> 32 zigeom    Zero-Inflated Geometric         uni   count    mean                   
+#> 33 zinegbin  Zero-Inflated Negative Binomial uni   count    nb2                    
+#> 34 zipois    Zero-Inflated Poisson           uni   count    mean                   
+#> 35 ziskellam Zero-Inflated Skellam           uni   integer  meanvar, diff, meandisp
 ```
 
 Details of each distribution, including its density function, expected

@@ -1,5 +1,6 @@
 # gasmodel (development version)
 * Added the Burr distribution.
+* Added the exponential-logarithmic distribution.
 * Added the Fisk distribution.
 * Added the Kumaraswamy distribution.
 * Added the log-normal distribution.

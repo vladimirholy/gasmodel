@@ -24,6 +24,7 @@ Imports:
     abind,
     arrangements,
     CircStats,
+    copula,
     dplyr,
     ggplot2,
     Matrix,
