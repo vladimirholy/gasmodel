@@ -4,7 +4,7 @@ test_that("test_case_bookshop", {
   data("bookshop_sales", package = "gasmodel")
 
   data_dur <- bookshop_sales %>%
-    dplyr::mutate(duration = as.numeric(time - lag(time)) / 60) %>%
+    dplyr::mutate(duration = as.numeric(time - dplyr::lag(time)) / 60) %>%
     dplyr::mutate(duration = dplyr::recode(duration, "0" = 0.5)) %>%
     dplyr::mutate(just_time = as.vector(as.POSIXct(format(time, "1970-01-01 %H:%M:%S"), tz = "UTC"))) %>%
     tidyr::drop_na()
@@ -17,6 +17,42 @@ test_that("test_case_bookshop", {
     dplyr::select(-just_time)
 
   y <- data_dur$duration_adj
+
+  est_gas <- gas(y, distr = "exp", reg = "sep", scaling = "unit")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(-0.023, 0.049, 0.963), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "exp", reg = "sep", scaling = "fisher_inv_sqrt")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(-0.023, 0.049, 0.963), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "exp", reg = "sep", scaling = "fisher_inv")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(-0.023, 0.049, 0.963), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "gamma", reg = "sep", scaling = "unit")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(0.036, 0.052, 0.963, 0.942), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1", "shape")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "gamma", reg = "sep", scaling = "fisher_inv_sqrt")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(0.036, 0.050, 0.963, 0.942), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1", "shape")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "gamma", reg = "sep", scaling = "fisher_inv")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(0.036, 0.049, 0.963, 0.942), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1", "shape")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "gengamma", reg = "sep", scaling = "unit")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(-1.019, 0.070, 0.952, 1.764, 0.683), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1", "shape1", "shape2")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "gengamma", reg = "sep", scaling = "fisher_inv_sqrt")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(-1.019, 0.063, 0.952, 1.764, 0.683), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1", "shape1", "shape2")), tolerance = 1e-3)
+
+  est_gas <- gas(y, distr = "gengamma", reg = "sep", scaling = "fisher_inv")
+  expect_s3_class(est_gas, "gas")
+  expect_equal(coef(est_gas), setNames(c(-1.019, 0.057, 0.952, 1.764, 0.683), c("log(scale)_omega", "log(scale)_alpha1", "log(scale)_phi1", "shape1", "shape2")), tolerance = 1e-3)
 
   est_gas <- gas(y, distr = "weibull", reg = "sep", scaling = "unit", par_link = c(TRUE, FALSE), par_static = c(FALSE, TRUE))
   expect_s3_class(est_gas, "gas")
