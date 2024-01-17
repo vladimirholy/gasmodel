@@ -76,7 +76,6 @@ distr_bisa_scale_fisher <- function(f) {
   t <- nrow(f)
   s <- f[, 1, drop = FALSE]
   a <- f[, 2, drop = FALSE]
-  h <-
   res_fisher <- array(0, dim = c(t, 2L, 2L))
   res_fisher[, 1, 1] <- (1 + a * (a * sqrt(pi / 2) - pi * exp(2 / a^2) * (1 - stats::pnorm(2 / a))) / sqrt(2 * pi)) / (a * s)^2
   res_fisher[, 2, 2] <- 2 / a^2
