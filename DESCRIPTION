@@ -16,7 +16,7 @@ Description: Estimation, forecasting, and simulation of generalized
     of exogenous variables and dynamics, higher score and autoregressive orders,
     custom and unconditional initial values of time-varying parameters, fixed
     and bounded values of coefficients, and missing values. Model estimation is
-    performed by the maximum likelihood method and the Hessian matrix.
+    performed by the maximum likelihood method.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
