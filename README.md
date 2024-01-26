@@ -18,7 +18,7 @@ different parametrizations, exogenous variables, higher score and
 autoregressive orders, custom and unconditional initial values of
 time-varying parameters, fixed and bounded values of coefficients, and
 missing values. Model estimation is performed by the maximum likelihood
-method and the Hessian matrix.
+method.
 
 The package offers the following functions for working with GAS models:
 

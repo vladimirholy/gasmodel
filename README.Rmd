@@ -36,7 +36,7 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 A package for estimation, forecasting, and simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models.
 
 Model specification allows for various conditional distributions, different parametrizations, exogenous variables, higher score and autoregressive orders, custom and unconditional initial values of time-varying parameters, fixed and bounded values of coefficients, and missing values.
-Model estimation is performed by the maximum likelihood method and the Hessian matrix.
+Model estimation is performed by the maximum likelihood method.
 
 The package offers the following functions for working with GAS models:
 
