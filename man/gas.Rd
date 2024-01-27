@@ -125,8 +125,10 @@ They capture the dynamics of time-varying parameters using the autoregressive te
 Exogenous variables can also be included.
 Specifically, time-varying parameters \eqn{f_t} follow the recursion
 \deqn{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t-j}) \nabla(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \varphi_k f_{t-k},}{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t-j}) ∇(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \phi_k f_{t-k},}
-where \eqn{\omega} is a vector of constants, \eqn{\beta_i} are regression parameters, \eqn{\alpha_j} are score parameters, \eqn{\varphi_k}{\phi_k} are autoregressive parameters, \eqn{x_{ti}} are exogenous variables, \eqn{S(f_t)} is a scaling function for the score, and \eqn{\nabla(y_t, f_t)}{∇(y_t, f_t)} is the score given by
+where \eqn{\omega} is the intercept, \eqn{\beta_i} are the regression parameters, \eqn{\alpha_j} are the score parameters, \eqn{\varphi_k}{\phi_k} are the autoregressive parameters, \eqn{x_{ti}} are the exogenous variables, \eqn{S(f_t)} is a scaling function for the score, and \eqn{\nabla(y_t, f_t)}{∇(y_t, f_t)} is the score given by
 \deqn{\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.}{∇(y_t, f_t) = d ln p(y_t | f_t) / d f_t.}
+In the case of a single time-varying parameter, \eqn{\omega}, \eqn{\beta_i}, \eqn{\alpha_j}, \eqn{\varphi_k}, \eqn{x_{ti}}, \eqn{S(f_t)}, and \eqn{\nabla(y_t, f_t)} are all scalar.
+In the case of multiple time-varying parameters, \eqn{x_{ti}} are scalar, \eqn{\omega}, \eqn{\beta_i}, and \eqn{\nabla(y_{t - j}, f_{t - j})} are vectors, \eqn{\alpha_j} and \eqn{\varphi_k} are diagonal matrices, and \eqn{S(f_t)} is a square matrix.
 Alternatively, a different model can be obtained by defining the recursion in the fashion of regression models with dynamic errors as
 \deqn{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t-j}) \nabla(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.}{f_t = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_t,   e_t = \sum_{j=1}^P \alpha_j S(f_{t-j}) ∇(y_{t-j}, f_{t-j}) + \sum_{k=1}^Q \phi_k e_{t-k}.}
 

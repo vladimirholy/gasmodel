@@ -94,15 +94,15 @@ summary(data)
 
 model_gas <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
 model_gas
-#> GAS Model: Student‘s t Distribution / Mean-Variance Parametrization / Unit Scaling 
+#> GAS Model: Student’s t Distribution / Mean-Variance Parametrization / Unit Scaling 
 #> 
 #> Coefficients: 
 #>                    Estimate  Std. Error  Z-Test  Pr(>|Z|)    
 #> mean            -0.00145631  0.00042388 -3.4357 0.0005911 ***
-#> log(var)_omega  -2.16158419  0.76650952 -2.8200 0.0048018 ** 
-#> log(var)_alpha1  0.54442475  0.15216805  3.5778 0.0003465 ***
-#> log(var)_phi1    0.78322463  0.07644654 10.2454 < 2.2e-16 ***
-#> df              10.11802479  6.59431541  1.5344 0.1249422    
+#> log(var)_omega  -2.16158390  0.76650939 -2.8200 0.0048018 ** 
+#> log(var)_alpha1  0.54442471  0.15216803  3.5778 0.0003465 ***
+#> log(var)_phi1    0.78322466  0.07644653 10.2454 < 2.2e-16 ***
+#> df              10.11803153  6.59432158  1.5344 0.1249423    
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
@@ -163,14 +163,14 @@ distr() %>%
 #> 19 lognorm   Log-Normal                      uni   duration logmeanvar             
 #> 20 lomax     Lomax                           uni   duration scale                  
 #> 21 mvnorm    Multivariate Normal             multi real     meanvar                
-#> 22 mvt       Multivariate Student‘s t        multi real     meanvar                
+#> 22 mvt       Multivariate Student’s t        multi real     meanvar                
 #> 23 negbin    Negative Binomial               uni   count    nb2, prob              
 #> 24 norm      Normal                          uni   real     meanvar                
 #> 25 pluce     Plackett-Luce                   multi ranking  worth                  
 #> 26 pois      Poisson                         uni   count    mean                   
 #> 27 rayleigh  Rayleigh                        uni   duration scale                  
 #> 28 skellam   Skellam                         uni   integer  meanvar, diff, meandisp
-#> 29 t         Student‘s t                     uni   real     meanvar                
+#> 29 t         Student’s t                     uni   real     meanvar                
 #> 30 vonmises  von Mises                       uni   circular meanconc               
 #> 31 weibull   Weibull                         uni   duration scale, rate            
 #> 32 zigeom    Zero-Inflated Geometric         uni   count    mean                   
@@ -198,14 +198,20 @@ gradient of the log-likelihood function. Exogenous variables can also be
 included. Specifically, time-varying parameters $f_{t}$ follow the
 recursion
 $$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k f_{t-k},$$
-where $\omega$ is a vector of constants, $\beta_i$ are regression
-parameters, $\alpha_j$ are score parameters, $\varphi_k$ are
-autoregressive parameters, $x_{ti}$ are exogenous variables, $S(f_t)$ is
-a scaling function for the score, and $\nabla(y_t, f_t)$ is the score
-given by
+where $\omega$ is the intercept, $\beta_i$ are the regression
+parameters, $\alpha_j$ are the score parameters, $\varphi_k$ are the
+autoregressive parameters, $x_{ti}$ are the exogenous variables,
+$S(f_t)$ is a scaling function for the score, and $\nabla(y_t, f_t)$ is
+the score given by
 $$\nabla(y_t, f_t) = \frac{\partial \ln p(y_t | f_t)}{\partial f_t}.$$
-Alternatively, a different model can be obtained by defining the
-recursion in the fashion of regression models with dynamic errors as
+In the case of a single time-varying parameter, $\omega$, $\beta_i$,
+$\alpha_j$, $\varphi_k$, $x_{ti}$, $S(f_t)$, and $\nabla(y_t, f_t)$ are
+all scalar. In the case of multiple time-varying parameters, $x_{ti}$
+are scalar, $\omega$, $\beta_i$, and $\nabla(y_{t - j}, f_{t - j})$ are
+vectors, $\alpha_j$ and $\varphi_k$ are diagonal matrices, and $S(f_t)$
+is a square matrix. Alternatively, a different model can be obtained by
+defining the recursion in the fashion of regression models with dynamic
+errors as
 $$f_{t} = \omega + \sum_{i=1}^M \beta_i x_{ti} + e_{t}, \quad e_t = \sum_{j=1}^P \alpha_j S(f_{t - j}) \nabla(y_{t - j}, f_{t - j}) + \sum_{k=1}^Q \varphi_k e_{t-k}.$$
 
 The GAS models can be straightforwardly estimated by the maximum
