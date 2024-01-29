@@ -1,0 +1,40 @@
+Distribution,gasmodel,GAS
+Asymmetric Laplace,✓,✓
+Asymmetric Student's t with One Tail Decay,✕,✓
+Asymmetric Student's t with Two Tail Decay,✕,✓
+Bernoulli,✓,✓
+Beta,✓,✓
+Birnbaum–Saunders,✓,✕
+Burr,✓,✕
+Categorical,✓,✕
+Dirichlet,✓,✕
+Double Poisson,✓,✕
+Exponential,✓,✓
+Exponential-Logarithmic,✓,✕
+Fisk,✓,✕
+Gamma,✓,✓
+Generalized Gamma,✓,✕
+Geometric,✓,✕
+Kumaraswamy,✓,✕
+Laplace,✓,✕
+Logistic,✓,✕
+Log-Normal,✓,✕
+Logit-Normal,✓,✕
+Lomax,✓,✕
+Multivariate Normal,✓,✓
+Multivariate Student's t,✓,✓
+Negative Binomial,✓,✓
+Normal,✓,✓
+Plackett–Luce,✓,✕
+Poisson,✓,✓
+Rayleigh,✓,✕
+Skellam,✓,✓
+Skewed Normal,✕,✓
+Skewed Student's t,✕,✓
+Student's t,✓,✓
+vonMises,✓,✕
+Weibull,✓,✕
+Zero-Inflated Geometric,✓,✕
+Zero-Inflated Negative Binomial,✓,✕
+Zero-Inflated Poisson,✓,✕
+Zero-Inflated Skellam,✓,✕

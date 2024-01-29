@@ -1,0 +1,152 @@
+---
+title: "Comparison with the GAS Package"
+author: "Vladimír Holý"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparison with the GAS Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "75%"
+)
+
+options(
+  width = 100,
+  max.print = 1e3,
+  pillar.print_max = 1e3
+)
+
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+```
+
+## Introduction
+
+We compare the **gasmodel** package with the **GAS** package developed by Ardia et al. (2019). The **GAS** package provides functionality for both univariate and multivariate GAS models. The current version, 0.3.4, supports 16 distributions. However, the model specification in the **GAS** package is somewhat limited, only allowing for basic dynamics without the inclusion of exogenous variables. Additionally, this package lacks distributions for certain more specialized data types, such as circular, compositional, and ranking data. The package thus supports only a limited selection of GAS models found in the literature.
+
+## The Bookshop Orders Case Study
+
+First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on Tomanová and Holý (2021) using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. We begin by assigning a value of 0.5 to zero durations and then adjusting all durations for the diurnal pattern.
+
+``` {r durations_data_diurnal, results = "hide", message = FALSE, warning = FALSE}
+library("dplyr")
+library("tidyr")
+library("hms")
+library("gasmodel")
+library("GAS")
+
+data("bookshop_sales")
+
+data_dur <- bookshop_sales %>%
+  as_tibble() %>%
+  rename(datetime = time) %>%
+  mutate(date = as.Date(datetime)) %>%
+  mutate(time = as_hms(datetime)) %>%
+  mutate(duration = as.numeric(datetime - lag(datetime)) / 60) %>%
+  mutate(duration = recode(duration, "0" = 0.5)) %>%
+  drop_na()
+
+model_spl <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
+
+data_dur <- data_dur %>%
+  mutate(duration_spl = predict(model_spl, x = as.vector(time))$y) %>%
+  mutate(duration_adj = duration / duration_spl)
+
+y <- data_dur$duration_adj
+```
+
+The case study employs the general gamma distribution and its specific instances to model durations. The **GAS** package offers the exponential and gamma distributions but does not support the Weibull and generalized gamma distributions. The exponential distribution is parametrized in terms of the rate parameter with the logistic link function in the **GAS** package. The **gasmodel** package allows for both the scale and rate parametrizations as well as the identical and logarithmic link functions. When the logarithmic link function is used, however, the only difference between the scale and rate parametrizations is in the sign of the intercept We can therefore compare the exponential model using the scale parametrization estimated by the **gasmodel** package with the exponential model using the rate parametrization estimated by the **GAS** package.
+
+``` {r durations_exp}
+est_exp <- gas(y = y, distr = "exp")
+est_exp
+
+spec_exp <- UniGASSpec(Dist = "exp", GASPar = list(location = TRUE))
+fit_exp <- UniGASFit(spec_exp, data = y)
+fit_exp
+```
+
+The results are nearly identical, within a reasonable level of precision. Other than the inverted sign of the intercept, the only difference lies in the reported p-values: the **GAS** package employs one-tailed hypotheses, whereas the **gasmodel** package uses two-tailed hypotheses.
+
+Next, we estimate the model with the gamma distribution and the rate parametrization.
+
+``` {r durations_gamma}
+est_gamma <- gas(y = y, distr = "gamma")
+est_gamma
+
+spec_gamma <- UniGASSpec(Dist = "gamma", GASPar = list(scale = TRUE, shape = FALSE))
+fit_gamma <- UniGASFit(spec_gamma, data = y)
+fit_gamma
+```
+
+The result  of the **GAS** package significantly contrasts with the outcome of the **gasmodel** package. The default optimizer within the **GAS** package identifies a suboptimal solution, yielding a significantly lower log-likelihood compared to the exponential model. Note that the gamma distribution is a generalization of the exponential distribution and should therefore result in the same or better fit.
+
+The default optimizer within the **gasmodel** package finds a considerably superior solution, likely the optimal one, albeit demanding more computational resources. In both packages, it is possible to alter the optimizers. However, in the **GAS** package, the optimizer's parameters cannot be directly provided through the `UniGASFit()` function. Instead, a complete replacement of the optimizer is necessary, rendering it a more intricate process to manage.
+
+Let us compare the computational speed of both packages. The **gasmodel** package is entirely written in R, whereas the **GAS** package also utilizes C++ to expedite certain functions. As the **gasmodel** package incorporates some more exotic distributions, it relies on various statistical packages not implemented in C++. By default, the **GAS** package employs the BFGS algorithm for optimization, while the **gasmodel** package uses the Nelder--Mead algorithm with a much lower termination tolerance for the variables. In the table below, we compare the running speed of the **GAS** package with its default optimizer, the **gasmodel** package with the default **GAS** optimizer, and the **gasmodel** package with its default optimizer. We can see that when the optimizer is the same, the **gasmodel** package is approximately two times slower than the **GAS** package. The default optimizer of the **gasmodel** package is even slower; however, it is more reliable, as discussed above. The computations were performed on a 5.2 GHz processor.
+
+``` {r durations_speed, echo = FALSE, message = FALSE, warning = FALSE}
+optim_arg_gas <- list(method = "BFGS", control = list(trace = 0, abstol = 1e-08, reltol = 1e-08))
+
+speed_report <- tibble(model = character(), pkg = character(), alg = character(), time = numeric())
+
+for (i in 1:100) {
+  
+  t1 <- system.time(UniGASFit(UniGASSpec(Dist = "exp", GASPar = list(location = TRUE)), data = y))
+  t2 <- system.time(gas(y = y, distr = "exp", optim_function = wrapper_optim_stats, optim_arguments = optim_arg_gas))
+  t3 <- system.time(gas(y = y, distr = "exp"))
+  t4 <- system.time(UniGASFit(UniGASSpec(Dist = "gamma", GASPar = list(scale = TRUE, shape = FALSE)), data = y))
+  t5 <- system.time(gas(y = y, distr = "gamma", optim_function = wrapper_optim_stats, optim_arguments = optim_arg_gas))
+  t6 <- system.time(gas(y = y, distr = "gamma"))
+
+  speed_report <- speed_report %>%
+    add_row(model = c("Exponential", "Exponential", "Exponential", "Gamma", "Gamma", "Gamma"), pkg = c("GAS", "gasmodel", "gasmodel", "GAS", "gasmodel", "gasmodel"), alg = c("BFGS", "BFGS", "Nelder-Mead", "BFGS", "BFGS", "Nelder-Mead"), time = rbind(t1, t2, t3, t4, t5, t6)[, 3])
+
+}
+
+speed_table <- speed_report %>%
+  group_by(model, pkg, alg) %>%
+  summarize(time = mean(time)) %>%
+  ungroup() %>%
+  rename("Model" = "model", "Package" = "pkg", "Optimizer" = "alg", "Running Time" = time)
+
+knitr::kable(speed_table, align = c("l", "l", "l", "r"), caption = "Running times of estimation in seconds.")
+```
+
+After performing parameter estimation for the Weibull and generalized gamma distributions, the case study proceeds by introducing a trend into the model. Regrettably, the **GAS** package lacks the capacity for accommodating exogenous variables, thus preventing this extension. This shortcoming stands as a substantial limitation that considerably restricts the package's potential applications. The case study also utilizes the bootstrapping function provided by the **gasmodel** package. Such a feature is absent in the **GAS** package. This primarily affects convenience, as bootstrapping can still be executed using custom code from the user along with specialized packages. The functionality for simulation of GAS processes is very similar in both packages.
+
+## The Ice Hockey Rankings Case Study
+
+The Ice Hockey Rankings case study in the `case_rankings` vignette based on Holý and Zouhar (2022) is not replicable at all using the **GAS** package due to its lack of support for the Plackett--Luce distribution or any distribution based on rankings. Furthermore, the **GAS** package does not facilitate the imposition of constraints on coefficients, which is useful, for instance, in creating random walk models or multivariate models with a panel structure. In the same case study, the process of forecasting and deriving confidence bands on time-varying parameters is illustrated. Similar functionality is also offered by the **GAS** package.
+
+
+## Comparison of Supported Distributions and Functionalities
+
+The following tables compare the supported distributions and the available functionalities in both packages. In general, the **gasmodel** package offers much broader range of GAS models, encompassing various probability distributions and model specifications. The **gasmodel** package (version 0.6.0) supports 35 distributions, whereas the **GAS** package (version 0.3.4) includes only 16 distributions. The **GAS** package features asymmetric and skewed versions of the normal and Student's t distributions, which are currently absent in the **gasmodel** package. Conversely, the **gasmodel** package incorporates 23 distributions tailored for count, duration, categorical, circular, compositional, and ranking data, which are not present in the **GAS** package. While the **GAS** package caters primarily to standard GAS models without the ability to handle missing values, the **gasmodel** package offers enhanced flexibility, allowing for various model structures, incorporation of exogenous variables, and the handling of missing values in time series. Apart from differences in probability distributions and model specification, both packages provide analogous functionalities for inference, forecasting, and simulation. The **GAS** package also computes the probability integral transform and offers certain capabilities for backtesting one-step ahead density and Value-at-Risk. However, these functionalities are limited to continuous distributions, which constitute only a subset of GAS models. Furthermore, such functionalities can be derived from the output generated by the **gasmodel** package. For these reasons, we have decided not to implement them in **gasmodel**.
+
+``` {r table_distr, echo = FALSE}
+table_distr <- read.csv("table_distr.csv")
+knitr::kable(table_distr, align = c("l", "c", "c"), caption = "List of the supported distributions.")
+```
+
+``` {r table_fun, echo = FALSE}
+table_fun <- read.csv("table_fun.csv")
+knitr::kable(table_fun, align = c("l", "c", "c"), caption = "List of the available functionality.")
+```
+
+## References
+
+Ardia, D., Boudt, K, and Catania, L. (2019). Generalized Autoregressive Score Models in R: The GAS Package. *Journal of Statistical Software*, **88**(6), 1–28. doi: [10.18637/jss.v088.i06](https://doi.org/10.18637/jss.v088.i06).
+
+Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), **71**(5), 1427–1450. doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
+
+Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).

@@ -1,0 +1,16 @@
+Functionality,gasmodel,GAS
+Various parametrizations and link functions,✓,✕
+Exogenous variables,✓,✕
+Higher score and autoregressive orders,✓,✕
+Custom initial values of time-varying parameters,✓,✕
+Fixed and bounded values of coefficients,✓,✕
+Missing values,✓,✕
+Custom optimization function,✓,✓
+Hessian-based inference,✓,✓
+Probability integral transform,✕,✓
+Confidence bands,✓,✓
+Forecasting,✓,✓
+Backtesting and rolling re-estimation,✕,✓
+Basic simulation,✓,✓
+Bootstrapping,✓,✕
+Easy visualization,✓,✓
