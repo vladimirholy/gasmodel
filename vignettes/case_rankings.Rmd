@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
-date: "2023-08-25"
+date: "2024-01-28"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
@@ -72,7 +72,7 @@ The `gasmodel` package provides a single distribution on rankings -- the Placket
 ```r
 distr(filter_type = "ranking")
 #>      distr_title param_title distr param    type   dim orthog default
-#> 24 Plackett-Luce       Worth pluce worth ranking multi  FALSE    TRUE
+#> 32 Plackett-Luce       Worth pluce worth ranking multi  FALSE    TRUE
 ```
 
 It is a convenient and simple probability distribution on rankings utilizing a worth parameter for each item to be ranked. It originates from Luce’s choice axiom and is also related to the Thurstone’s theory of comparative judgment, see Luce (1977) and Yellott (1977). For more details on this distribution, see Plackett (1975), Stern (1990), and Critchlow et al. (1991).
@@ -232,7 +232,7 @@ plot(flt_stnry, which = 3)
 
 <div class="figure" style="text-align: center">
 <img src="rankings_filter_plot-1.png" alt="Confidence bands of time-varying parameters of the Canada team based on the stationary model." width="75%" />
-<p class="caption">Confidence band of time-varying parameters of the Canada team based on the stationary model.</p>
+<p class="caption">Confidence bands of time-varying parameters of the Canada team based on the stationary model.</p>
 </div>
 
 ## Forecasting
@@ -296,7 +296,7 @@ Alvo, M. and Yu, P. L. H. (2014). *Statistical Methods for Ranking Data*. Spring
 
 Critchlow, D. E., Fligner, M. A., and Verducci, J. S. (1991). Probability Models on Rankings. *Journal of Mathematical Psychology*, **35**(3), 294–318. doi: [10.1016/0022-2496(91)90050-4](https://doi.org/10.1016/0022-2496(91)90050-4).
 
-Holý, V. and Zouhar, J. (2021). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics). doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
+Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), **71**(5), 1427–1450. doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
 
 Luce, R. D. (1977). The Choice Axiom after Twenty Years. *Journal of Mathematical Psychology*, **15**(3), 215–233. doi: [10.1016/0022-2496(77)90032-3](https://doi.org/10.1016/0022-2496(77)90032-3).
 

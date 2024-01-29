@@ -1,7 +1,7 @@
 ---
 title: "Case Study: Bookshop Orders"
 author: "Vladimír Holý & Petra Tomanová"
-date: "2023-08-25"
+date: "2024-01-28"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Bookshop Orders}
@@ -63,16 +63,22 @@ The following distributions are available for our data type. We utilize the gene
 
 ```r
 distr(filter_type = "duration", filter_dim = "uni")
-#>          distr_title param_title    distr param     type dim orthog default
-#> 6  Birnbaum-Saunders       Scale     bisa scale duration uni   TRUE    TRUE
-#> 10       Exponential        Rate      exp  rate duration uni   TRUE   FALSE
-#> 11       Exponential       Scale      exp scale duration uni   TRUE    TRUE
-#> 12             Gamma        Rate    gamma  rate duration uni  FALSE   FALSE
-#> 13             Gamma       Scale    gamma scale duration uni  FALSE    TRUE
-#> 14 Generalized Gamma        Rate gengamma  rate duration uni  FALSE   FALSE
-#> 15 Generalized Gamma       Scale gengamma scale duration uni  FALSE    TRUE
-#> 31           Weibull        Rate  weibull  rate duration uni  FALSE   FALSE
-#> 32           Weibull       Scale  weibull scale duration uni  FALSE    TRUE
+#>                distr_title       param_title    distr      param     type dim orthog default
+#> 6        Birnbaum-Saunders             Scale     bisa      scale duration uni   TRUE    TRUE
+#> 7                     Burr             Scale     burr      scale duration uni  FALSE    TRUE
+#> 11             Exponential              Rate      exp       rate duration uni   TRUE   FALSE
+#> 12             Exponential             Scale      exp      scale duration uni   TRUE    TRUE
+#> 13 Exponential-Logarithmic              Rate   explog       rate duration uni  FALSE    TRUE
+#> 14                    Fisk             Scale     fisk      scale duration uni   TRUE    TRUE
+#> 15                   Gamma              Rate    gamma       rate duration uni  FALSE   FALSE
+#> 16                   Gamma             Scale    gamma      scale duration uni  FALSE    TRUE
+#> 17       Generalized Gamma              Rate gengamma       rate duration uni  FALSE   FALSE
+#> 18       Generalized Gamma             Scale gengamma      scale duration uni  FALSE    TRUE
+#> 25              Log-Normal Log-Mean-Variance  lognorm logmeanvar duration uni   TRUE    TRUE
+#> 26                   Lomax             Scale    lomax      scale duration uni  FALSE    TRUE
+#> 34                Rayleigh             Scale rayleigh      scale duration uni   TRUE    TRUE
+#> 40                 Weibull              Rate  weibull       rate duration uni  FALSE   FALSE
+#> 41                 Weibull             Scale  weibull      scale duration uni  FALSE    TRUE
 ```
 
 First, we estimate the model based on the exponential distribution. By default, the logarithmic link for the time-varying scale parameter is adopted. In this particular case, the Fisher information is constant and the three scalings are therefore equivalent.
@@ -87,7 +93,7 @@ est_exp
 #>                      Estimate  Std. Error   Z-Test  Pr(>|Z|)    
 #> log(scale)_omega  -0.00085202  0.00114896  -0.7416    0.4584    
 #> log(scale)_alpha1  0.04888439  0.00650562   7.5142 5.727e-14 ***
-#> log(scale)_phi1    0.96343265  0.00910508 105.8126 < 2.2e-16 ***
+#> log(scale)_phi1    0.96343266  0.00910508 105.8127 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
@@ -208,11 +214,11 @@ est_weibull_tr
 #> 
 #> Coefficients: 
 #>                      Estimate  Std. Error  Z-Test  Pr(>|Z|)    
-#> log(scale)_omega   0.26955739  0.04763575  5.6587 1.525e-08 ***
+#> log(scale)_omega   0.26955741  0.04763575  5.6587 1.525e-08 ***
 #> log(scale)_beta1  -0.00302892  0.00039014 -7.7638 8.244e-15 ***
 #> log(scale)_alpha1  0.06215424  0.00992563  6.2620 3.801e-10 ***
-#> log(scale)_phi1    0.90950196  0.02399584 37.9025 < 2.2e-16 ***
-#> shape              0.94858384  0.00949927 99.8586 < 2.2e-16 ***
+#> log(scale)_phi1    0.90950195  0.02399584 37.9025 < 2.2e-16 ***
+#> shape              0.94858383  0.00949927 99.8586 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
@@ -240,12 +246,12 @@ est_gengamma_tr
 #> 
 #> Coefficients: 
 #>                      Estimate  Std. Error  Z-Test  Pr(>|Z|)    
-#> log(scale)_omega  -0.70489163  0.19283438 -3.6554 0.0002568 ***
+#> log(scale)_omega  -0.70489176  0.19283438 -3.6554 0.0002568 ***
 #> log(scale)_beta1  -0.00292746  0.00039123 -7.4827 7.280e-14 ***
-#> log(scale)_alpha1  0.08164957  0.01387329  5.8854 3.971e-09 ***
-#> log(scale)_phi1    0.87684184  0.03506612 25.0054 < 2.2e-16 ***
-#> shape1             1.76342697  0.15253550 11.5608 < 2.2e-16 ***
-#> shape2             0.68568220  0.03426457 20.0114 < 2.2e-16 ***
+#> log(scale)_alpha1  0.08164958  0.01387329  5.8854 3.971e-09 ***
+#> log(scale)_phi1    0.87684183  0.03506612 25.0054 < 2.2e-16 ***
+#> shape1             1.76342711  0.15253551 11.5608 < 2.2e-16 ***
+#> shape2             0.68568217  0.03426456 20.0114 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
@@ -283,22 +289,22 @@ To assess the suitability of standard deviations based on asymptotics for our fi
 
 ```r
 set.seed(42)
-boot_gengamma_tr <- gas_bootstrap(est_gengamma_tr, method = "parametric")
+boot_gengamma_tr <- gas_bootstrap(est_gengamma_tr, method = "parametric", rep_boot = 100)
 boot_gengamma_tr
 #> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 
 #> Method: Parametric Bootstrap 
 #> 
-#> Number of Bootstrap Samples: 1000 
+#> Number of Bootstrap Samples: 100 
 #> 
 #> Bootstrapped Coefficients: 
-#>                       Original         Mean   Std. Error P-Value         2.5%       97.5%
-#> log(scale)_omega  -0.704891626 -0.705226357 0.1980063054       0 -1.110703445 -0.34772409
-#> log(scale)_beta1  -0.002927462 -0.002932047 0.0003883289       0 -0.003698968 -0.00217132
-#> log(scale)_alpha1  0.081649573  0.081648774 0.0116918758       0  0.059179321  0.10575927
-#> log(scale)_phi1    0.876841843  0.871223702 0.0297172317       0  0.806282230  0.91973863
-#> shape1             1.763426971  1.765458333 0.1596470324       0  1.476831790  2.09983786
-#> shape2             0.685682201  0.688266197 0.0354034049       0  0.623633255  0.76097862
+#>                       Original         Mean Std. Error P-Value         2.5%        97.5%
+#> log(scale)_omega  -0.704891757 -0.691650417 0.22759165       0 -1.171868984 -0.342255708
+#> log(scale)_beta1  -0.002927462 -0.002946901 0.00035879       0 -0.003656872 -0.002238183
+#> log(scale)_alpha1  0.081649576  0.080128593 0.01164234       0  0.056643028  0.105426070
+#> log(scale)_phi1    0.876841834  0.871097748 0.03637299       0  0.798610795  0.922273459
+#> shape1             1.763427106  1.756371114 0.18391065       0  1.467043066  2.122748997
+#> shape2             0.685682170  0.690872213 0.03914670       0  0.613915496  0.760901301
 ```
 
 The results can also be viewed in a boxplot.
@@ -319,9 +325,9 @@ Given that the number of observations in our model is 5752 (accessible through `
 ```r
 est_gengamma_tr$fit$coef_sd - boot_gengamma_tr$bootstrap$coef_sd
 #>  log(scale)_omega  log(scale)_beta1 log(scale)_alpha1   log(scale)_phi1            shape1 
-#>     -5.171928e-03      2.900388e-06      2.181417e-03      5.348887e-03     -7.111530e-03 
+#>     -3.475727e-02      3.243935e-05      2.230949e-03     -1.306872e-03     -3.137514e-02 
 #>            shape2 
-#>     -1.138839e-03 
+#>     -4.882134e-03
 ```
 
 ## Simulation
@@ -339,12 +345,12 @@ sim_gengamma_tr
 #> GAS Model: Generalized Gamma Distribution / Scale Parametrization / Unit Scaling 
 #> 
 #> Simulations: 
-#>          t1          t2          t3          t4          t5          t6          t7 
-#> 1.009836881 0.706070572 1.139254609 0.112834862 0.252712188 2.268641670 2.271065825 
-#>          t8          t9         t10         t11         t12         t13         t14 
-#> 0.742231695 0.676595922 0.259042333 0.004836128 0.077080566 0.608510890 0.799449725 
-#>         t15         t16         t17         t18         t19         t20 
-#> 1.126124047 0.157351783 0.124067217 0.100168697 0.648121920 0.219983546 
+#>         t1         t2         t3         t4         t5         t6         t7         t8         t9 
+#> 1.00983688 0.70607057 1.13925461 0.11283487 0.25271219 2.26864169 2.27106585 0.74223170 0.67659592 
+#>        t10        t11        t12        t13        t14        t15        t16        t17        t18 
+#> 0.25904234 0.00483613 0.07708057 0.60851088 0.79944972 1.12612404 0.15735179 0.12406722 0.10016870 
+#>        t19        t20 
+#> 0.64812192 0.21998355
 ```
 
 The simulated time series can be plotted using the generic `plot()` function.

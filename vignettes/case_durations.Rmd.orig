@@ -39,7 +39,7 @@ A strand of financial econometrics is devoted to analyzing the timing of transac
 
 Let us prepare the analyzed data. We use the `bookshop_sales` dataset containing times of orders from June 8, 2018 to December 20, 2018. We calculate differences of subsequent times, i.e. durations. To avoid zero durations, we set them to 0.5 second.
 
-``` {r durations_data}
+``` {r durations_data, results = "hide", message = FALSE, warning = FALSE}
 library("dplyr")
 library("tidyr")
 library("ggplot2")
@@ -158,7 +158,7 @@ To assess the suitability of standard deviations based on asymptotics for our fi
 
 ``` {r durations_boot_comp}
 set.seed(42)
-boot_gengamma_tr <- gas_bootstrap(est_gengamma_tr, method = "parametric")
+boot_gengamma_tr <- gas_bootstrap(est_gengamma_tr, method = "parametric", rep_boot = 100)
 boot_gengamma_tr
 ```
 
