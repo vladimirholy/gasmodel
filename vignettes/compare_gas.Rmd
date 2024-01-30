@@ -1,7 +1,7 @@
 ---
 title: "Comparison with the GAS Package"
 author: "Vladimír Holý"
-date: "2024-01-28"
+date: "2024-01-30"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Comparison with the GAS Package}
@@ -17,34 +17,17 @@ We compare the **gasmodel** package with the **GAS** package developed by Ardia 
 
 ## The Bookshop Orders Case Study
 
-First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on Tomanová and Holý (2021) using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. We begin by assigning a value of 0.5 to zero durations and then adjusting all durations for the diurnal pattern.
+First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on Tomanová and Holý (2021) using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. Specifically, We analyze durations adjusted for the diurnal pattern.
 
 
 ```r
 library("dplyr")
-library("tidyr")
-library("hms")
 library("gasmodel")
 library("GAS")
 
 data("bookshop_sales")
 
-data_dur <- bookshop_sales %>%
-  as_tibble() %>%
-  rename(datetime = time) %>%
-  mutate(date = as.Date(datetime)) %>%
-  mutate(time = as_hms(datetime)) %>%
-  mutate(duration = as.numeric(datetime - lag(datetime)) / 60) %>%
-  mutate(duration = recode(duration, "0" = 0.5)) %>%
-  drop_na()
-
-model_spl <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
-
-data_dur <- data_dur %>%
-  mutate(duration_spl = predict(model_spl, x = as.vector(time))$y) %>%
-  mutate(duration_adj = duration / duration_spl)
-
-y <- data_dur$duration_adj
+y <- bookshop_orders$duration_adj[-1]
 ```
 
 The case study employs the general gamma distribution and its specific instances to model durations. The **GAS** package offers the exponential and gamma distributions but does not support the Weibull and generalized gamma distributions. The exponential distribution is parametrized in terms of the rate parameter with the logistic link function in the **GAS** package. The **gasmodel** package allows for both the scale and rate parametrizations as well as the identical and logarithmic link functions. When the logarithmic link function is used, however, the only difference between the scale and rate parametrizations is in the sign of the intercept We can therefore compare the exponential model using the scale parametrization estimated by the **gasmodel** package with the exponential model using the rate parametrization estimated by the **GAS** package.
@@ -57,13 +40,13 @@ est_exp
 #> 
 #> Coefficients: 
 #>                      Estimate  Std. Error   Z-Test  Pr(>|Z|)    
-#> log(scale)_omega  -0.00085202  0.00114896  -0.7416    0.4584    
-#> log(scale)_alpha1  0.04888439  0.00650562   7.5142 5.727e-14 ***
-#> log(scale)_phi1    0.96343266  0.00910508 105.8127 < 2.2e-16 ***
+#> log(scale)_omega  -0.00089754  0.00117598  -0.7632    0.4453    
+#> log(scale)_alpha1  0.04992815  0.00657547   7.5931 3.123e-14 ***
+#> log(scale)_phi1    0.96278385  0.00918996 104.7647 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Log-Likelihood: -5608.518, AIC: 11223.04, BIC: 11243.01
+#> Log-Likelihood: -5571.078, AIC: 11148.16, BIC: 11168.11
 
 spec_exp <- UniGASSpec(Dist = "exp", GASPar = list(location = TRUE))
 fit_exp <- UniGASFit(spec_exp, data = y)
@@ -74,26 +57,26 @@ fit_exp
 #> ------------------------------------------
 #> 
 #> Model Specification:	
-#> T =  5752
+#> T =  5718
 #> Conditional distribution:  exp
 #> Score scaling type:  Identity
 #> Time varying parameters:  location
 #> ------------------------------------------
 #> Estimates:
 #>            Estimate  Std. Error     t value     Pr(>|t|)
-#> kappa1 0.0008535178 0.001149039   0.7428099 2.287984e-01
-#> a1     0.0488830441 0.006513237   7.5051838 3.064216e-14
-#> b1     0.9634339711 0.009119708 105.6430684 0.000000e+00
+#> kappa1 0.0008988645 0.001176163   0.7642349 2.223636e-01
+#> a1     0.0499298880 0.006583222   7.5844146 1.665335e-14
+#> b1     0.9627795337 0.009205272 104.5900093 0.000000e+00
 #> 
 #> ------------------------------------------
 #> Unconditional Parameters:
 #> location 
-#> 1.023616 
+#> 1.024444 
 #> 
 #> ------------------------------------------
 #> Information Criteria:
 #>       AIC       BIC        np       llk 
-#> 11223.036 11243.008     3.000 -5608.518 
+#> 11148.156 11168.110     3.000 -5571.078 
 #> 
 #> ------------------------------------------
 #> Convergence:	0
@@ -114,14 +97,14 @@ est_gamma
 #> 
 #> Coefficients: 
 #>                    Estimate Std. Error   Z-Test  Pr(>|Z|)    
-#> log(scale)_omega  0.0013296  0.0013395   0.9926    0.3209    
-#> log(scale)_alpha1 0.0518896  0.0071672   7.2399 4.491e-13 ***
-#> log(scale)_phi1   0.9634327  0.0093853 102.6532 < 2.2e-16 ***
-#> shape             0.9420850  0.0153854  61.2325 < 2.2e-16 ***
+#> log(scale)_omega  0.0010440  0.0013489   0.7740    0.4389    
+#> log(scale)_alpha1 0.0526020  0.0071647   7.3418 2.107e-13 ***
+#> log(scale)_phi1   0.9627838  0.0094368 102.0247 < 2.2e-16 ***
+#> shape             0.9491683  0.0155575  61.0102 < 2.2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Log-Likelihood: -5601.735, AIC: 11211.47, BIC: 11238.1
+#> Log-Likelihood: -5565.939, AIC: 11139.88, BIC: 11166.48
 
 spec_gamma <- UniGASSpec(Dist = "gamma", GASPar = list(scale = TRUE, shape = FALSE))
 fit_gamma <- UniGASFit(spec_gamma, data = y)
@@ -132,27 +115,27 @@ fit_gamma
 #> ------------------------------------------
 #> 
 #> Model Specification:	
-#> T =  5752
+#> T =  5718
 #> Conditional distribution:  gamma
 #> Score scaling type:  Identity
 #> Time varying parameters:  scale
 #> ------------------------------------------
 #> Estimates:
 #>           Estimate  Std. Error   t value     Pr(>|t|)
-#> kappa1 -0.01301586 0.005587936 -2.329279 9.922151e-03
-#> kappa2 -0.06533321 0.021302585 -3.066915 1.081403e-03
-#> a1      0.05420745 0.009282091  5.840005 2.609969e-09
-#> b1      0.82496872 0.058251327 14.162231 0.000000e+00
+#> kappa1 -0.01013261 0.004387366 -2.309496 1.045803e-02
+#> kappa2 -0.05727855 0.021342698 -2.683754 3.640035e-03
+#> a1      0.05273107 0.008356407  6.310256 1.392869e-10
+#> b1      0.84825707 0.045825664 18.510524 0.000000e+00
 #> 
 #> ------------------------------------------
 #> Unconditional Parameters:
 #>     scale     shape 
-#> 0.9283346 0.9367553 
+#> 0.9354058 0.9443310 
 #> 
 #> ------------------------------------------
 #> Information Criteria:
 #>       AIC       BIC        np       llk 
-#> 11330.024 11356.653     4.000 -5661.012 
+#> 11257.770 11284.375     4.000 -5624.885 
 #> 
 #> ------------------------------------------
 #> Convergence:	0
@@ -173,12 +156,12 @@ Table: Running times of estimation in seconds.
 
 |Model       |Package  |Optimizer   | Running Time|
 |:-----------|:--------|:-----------|------------:|
-|Exponential |GAS      |BFGS        |      0.86404|
-|Exponential |gasmodel |BFGS        |      1.73202|
-|Exponential |gasmodel |Nelder-Mead |      3.88842|
-|Gamma       |GAS      |BFGS        |      1.62598|
-|Gamma       |gasmodel |BFGS        |      3.46951|
-|Gamma       |gasmodel |Nelder-Mead |     12.41875|
+|Exponential |GAS      |BFGS        |      0.83151|
+|Exponential |gasmodel |BFGS        |      1.70054|
+|Exponential |gasmodel |Nelder-Mead |      3.86932|
+|Gamma       |GAS      |BFGS        |      1.95717|
+|Gamma       |gasmodel |BFGS        |      3.41864|
+|Gamma       |gasmodel |Nelder-Mead |     11.69872|
 
 
 

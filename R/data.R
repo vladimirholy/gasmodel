@@ -2,53 +2,27 @@
 # DOCUMENTATION OF DATASETS
 
 
-# Dataset bookshop_sales -------------------------------------------------------
-#' @title Antiquarian Bookshop Sales
+# Dataset bookshop_orders -------------------------------------------------------
+#' @title Antiquarian Bookshop Orders
 #'
 #' @description
 #' Individual orders of a Czech antiquarian bookshop from June 8, 2018 to December 20, 2018.
 #' This dataset is analyzed in Tomanová and Holý (2021).
-#' Details on the bookshop can be also found in Tomanová and Černý (2022).
-#'
-#' @source
-#' Petra Tomanová (\email{petra.tomanova@@vse.cz}).
 #'
 #' @format
 #' A data frame with columns:
 #' \describe{
-#'   \item{order}{ID of the order.}
-#'   \item{time}{Time of the order.}
-#'   \item{quantity}{Number of purchased books. Zero value means the order was canceled.}
+#'   \item{id}{ID of the order.}
+#'   \item{datetime}{Date and time of the order.}
+#'   \item{quantity}{Number of purchased books.}
+#'   \item{duration}{Number of minutes since the last order.}
+#'   \item{duration_adj}{Duration since the last order adjusted for diurnal pattern.}
 #' }
 #'
 #' @references
-#' Tomanová, P. and Černý, M. (2022). Efficiency of Antiquarian Bookshops in Informationally Complete Markets. \emph{Central European Journal of Operations Research}, \strong{30}(2), 573–593. \doi{10.1007/s10100-021-00780-3}.
-#'
 #' Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. \emph{Central European Journal of Operations Research}, \strong{29}(3), 859–874. \doi{10.1007/s10100-021-00744-7}.
 #'
-"bookshop_sales"
-# ------------------------------------------------------------------------------
-
-
-# Dataset german_car_market_cap ------------------------------------------------
-#' @title Market Capitalization of German Car Manufacturers
-#'
-#' @description
-#' Market capitalization of the "Germany's Big Three" automobile manufacturers – Volkswagen Group, Mercedes-Benz Group, and BMW.
-#' Market capitalization is reported in billions of euros and covers the period 1994–2021.
-#'
-#' @source
-#' Thomson Reuters (\href{https://www.thomsonreuters.com/en.html}{www.thomsonreuters.com}).
-#'
-#' @format
-#' A data frame with columns:
-#' \describe{
-#'   \item{year}{Year.}
-#'   \item{car_manufacturer}{Car manufacturer.}
-#'   \item{market_cap}{Market capitalization in billions of euros.}
-#' }
-#'
-"german_car_market_cap"
+"bookshop_orders"
 # ------------------------------------------------------------------------------
 
 
@@ -78,26 +52,30 @@
 # ------------------------------------------------------------------------------
 
 
-# Dataset sp500_daily ----------------------------------------------------------
-#' @title Daily S&P 500 Prices
+# Dataset bookshop_orders -------------------------------------------------------
+#' @title Daily Toilet Paper Sales
 #'
 #' @description
-#' Daily opening, highest, lowest, and closing prices of the Standard and Poor's 500 stock market index (SPX) from 2013.
-#'
-#' @source
-#' Nasdaq (\href{https://www.nasdaq.com/market-activity/index/spx}{www.nasdaq.com/market-activity/index/spx}).
+#' The daily number of toilet paper packs sold in a European store in 2001 and 2002.
+#' The \code{promo} variable indicates whether the product was promoted in a campaign.
+#' Missing values correspond to the days when the store was closed.
 #'
 #' @format
 #' A data frame with columns:
 #' \describe{
-#'   \item{date}{Trading day.}
-#'   \item{open}{Opening price of the day.}
-#'   \item{high}{Highest price of the day.}
-#'   \item{low}{Lowest price of the day.}
-#'   \item{close}{Closing price of the day.}
+#'   \item{date}{Date.}
+#'   \item{monday}{Dummy variable indicating whether it is Monday.}
+#'   \item{tuesday}{Dummy variable indicating whether it is Tuesday.}
+#'   \item{wednesday}{Dummy variable indicating whether it is Wednesday.}
+#'   \item{thursday}{Dummy variable indicating whether it is Thursday.}
+#'   \item{friday}{Dummy variable indicating whether it is Friday.}
+#'   \item{saturday}{Dummy variable indicating whether it is Saturday.}
+#'   \item{sunday}{Dummy variable indicating whether it is Sunday.}
+#'   \item{promo}{Dummy variable indicating whether the product is promoted.}
+#'   \item{quantity}{Number of packs sold.}
 #' }
 #'
-"sp500_daily"
+"toilet_paper_sales"
 # ------------------------------------------------------------------------------
 
 

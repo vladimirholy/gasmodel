@@ -37,39 +37,14 @@ A strand of financial econometrics is devoted to analyzing the timing of transac
 
 ## Data Preparation
 
-Let us prepare the analyzed data. We use the `bookshop_sales` dataset containing times of orders from June 8, 2018 to December 20, 2018. We calculate differences of subsequent times, i.e. durations. To avoid zero durations, we set them to 0.5 second.
+Let us prepare the analyzed data. We use the `bookshop_orders` dataset containing times of orders from June 8, 2018 to December 20, 2018. The differences of subsequent times, i.e. durations, are already included in the dataset. Additionally, the dataset includes durations that have been adjusted for diurnal patterns using smoothing splines. This is the time series we are interested in.
 
 ``` {r durations_data, results = "hide", message = FALSE, warning = FALSE}
-library("dplyr")
-library("tidyr")
-library("ggplot2")
-library("hms")
 library("gasmodel")
 
-data("bookshop_sales")
+data("bookshop_orders")
 
-data_dur <- bookshop_sales %>%
-  as_tibble() %>%
-  rename(datetime = time) %>%
-  mutate(date = as.Date(datetime)) %>%
-  mutate(time = as_hms(datetime)) %>%
-  mutate(duration = as.numeric(datetime - lag(datetime)) / 60) %>%
-  mutate(duration = recode(duration, "0" = 0.5)) %>%
-  drop_na()
-```
-
-## Diurnal Adjustment
-
-We adjust the observed durations for diurnal pattern and extract the time series to be analyzed.
-
-``` {r durations_diurnal}
-model_spl <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
-
-data_dur <- data_dur %>%
-  mutate(duration_spl = predict(model_spl, x = as.vector(time))$y) %>%
-  mutate(duration_adj = duration / duration_spl)
-
-y <- data_dur$duration_adj
+y <- bookshop_orders$duration_adj[-1]
 ```
 
 ## Model Estimation
@@ -125,7 +100,7 @@ plot(est_gengamma)
 We can see a slight negative trend in time-varying parameters. We can try including a trend as an exogenous variable for all four considered distributions.
 
 ``` {r durations_trend_models}
-x <- as.integer(data_dur$date) - as.integer(data_dur$date[1])
+x <- as.integer(as.Date(bookshop_orders$datetime[-1])) - 17690
 
 est_exp_tr <- gas(y = y, x = x, distr = "exp", reg = "sep")
 est_exp_tr

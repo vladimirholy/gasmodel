@@ -35,33 +35,16 @@ We compare the **gasmodel** package with the **GAS** package developed by Ardia 
 
 ## The Bookshop Orders Case Study
 
-First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on Tomanová and Holý (2021) using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. We begin by assigning a value of 0.5 to zero durations and then adjusting all durations for the diurnal pattern.
+First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on Tomanová and Holý (2021) using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. Specifically, We analyze durations adjusted for the diurnal pattern.
 
 ``` {r durations_data_diurnal, results = "hide", message = FALSE, warning = FALSE}
 library("dplyr")
-library("tidyr")
-library("hms")
 library("gasmodel")
 library("GAS")
 
 data("bookshop_sales")
 
-data_dur <- bookshop_sales %>%
-  as_tibble() %>%
-  rename(datetime = time) %>%
-  mutate(date = as.Date(datetime)) %>%
-  mutate(time = as_hms(datetime)) %>%
-  mutate(duration = as.numeric(datetime - lag(datetime)) / 60) %>%
-  mutate(duration = recode(duration, "0" = 0.5)) %>%
-  drop_na()
-
-model_spl <- smooth.spline(as.vector(data_dur$time), data_dur$duration, df = 10)
-
-data_dur <- data_dur %>%
-  mutate(duration_spl = predict(model_spl, x = as.vector(time))$y) %>%
-  mutate(duration_adj = duration / duration_spl)
-
-y <- data_dur$duration_adj
+y <- bookshop_orders$duration_adj[-1]
 ```
 
 The case study employs the general gamma distribution and its specific instances to model durations. The **GAS** package offers the exponential and gamma distributions but does not support the Weibull and generalized gamma distributions. The exponential distribution is parametrized in terms of the rate parameter with the logistic link function in the **GAS** package. The **gasmodel** package allows for both the scale and rate parametrizations as well as the identical and logarithmic link functions. When the logarithmic link function is used, however, the only difference between the scale and rate parametrizations is in the sign of the intercept We can therefore compare the exponential model using the scale parametrization estimated by the **gasmodel** package with the exponential model using the rate parametrization estimated by the **GAS** package.
@@ -100,7 +83,7 @@ optim_arg_gas <- list(method = "BFGS", control = list(trace = 0, abstol = 1e-08,
 speed_report <- tibble(model = character(), pkg = character(), alg = character(), time = numeric())
 
 for (i in 1:100) {
-  
+
   t1 <- system.time(UniGASFit(UniGASSpec(Dist = "exp", GASPar = list(location = TRUE)), data = y))
   t2 <- system.time(gas(y = y, distr = "exp", optim_function = wrapper_optim_stats, optim_arguments = optim_arg_gas))
   t3 <- system.time(gas(y = y, distr = "exp"))
