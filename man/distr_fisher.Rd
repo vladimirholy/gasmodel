@@ -25,10 +25,7 @@ A function computing Fisher information, its inverse, or its inverse square root
 }
 \examples{
 # Fisher information for the negative binomial distribution
-distr_fisher(f = c(0.5, 1.2), distr = "negbin")
-
-# Fisher information for the multivariate normal distribution
-distr_fisher(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+distr_fisher(f = c(13.50, 0.03), distr = "negbin")
 
 }
 \seealso{

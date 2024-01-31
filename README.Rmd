@@ -58,10 +58,9 @@ The package handles probability distributions by the following functions:
 
 In addition, the package provides the following datasets used in examples:
 
-- `bookshop_sales` contains times of antiquarian bookshop sales.
-- `german_car_market_cap` contains the market capitalization of major German car manufacturers.
+- `bookshop_orders` contains times of antiquarian bookshop orders.
 - `ice_hockey_championships` contains the results of the Ice Hockey World Championships.
-- `sp500_daily` contains daily S&P 500 prices.
+- `toilet_paper_sales` contains daily sales of toilet paper.
 
 ## Installation
 
@@ -80,23 +79,19 @@ devtools::install_github("vladimirholy/gasmodel")
 
 ## Example
 
-As a simple example, let us model volatility of daily S&P 500 prices in 2021 in the fashion of GARCH models. We estimate the GAS model based on the Student's t-distribution with time-varying volatility and plot the filtered time-varying parameters:
+As a simple example, let us model daily toilet paper sales in a store. We estimate the GAS model based on the negative binomial distribution with time-varying mean and incorporating dummy variables to indicate the day of the week and whether the product is being promoted. We also plot the filtered time-varying parameters:
 
 ``` {r example, warning = FALSE, message = FALSE}
-library("dplyr")
-library("ggplot2")
 library("gasmodel")
 
-data <- sp500_daily %>%
-  mutate(return = log(close) - log(lag(close))) %>%
-  filter(format(sp500_daily$date, "%Y") == "2021") %>%
-  select(date, return)
-summary(data)
+data("toilet_paper_sales")
+y <- toilet_paper_sales$quantity
+x <- as.matrix(toilet_paper_sales[3:9])
 
-model_gas <- gas(y = data$return, distr = "t", par_static = c(TRUE, FALSE, TRUE))
-model_gas
+est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+est_negbin
 
-plot(model_gas)
+plot(est_negbin)
 ```
 
 ## Case Studies
@@ -112,15 +107,21 @@ Currently, there are `r length(unique(distr()$distr))` distributions available.
 
 The list of supported distribution can be obtained by the `distr()` function:
 
-``` {r distr}
-distr() %>%
+``` {r distr, echo = FALSE, message = FALSE, warning = FALSE}
+library("dplyr")
+
+distr_table <- distr() %>%
   arrange(!default, param) %>%
   select(distr, distr_title, dim, type, param) %>%
   group_by(distr, distr_title, dim, type) %>%
   summarize(param = paste(param, collapse = ", ")) %>%
   ungroup() %>%
-  arrange(distr) %>%
-  print(right = FALSE, row.names = FALSE)
+  mutate(dim = recode(dim, "uni" = "Univariate", "multi" = "Multivariate")) %>%
+  mutate(type = recode(type, "binary" = "Binary", "cat" = "Categorical", "circular" = "Circular", "comp" = "Compositional", "count" = "Count", "duration" = "Duration", "integer" = "Integer", "interval" = "Interval", "ranking" = "Ranking", "real" = "Real")) %>%
+  rename(c("Label" = "distr", "Distribution" = "distr_title", "Dimension" = "dim", "Data Type" = "type", "Parametrizations" = "param")) %>%
+  arrange(Label)
+
+knitr::kable(distr_table)
 ```
 
 Details of each distribution, including its density function, expected value, variance, score, and Fisher information, can be found in vignette `distributions`.

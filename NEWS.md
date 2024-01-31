@@ -8,6 +8,7 @@
 * Added the Lomax distribution.
 * Added the Rayleigh distribution.
 * Modified the datasets.
+* Changed the examples.
 * Increased the running speed of the estimation.
 * Corrected the log-likelihood function for the zero-inflated geometric distribution.
 

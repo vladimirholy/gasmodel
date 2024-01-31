@@ -76,22 +76,21 @@
 #' \code{\link[gasmodel:gas]{gas()}}
 #'
 #' @examples
-#' # Load Level of Lake Huron dataset
-#' data(LakeHuron)
-#' y <- LakeHuron - 570
-#' x <- 1:length(y)
+#' \donttest{# Load the Daily Toilet Paper Sales dataset
+#' data("toilet_paper_sales")
+#' y <- toilet_paper_sales$quantity
+#' x <- as.matrix(toilet_paper_sales[3:9])
 #'
-#' # Estimate GAS model based on the normal distribution with dynamic mean
-#' est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
-#'   coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
-#' est_gas
+#' # Estimate GAS model based on the negative binomial distribution
+#' est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+#' est_negbin
 #'
 #' # Filter the time-varying parameters by the "simulated_coefs" method
-#' flt_gas <- gas_filter(est_gas, rep_gen	= 100)
-#' flt_gas
+#' flt_negbin <- gas_filter(est_negbin, rep_gen = 100)
+#' flt_negbin
 #'
 #' # Plot the time-varying parameters with confidence bands
-#' plot(flt_gas)
+#' plot(flt_negbin)}
 #'
 #' @export
 gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set = NULL, rep_gen = 1000L, t_ahead = 0L, x_ahead = NULL, rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, coef_vcov = NULL) {
@@ -423,12 +422,12 @@ plot.gas_filter <- function(x, which = NULL, ...) {
     gg_which <- gg_which[gg_which %in% which]
   }
   if (length(gg_which) == 1) {
-    print(gg_list[[gg_which[1]]])
+    be_silent(print(gg_list[[gg_which[1]]]))
   } else if (length(gg_which) > 1) {
-    print(gg_list[[gg_which[1]]])
+    be_silent(print(gg_list[[gg_which[1]]]))
     old_par <- grDevices::devAskNewPage(ask = TRUE)
     for (i in 2:length(gg_which)) {
-      print(gg_list[[gg_which[i]]])
+      be_silent(print(gg_list[[gg_which[i]]]))
     }
     on.exit(grDevices::devAskNewPage(ask = old_par))
   }

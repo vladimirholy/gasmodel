@@ -87,23 +87,22 @@ Instead of supplying arguments about the model, the function can be applied to t
 Supported generic functions for S3 class \code{gas_forecast} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 }
 \examples{
-# Load Level of Lake Huron dataset
-data(LakeHuron)
-y <- LakeHuron - 570
-x <- 1:length(y)
+\donttest{# Load the Daily Toilet Paper Sales dataset
+data("toilet_paper_sales")
+y <- toilet_paper_sales$quantity
+x <- as.matrix(toilet_paper_sales[3:9])
 
-# Estimate GAS model based on the normal distribution with dynamic mean
-est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
-  coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
-est_gas
+# Estimate GAS model based on the negative binomial distribution
+est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+est_negbin
 
 # Forecast the model by the "mean_paths" method
-fcst_gas <- gas_forecast(est_gas, method = "mean_path",
-  t_ahead = 22, x_ahead = 99:120)
-fcst_gas
+x_ahead <- cbind(repmat(diag(7), n = 53, m = 1), 0)[3:367, -1]
+fcst_negbin <- gas_forecast(est_negbin, t_ahead = 365, x_ahead = x_ahead)
+fcst_negbin
 
 # Plot the forecasted expected value
-plot(fcst_gas)
+plot(fcst_negbin)}
 
 }
 \references{

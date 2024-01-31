@@ -42,8 +42,8 @@
 #' # List only distributions for count data
 #' distr(filter_type = "count")
 #'
-#' # Show default parametrization for the exponential distribution
-#' distr(filter_dist = "exp", filter_default = TRUE)
+#' # Show default parametrization for the negative binomial distribution
+#' distr(filter_dist = "negbin", filter_default = TRUE)
 #'
 #' @export
 distr <- function(filter_distr = NULL, filter_param = NULL, filter_type = NULL, filter_dim = NULL, filter_orthog = NULL, filter_default = NULL) {
@@ -103,11 +103,7 @@ distr <- function(filter_distr = NULL, filter_param = NULL, filter_type = NULL, 
 #'
 #' @examples
 #' # Density of the negative binomial distribution
-#' distr_density(y = c(1, 8, 5, 0, 0), f = c(0.5, 1.2), distr = "negbin")
-#'
-#' # Density of the multivariate normal distribution
-#' distr_density(y = rbind(c(0.5, 0.6), c(-2.3, -1.8), c(-0.2, 0.2)),
-#'               f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+#' distr_density(y = c(1, 8, 5, 0, 0), f = c(13.50, 0.03), distr = "negbin")
 #'
 #' @export
 distr_density <- function(y, f, distr, param = NULL, par_link = NULL, trans = NULL) {
@@ -152,10 +148,7 @@ distr_density <- function(y, f, distr, param = NULL, par_link = NULL, trans = NU
 #'
 #' @examples
 #' # Mean for the negative binomial distribution
-#' distr_mean(f = c(0.5, 1.2), distr = "negbin")
-#'
-#' # Mean for the multivariate normal distribution
-#' distr_mean(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+#' distr_mean(f = c(13.50, 0.03), distr = "negbin")
 #'
 #' @export
 distr_mean <- function(f, distr, param = NULL, par_link = NULL) {
@@ -191,10 +184,7 @@ distr_mean <- function(f, distr, param = NULL, par_link = NULL) {
 #'
 #' @examples
 #' # Variance for the negative binomial distribution
-#' distr_var(f = c(0.5, 1.2), distr = "negbin")
-#'
-#' # Variance for the multivariate normal distribution
-#' distr_var(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+#' distr_var(f = c(13.50, 0.03), distr = "negbin")
 #'
 #' @export
 distr_var <- function(f, distr, param = NULL, par_link = NULL) {
@@ -232,11 +222,7 @@ distr_var <- function(f, distr, param = NULL, par_link = NULL) {
 #'
 #' @examples
 #' # Score for the negative binomial distribution
-#' distr_score(y = c(1, 8, 5, 0, 0), f = c(0.5, 1.2), distr = "negbin")
-#'
-#' # Score for the multivariate normal distribution
-#' distr_score(y = rbind(c(0.5, 0.6), c(-2.3, -1.8), c(-0.2, 0.2)),
-#'             f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+#' distr_score(y = c(1, 8, 5, 0, 0), f = c(13.50, 0.03), distr = "negbin")
 #'
 #' @export
 distr_score <- function(y, f, distr, param = NULL, par_link = NULL, scaling = NULL) {
@@ -313,10 +299,7 @@ distr_score <- function(y, f, distr, param = NULL, par_link = NULL, scaling = NU
 #'
 #' @examples
 #' # Fisher information for the negative binomial distribution
-#' distr_fisher(f = c(0.5, 1.2), distr = "negbin")
-#'
-#' # Fisher information for the multivariate normal distribution
-#' distr_fisher(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+#' distr_fisher(f = c(13.50, 0.03), distr = "negbin")
 #'
 #' @export
 distr_fisher <- function(f, distr, param = NULL, par_link = NULL, trans = NULL) {
@@ -388,10 +371,7 @@ distr_fisher <- function(f, distr, param = NULL, par_link = NULL, trans = NULL) 
 #'
 #' @examples
 #' # Random observations from the negative binomial distribution
-#' distr_random(t = 10, f = c(0.5, 1.2), distr = "negbin")
-#'
-#' # Random observations from the multivariate normal distribution
-#' distr_random(t = 10, f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+#' distr_random(t = 10, f = c(13.50, 0.03), distr = "negbin")
 #'
 #' @export
 distr_random <- function(t, f, distr, param = NULL, par_link = NULL) {

@@ -25,10 +25,7 @@ A function generating random observations from a given distribution.
 }
 \examples{
 # Random observations from the negative binomial distribution
-distr_random(t = 10, f = c(0.5, 1.2), distr = "negbin")
-
-# Random observations from the multivariate normal distribution
-distr_random(t = 10, f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+distr_random(t = 10, f = c(13.50, 0.03), distr = "negbin")
 
 }
 \seealso{

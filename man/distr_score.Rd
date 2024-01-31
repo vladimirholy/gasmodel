@@ -27,11 +27,7 @@ A function computing score or scaled score for a given distribution.
 }
 \examples{
 # Score for the negative binomial distribution
-distr_score(y = c(1, 8, 5, 0, 0), f = c(0.5, 1.2), distr = "negbin")
-
-# Score for the multivariate normal distribution
-distr_score(y = rbind(c(0.5, 0.6), c(-2.3, -1.8), c(-0.2, 0.2)),
-            f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+distr_score(y = c(1, 8, 5, 0, 0), f = c(13.50, 0.03), distr = "negbin")
 
 }
 \seealso{

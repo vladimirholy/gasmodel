@@ -42,8 +42,8 @@ distr()
 # List only distributions for count data
 distr(filter_type = "count")
 
-# Show default parametrization for the exponential distribution
-distr(filter_dist = "exp", filter_default = TRUE)
+# Show default parametrization for the negative binomial distribution
+distr(filter_dist = "negbin", filter_default = TRUE)
 
 }
 \seealso{

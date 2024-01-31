@@ -23,10 +23,7 @@ A function computing mean for a given distribution.
 }
 \examples{
 # Mean for the negative binomial distribution
-distr_mean(f = c(0.5, 1.2), distr = "negbin")
-
-# Mean for the multivariate normal distribution
-distr_mean(f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+distr_mean(f = c(13.50, 0.03), distr = "negbin")
 
 }
 \seealso{

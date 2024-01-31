@@ -27,11 +27,7 @@ A function computing density or its logarithm of a given distribution.
 }
 \examples{
 # Density of the negative binomial distribution
-distr_density(y = c(1, 8, 5, 0, 0), f = c(0.5, 1.2), distr = "negbin")
-
-# Density of the multivariate normal distribution
-distr_density(y = rbind(c(0.5, 0.6), c(-2.3, -1.8), c(-0.2, 0.2)),
-              f = c(0, 0, 1, 1, 0.5), distr = "mvnorm")
+distr_density(y = c(1, 8, 5, 0, 0), f = c(13.50, 0.03), distr = "negbin")
 
 }
 \seealso{

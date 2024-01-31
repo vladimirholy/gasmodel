@@ -112,22 +112,21 @@ The function enables parallelization.
 Supported generic functions for S3 class \code{gas_bootstrap} include \code{\link[base:summary]{summary()}}, \code{\link[base:plot]{plot()}}, \code{\link[stats:coef]{coef()}}, and \code{\link[stats:vcov]{vcov()}}.
 }
 \examples{
-# Load Level of Lake Huron dataset
-data(LakeHuron)
-y <- LakeHuron - 570
-x <- 1:length(y)
+\donttest{# Load the Daily Toilet Paper Sales dataset
+data("toilet_paper_sales")
+y <- toilet_paper_sales$quantity
+x <- as.matrix(toilet_paper_sales[3:9])
 
-# Estimate GAS model based on the normal distribution with dynamic mean
-est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
-  par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
-est_gas
+# Estimate GAS model based on the negative binomial distribution
+est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+est_negbin
 
 # Bootstrap the model (can be time-consuming for a larger number of samples)
-\donttest{boot_gas <- gas_bootstrap(est_gas, rep_boot = 10)
-boot_gas}
+boot_negbin <- gas_bootstrap(est_negbin, rep_boot = 10)
+boot_negbin
 
 # Plot boxplot of bootstrapped coefficients
-\donttest{plot(boot_gas)}
+plot(boot_negbin)}
 
 }
 \references{

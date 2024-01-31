@@ -164,32 +164,31 @@
 #' \code{\link[gasmodel:wrappers_hessian]{wrappers_hessian}}
 #'
 #' @examples
-#' # Load Level of Lake Huron dataset
-#' data(LakeHuron)
-#' y <- LakeHuron - 570
-#' x <- 1:length(y)
+#' \donttest{# Load the Daily Toilet Paper Sales dataset
+#' data("toilet_paper_sales")
+#' y <- toilet_paper_sales$quantity
+#' x <- as.matrix(toilet_paper_sales[3:9])
 #'
-#' # Estimate GAS model based on the normal distribution with dynamic mean
-#' est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
-#'   coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
-#' est_gas
+#' # Estimate GAS model based on the negative binomial distribution
+#' est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+#' est_negbin
 #'
 #' # Obtain the estimated coefficients
-#' coef(est_gas)
+#' coef(est_negbin)
 #'
 #' # Obtain the estimated variance-covariance matrix
-#' vcov(est_gas)
+#' vcov(est_negbin)
 #'
 #' # Obtain the log-likelihood, AIC, and BIC
-#' logLik(est_gas)
-#' AIC(est_gas)
-#' BIC(est_gas)
+#' logLik(est_negbin)
+#' AIC(est_negbin)
+#' BIC(est_negbin)
 #'
 #' # Obtain the confidence intervals of coefficients
-#' confint(est_gas)
+#' confint(est_negbin)
 #'
 #' # Plot the time-varying parameters
-#' plot(est_gas)
+#' plot(est_negbin)}
 #'
 #' @export
 gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
@@ -447,12 +446,12 @@ plot.gas <- function(x, which = NULL, ...) {
     gg_which <- gg_which[gg_which %in% which]
   }
   if (length(gg_which) == 1) {
-    print(gg_list[[gg_which[1]]])
+    be_silent(print(gg_list[[gg_which[1]]]))
   } else if (length(gg_which) > 1) {
-    print(gg_list[[gg_which[1]]])
+    be_silent(print(gg_list[[gg_which[1]]]))
     old_par <- grDevices::devAskNewPage(ask = TRUE)
     for (i in 2:length(gg_which)) {
-      print(gg_list[[gg_which[i]]])
+      be_silent(print(gg_list[[gg_which[i]]]))
     }
     on.exit(grDevices::devAskNewPage(ask = old_par))
   }

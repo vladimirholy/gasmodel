@@ -47,13 +47,13 @@
 #' @seealso \code{\link[gasmodel:gas]{gas()}}
 #'
 #' @examples
-#' # Simulate GAS model based on the Weibull distribution with dynamic scale
-#' sim_gas <- gas_simulate(t_sim = 50, distr = "weibull",
-#'   coef_est = c(0.2, 0.1, 0.8, 2.0))
-#' sim_gas
+#' \donttest{# Simulate GAS model based on the negative binomial distribution
+#' sim_negbin <- gas_simulate(t_sim = 50, distr = "negbin", reg = "sep",
+#'   coef_est = c(2.60, 0.02, 0.95, 0.03))
+#' sim_negbin
 #'
 #' # Plot the simulated time series
-#' plot(sim_gas)
+#' plot(sim_negbin)}
 #'
 #' @export
 gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", n = NULL, p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, coef_est = NULL) {
@@ -262,12 +262,12 @@ plot.gas_simulate <- function(x, which = NULL, ...) {
     gg_which <- gg_which[gg_which %in% which]
   }
   if (length(gg_which) == 1) {
-    print(gg_list[[gg_which[1]]])
+    be_silent(print(gg_list[[gg_which[1]]]))
   } else if (length(gg_which) > 1) {
-    print(gg_list[[gg_which[1]]])
+    be_silent(print(gg_list[[gg_which[1]]]))
     old_par <- grDevices::devAskNewPage(ask = TRUE)
     for (i in 2:length(gg_which)) {
-      print(gg_list[[gg_which[i]]])
+      be_silent(print(gg_list[[gg_which[i]]]))
     }
     on.exit(grDevices::devAskNewPage(ask = old_par))
   }

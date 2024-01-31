@@ -65,22 +65,21 @@
 #' \code{\link[gasmodel:wrappers_parallel]{wrappers_parallel}}
 #'
 #' @examples
-#' # Load Level of Lake Huron dataset
-#' data(LakeHuron)
-#' y <- LakeHuron - 570
-#' x <- 1:length(y)
+#' \donttest{# Load the Daily Toilet Paper Sales dataset
+#' data("toilet_paper_sales")
+#' y <- toilet_paper_sales$quantity
+#' x <- as.matrix(toilet_paper_sales[3:9])
 #'
-#' # Estimate GAS model based on the normal distribution with dynamic mean
-#' est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
-#'   par_static = c(FALSE, TRUE), coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
-#' est_gas
+#' # Estimate GAS model based on the negative binomial distribution
+#' est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+#' est_negbin
 #'
 #' # Bootstrap the model (can be time-consuming for a larger number of samples)
-#' \donttest{boot_gas <- gas_bootstrap(est_gas, rep_boot = 10)
-#' boot_gas}
+#' boot_negbin <- gas_bootstrap(est_negbin, rep_boot = 10)
+#' boot_negbin
 #'
 #' # Plot boxplot of bootstrapped coefficients
-#' \donttest{plot(boot_gas)}
+#' plot(boot_negbin)}
 #'
 #' @export
 gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1000L, block_length = NULL, quant = c(0.025, 0.975), y = NULL, x = NULL, distr = NULL, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_est = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), parallel_function = NULL, parallel_arguments = list()) {
@@ -467,7 +466,7 @@ plot.gas_bootstrap <- function(x, ...) {
   gg_fig <- ggplot2::ggplot(gg_data, mapping = ggplot2::aes(.data$coef, .data$value)) +
     ggplot2::geom_boxplot(color = "#800000", fill = "#FFAAAA") +
     ggplot2::labs(title = "Bootstrapped Coefficients", x = "Coefficient", y = "Coefficient Value")
-  print(gg_fig)
+  be_silent(print(gg_fig))
   invisible(gg_fig)
 }
 # ------------------------------------------------------------------------------

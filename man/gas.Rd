@@ -151,32 +151,31 @@ The extensive GAS literature is listed on \href{http://www.gasmodel.com}{www.gas
 Supported generic functions for S3 class \code{gas} include \code{\link[base:summary]{summary()}}, \code{\link[base:plot]{plot()}}, \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:fitted]{fitted()}}, \code{\link[stats:residuals]{residuals()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.
 }
 \examples{
-# Load Level of Lake Huron dataset
-data(LakeHuron)
-y <- LakeHuron - 570
-x <- 1:length(y)
+\donttest{# Load the Daily Toilet Paper Sales dataset
+data("toilet_paper_sales")
+y <- toilet_paper_sales$quantity
+x <- as.matrix(toilet_paper_sales[3:9])
 
-# Estimate GAS model based on the normal distribution with dynamic mean
-est_gas <- gas(y = y, x = x, distr = "norm", regress = "sep",
-  coef_start = c(9.99, -0.02, 0.46, 0.67, 0.46))
-est_gas
+# Estimate GAS model based on the negative binomial distribution
+est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
+est_negbin
 
 # Obtain the estimated coefficients
-coef(est_gas)
+coef(est_negbin)
 
 # Obtain the estimated variance-covariance matrix
-vcov(est_gas)
+vcov(est_negbin)
 
 # Obtain the log-likelihood, AIC, and BIC
-logLik(est_gas)
-AIC(est_gas)
-BIC(est_gas)
+logLik(est_negbin)
+AIC(est_negbin)
+BIC(est_negbin)
 
 # Obtain the confidence intervals of coefficients
-confint(est_gas)
+confint(est_negbin)
 
 # Plot the time-varying parameters
-plot(est_gas)
+plot(est_negbin)}
 
 }
 \references{

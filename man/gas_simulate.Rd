@@ -66,13 +66,13 @@ Instead of supplying arguments about the model, the function can be applied to t
 Supported generic functions for S3 class \code{gas_simulate} include \code{\link[base:summary]{summary()}} ans \code{\link[base:plot]{plot()}}.
 }
 \examples{
-# Simulate GAS model based on the Weibull distribution with dynamic scale
-sim_gas <- gas_simulate(t_sim = 50, distr = "weibull",
-  coef_est = c(0.2, 0.1, 0.8, 2.0))
-sim_gas
+\donttest{# Simulate GAS model based on the negative binomial distribution
+sim_negbin <- gas_simulate(t_sim = 50, distr = "negbin", reg = "sep",
+  coef_est = c(2.60, 0.02, 0.95, 0.03))
+sim_negbin
 
 # Plot the simulated time series
-plot(sim_gas)
+plot(sim_negbin)}
 
 }
 \references{
