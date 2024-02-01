@@ -305,18 +305,19 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
   model$num_obs <- sum(!is.na(comp$eval_tv$lik))
   model$num_coef <- info_theta$theta_num
   comp$theta_vcov <- matrix_inv(solution$theta_hessian) / model$num_obs
-  info_data <- info_data(y = data$y, x = data$x)
-  data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
-  data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
+  comp$struc <- convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names)
   fit$coef_vcov <- name_matrix(convert_theta_matrix_to_coef_matrix(comp$theta_vcov, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other), info_coef$coef_names, info_coef$coef_names)
   fit$coef_sd <- be_silent(sqrt(diag(fit$coef_vcov)))
   fit$coef_zstat <- fit$coef_est / fit$coef_sd
   fit$coef_pval <- 2 * stats::pnorm(-abs(fit$coef_zstat))
   if (model$regress == "joint") {
-    fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega / (1 - sum(e$phi)) }), info_par$par_names)
+    fit$par_unc <- sapply(1:info_par$par_num, function(i) { (comp$struc[[i]]$omega + colMeans(data$x[[i]], na.rm = TRUE) %*% comp$struc[[i]]$beta) / (1 - sum(comp$struc[[i]]$phi)) })
   } else if (model$regress == "sep") {
-    fit$par_unc <- name_vector(sapply(convert_coef_vector_to_struc_list(coef_vec = fit$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names), function(e) { e$omega }), info_par$par_names)
+    fit$par_unc <- sapply(1:info_par$par_num, function(i) { comp$struc[[i]]$omega + colMeans(data$x[[i]], na.rm = TRUE) %*% comp$struc[[i]]$beta })
   }
+  info_data <- info_data(y = data$y, x = data$x)
+  data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
+  data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
   fit$par_tv <- name_matrix(comp$eval_tv$par, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$score_tv <- name_matrix(comp$eval_tv$score, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$mean_tv <- name_matrix(fun$mean(comp$eval_tv$par), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
