@@ -97,7 +97,7 @@ est_negbin <- gas(y = y, x = x, distr = "negbin", regress = "sep")
 est_negbin
 
 # Forecast the model by the "mean_paths" method
-x_ahead <- cbind(repmat(diag(7), n = 53, m = 1), 0)[3:367, -1]
+x_ahead <- cbind(kronecker(matrix(1, 53, 1), diag(7)), 1)[3:367, -1]
 fcst_negbin <- gas_forecast(est_negbin, t_ahead = 365, x_ahead = x_ahead)
 fcst_negbin
 
