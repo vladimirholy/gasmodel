@@ -1,5 +1,5 @@
 
-test_that("test_case_bookshop", {
+test_that("test_case_transaction", {
 
   data("adjDurData", package = "ACDm")
 
