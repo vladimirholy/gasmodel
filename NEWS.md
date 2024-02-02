@@ -1,4 +1,4 @@
-# gasmodel (development version)
+# gasmodel 0.6.0
 * Added the Burr distribution.
 * Added the exponential-logarithmic distribution.
 * Added the Fisk distribution.
