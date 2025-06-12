@@ -2038,8 +2038,6 @@ $$
 \end{aligned}
 $$
 
-
-
 ## Laplace Distribution
 
 ### Mean-Scale Parametrization
