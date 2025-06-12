@@ -1,4 +1,4 @@
-# gasmodel (development version)
+# gasmodel 0.6.1
 * Modified code for the von Mises distribution.
 
 # gasmodel 0.6.0
