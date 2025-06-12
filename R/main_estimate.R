@@ -63,7 +63,7 @@
 #' More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the circular model of Harvey (2019), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2022).
 #' For an overview of various GAS models, see Harvey (2022).
 #'
-#' The extensive GAS literature is listed on \href{http://www.gasmodel.com}{www.gasmodel.com}.
+#' The extensive GAS literature is listed on \href{https://www.gasmodel.com}{www.gasmodel.com}.
 #'
 #' @return A \code{list} of S3 class \code{gas} with components:
 #' \item{data$y}{The time series.}

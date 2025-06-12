@@ -145,7 +145,7 @@ The GAS class includes many well-known econometric models, such as the generaliz
 More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the circular model of Harvey (2019), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2022).
 For an overview of various GAS models, see Harvey (2022).
 
-The extensive GAS literature is listed on \href{http://www.gasmodel.com}{www.gasmodel.com}.
+The extensive GAS literature is listed on \href{https://www.gasmodel.com}{www.gasmodel.com}.
 }
 \note{
 Supported generic functions for S3 class \code{gas} include \code{\link[base:summary]{summary()}}, \code{\link[base:plot]{plot()}}, \code{\link[stats:coef]{coef()}}, \code{\link[stats:vcov]{vcov()}}, \code{\link[stats:fitted]{fitted()}}, \code{\link[stats:residuals]{residuals()}}, \code{\link[stats:logLik]{logLik()}}, \code{\link[stats:AIC]{AIC()}}, \code{\link[stats:BIC]{BIC()}}, and \code{\link[stats:confint]{confint()}}.

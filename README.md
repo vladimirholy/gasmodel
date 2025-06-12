@@ -4,6 +4,7 @@
 # gasmodel
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 ## Overview
@@ -119,48 +120,57 @@ the following case studies in the form of vignettes:
 
 ## Supported Distributions
 
-Currently, there are 35 distributions available.
+Currently, there are 44 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
 
-| Label     | Distribution                    | Dimension    | Data Type     | Parametrizations        |
-|:----------|:--------------------------------|:-------------|:--------------|:------------------------|
-| alaplace  | Asymmetric Laplace              | Univariate   | Real          | meanscale               |
-| bernoulli | Bernoulli                       | Univariate   | Binary        | prob                    |
-| beta      | Beta                            | Univariate   | Interval      | conc, meansize, meanvar |
-| bisa      | Birnbaum-Saunders               | Univariate   | Duration      | scale                   |
-| burr      | Burr                            | Univariate   | Duration      | scale                   |
-| cat       | Categorical                     | Multivariate | Categorical   | worth                   |
-| dirichlet | Dirichlet                       | Multivariate | Compositional | conc                    |
-| dpois     | Double Poisson                  | Univariate   | Count         | mean                    |
-| exp       | Exponential                     | Univariate   | Duration      | scale, rate             |
-| explog    | Exponential-Logarithmic         | Univariate   | Duration      | rate                    |
-| fisk      | Fisk                            | Univariate   | Duration      | scale                   |
-| gamma     | Gamma                           | Univariate   | Duration      | scale, rate             |
-| gengamma  | Generalized Gamma               | Univariate   | Duration      | scale, rate             |
-| geom      | Geometric                       | Univariate   | Count         | mean, prob              |
-| kuma      | Kumaraswamy                     | Univariate   | Interval      | conc                    |
-| laplace   | Laplace                         | Univariate   | Real          | meanscale               |
-| logistic  | Logistic                        | Univariate   | Real          | meanscale               |
-| logitnorm | Logit-Normal                    | Univariate   | Interval      | logitmeanvar            |
-| lognorm   | Log-Normal                      | Univariate   | Duration      | logmeanvar              |
-| lomax     | Lomax                           | Univariate   | Duration      | scale                   |
-| mvnorm    | Multivariate Normal             | Multivariate | Real          | meanvar                 |
-| mvt       | Multivariate Student’s t        | Multivariate | Real          | meanvar                 |
-| negbin    | Negative Binomial               | Univariate   | Count         | nb2, prob               |
-| norm      | Normal                          | Univariate   | Real          | meanvar                 |
-| pluce     | Plackett-Luce                   | Multivariate | Ranking       | worth                   |
-| pois      | Poisson                         | Univariate   | Count         | mean                    |
-| rayleigh  | Rayleigh                        | Univariate   | Duration      | scale                   |
-| skellam   | Skellam                         | Univariate   | Integer       | meanvar, diff, meandisp |
-| t         | Student’s t                     | Univariate   | Real          | meanvar                 |
-| vonmises  | von Mises                       | Univariate   | Circular      | meanconc                |
-| weibull   | Weibull                         | Univariate   | Duration      | scale, rate             |
-| zigeom    | Zero-Inflated Geometric         | Univariate   | Count         | mean                    |
-| zinegbin  | Zero-Inflated Negative Binomial | Univariate   | Count         | nb2                     |
-| zipois    | Zero-Inflated Poisson           | Univariate   | Count         | mean                    |
-| ziskellam | Zero-Inflated Skellam           | Univariate   | Integer       | meanvar, diff, meandisp |
+| Label | Distribution | Dimension | Data Type | Parametrizations |
+|:---|:---|:---|:---|:---|
+| alaplace | Asymmetric Laplace | Univariate | Real | meanscale |
+| bernoulli | Bernoulli | Univariate | Binary | prob |
+| beta | Beta | Univariate | Interval | conc, meansize, meanvar |
+| bisa | Birnbaum-Saunders | Univariate | Duration | scale |
+| burr | Burr | Univariate | Duration | scale |
+| cat | Categorical | Multivariate | Categorical | worth |
+| dirichlet | Dirichlet | Multivariate | Compositional | conc |
+| dpois | Double Poisson | Univariate | Count | mean |
+| exp | Exponential | Univariate | Duration | scale, rate |
+| explog | Exponential-Logarithmic | Univariate | Duration | rate |
+| fisk | Fisk | Univariate | Duration | scale |
+| frechet | Fréchet | Univariate | Duration | scale |
+| gamma | Gamma | Univariate | Duration | scale, rate |
+| gengamma | Generalized Gamma | Univariate | Duration | scale, rate |
+| geom | Geometric | Univariate | Count | mean, prob |
+| gev | Generalized Extreme Value | Univariate | Real | meanscale |
+| gumbel | Gumbel | Univariate | Real | meanscale |
+| inorm | Integer Normal | Univariate | Real | meanvar |
+| inorm2 | Integer Normal | Univariate | Real | meanvar |
+| it | Integer Student’s t | Univariate | Integer | meanvar |
+| it2 | Integer Student’s t | Univariate | Integer | meanvar |
+| kuma | Kumaraswamy | Univariate | Interval | conc |
+| laplace | Laplace | Univariate | Real | meanscale |
+| logistic | Logistic | Univariate | Real | meanscale |
+| logitnorm | Logit-Normal | Univariate | Interval | logitmeanvar |
+| lognorm | Log-Normal | Univariate | Duration | logmeanvar |
+| lomax | Lomax | Univariate | Duration | scale |
+| mvnorm | Multivariate Normal | Multivariate | Real | meanvar |
+| mvt | Multivariate Student’s t | Multivariate | Real | meanvar |
+| negbin | Negative Binomial | Univariate | Count | nb2, prob |
+| norm | Normal | Univariate | Real | meanvar |
+| pluce | Plackett-Luce | Multivariate | Ranking | worth |
+| pois | Poisson | Univariate | Count | mean |
+| rayleigh | Rayleigh | Univariate | Duration | scale |
+| skellam | Skellam | Univariate | Integer | meanvar, diff, meandisp |
+| t | Student’s t | Univariate | Real | meanvar |
+| tskellam | Theta Skellam | Univariate | Integer | meandisp |
+| tziskellam | Theta Zero-Inflated Skellam | Univariate | Integer | meandisp, meanvar |
+| vonmises | von Mises | Univariate | Circular | meanconc |
+| weibull | Weibull | Univariate | Duration | scale, rate |
+| zigeom | Zero-Inflated Geometric | Univariate | Count | mean |
+| zinegbin | Zero-Inflated Negative Binomial | Univariate | Count | nb2 |
+| zipois | Zero-Inflated Poisson | Univariate | Count | mean |
+| ziskellam | Zero-Inflated Skellam | Univariate | Integer | meanvar, diff, meandisp |
 
 Details of each distribution, including its density function, expected
 value, variance, score, and Fisher information, can be found in vignette
@@ -224,7 +234,7 @@ and Lit (2019), and a ranking model of Holý and Zouhar (2022). For an
 overview of various GAS models, see Harvey (2022).
 
 The extensive GAS literature is listed on
-[www.gasmodel.com](http://www.gasmodel.com).
+[www.gasmodel.com](https://www.gasmodel.com).
 
 ## References
 
