@@ -2038,6 +2038,45 @@ $$
 \end{aligned}
 $$
 
+## Generalized Error Distribution
+
+### Mean-Scale Parametrization
+
+#### Parameters
+
+- Mean parameter $m \in \mathbb{R}$
+- Scale parameter $s \in (0, \infty)$
+- Shape parameter $b \in (0, \infty)$
+
+#### Density Function
+
+$$
+f(y | m, s, b) = \frac{b}{2 s \Gamma \left( \frac{1}{b} \right)}  \exp \left(- \left(\frac{|y - m|}{s} \right)^b \right)
+$$
+
+#### Moments
+
+$$
+\begin{aligned}
+\mathrm{E}[Y] &= m \\
+\mathrm{var}[Y] &= \frac{\Gamma \left( \frac{3}{b} \right)}{\Gamma \left( \frac{1}{b} \right)} s^2 \\
+\end{aligned}
+$$
+
+#### Score
+
+$$
+\begin{aligned}
+\nabla_{m} (y; m, s, b) &= \frac{b}{s^b}  |y - m|^{b - 1} \mathrm{sign}(y - m) \\
+\nabla_{s} (y; m, s, b) &= \frac{b}{s^{b+1}} |y - m|^b - \frac{1}{s} \\
+\nabla_{b} (y; m, s, b) &= \frac{1}{b} - \frac{1}{s^b} |y - m|^b \ln \left( \frac{|y - m|}{s} \right) + \frac{1}{b^2} \psi_0 \left( \frac{1}{b} \right) \\
+\end{aligned}
+$$
+
+### Notes
+
+- The Fisher information is approximated using a Riemann sum evaluated at 1 000 points.
+
 ## Laplace Distribution
 
 ### Mean-Scale Parametrization
