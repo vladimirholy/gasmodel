@@ -38,7 +38,6 @@ Suggests:
     rmarkdown,
     testthat
 RoxygenNote: 7.3.2
-Roxygen: list(old_usage = TRUE)
 Depends: 
     R (>= 3.5)
 VignetteBuilder: knitr

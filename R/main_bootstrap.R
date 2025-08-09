@@ -12,13 +12,14 @@
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 #' The function enables parallelization.
 #'
-#' @inheritParams gas
-#' @inheritParams gas_simulate
-#'
+#' @param gas_object An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.
 #' @param method A method used for bootstrapping. Supported methods are \code{"parametric"}, \code{"simple_block"}, \code{"moving_block"}, and \code{"stationary_block"}.
 #' @param rep_boot A number of bootstrapping repetitions.
 #' @param block_length A length of blocks for methods \code{"simple_block"} and \code{"moving_block"}. A mean length of blocks for method \code{"stationary_block"}.
 #' @param quant A numeric vector of probabilities determining quantiles.
+#' @param y,x,distr,param,scaling,regress,p,q,par_static,par_link,par_init,lik_skip,coef_fix_value,coef_fix_other,coef_fix_special,coef_bound_lower,coef_bound_upper,coef_est When \code{gas_object} is not supplied, the estimated model can be specified using these individual arguments. See the arguments and value of the \code{\link[gasmodel:gas]{gas()}} function for more details.
+#' @param optim_function An optimization function. For suitable wrappers of common R optimization functions, see \code{\link[gasmodel:wrappers_optim]{wrappers_optim}}.
+#' @param optim_arguments An optional list of arguments to be passed to the optimization function.
 #' @param parallel_function A parallelization function. For suitable wrappers of common R parallelization functions, see \code{\link[gasmodel:wrappers_parallel]{wrappers_parallel}}. Can be set to \code{NULL} if no parallelization is to be used.
 #' @param parallel_arguments An optional list of arguments to be passed to the optimization function.
 #'

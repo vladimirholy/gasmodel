@@ -12,15 +12,15 @@
 #' Method \code{"given_coefs"} computes a path of time-varying parameters for each supplied coefficient set.
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 #'
-#' @inheritParams gas
-#' @inheritParams gas_forecast
-#'
+#' @param gas_object An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.
 #' @param method A method used for parameter uncertainty. Supported methods are \code{"given_coefs"} and \code{"simulated_coefs"}.
 #' @param coef_set A numeric matrix of coefficient sets in rows for \code{method = "given_coefs"}. Can be generated for example by \code{\link[gasmodel:gas_bootstrap]{gas_bootstrap()}}.
 #' @param rep_gen A number of generated coefficient sets for \code{method = "simulated_coefs"}.
+#' @param t_ahead A number of observations to forecast.
+#' @param x_ahead Out-of-sample exogenous variables. For a single variable common for all time-varying parameters, a numeric vector. For multiple variables common for all time-varying parameters, a numeric matrix with observations in rows. For individual variables for each time-varying parameter, a list of numeric vectors or matrices in the above form. The number of observation must be equal to \code{t_ahead}.
 #' @param rep_ahead A number of simulation repetitions for forecasting when \code{t_ahead > 0}.
 #' @param quant A numeric vector of probabilities determining quantiles.
-#' @param coef_vcov A numeric matrix of estimated covariances between coefficients.
+#' @param y,x,distr,param,scaling,regress,p,q,par_static,par_link,par_init,coef_fix_value,coef_fix_other,coef_fix_special,coef_bound_lower,coef_bound_upper,coef_est,coef_vcov When \code{gas_object} is not supplied, the estimated model can be specified using these individual arguments. See the arguments and value of the \code{\link[gasmodel:gas]{gas()}} function for more details.
 #'
 #' @return A \code{list} of S3 class \code{gas_filter} with components:
 #' \item{data$y}{The time series.}

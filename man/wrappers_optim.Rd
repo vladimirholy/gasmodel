@@ -6,11 +6,23 @@
 \alias{wrapper_optim_nloptr}
 \title{Wrappers for Optimization Functions}
 \usage{
-wrapper_optim_stats(obj_fun, theta_start, theta_bound_lower, theta_bound_upper,
-  est_details, ...)
+wrapper_optim_stats(
+  obj_fun,
+  theta_start,
+  theta_bound_lower,
+  theta_bound_upper,
+  est_details,
+  ...
+)
 
-wrapper_optim_nloptr(obj_fun, theta_start, theta_bound_lower,
-  theta_bound_upper, est_details, ...)
+wrapper_optim_nloptr(
+  obj_fun,
+  theta_start,
+  theta_bound_lower,
+  theta_bound_upper,
+  est_details,
+  ...
+)
 }
 \arguments{
 \item{obj_fun}{An objective function.}

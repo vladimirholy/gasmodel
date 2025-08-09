@@ -4,14 +4,34 @@
 \alias{gas_filter}
 \title{Filter GAS Model}
 \usage{
-gas_filter(gas_object = NULL, method = "simulated_coefs",
-  coef_set = NULL, rep_gen = 1000L, t_ahead = 0L, x_ahead = NULL,
-  rep_ahead = 1000L, quant = c(0.025, 0.975), y = NULL, x = NULL,
-  distr = NULL, param = NULL, scaling = "unit", regress = "joint",
-  p = 1L, q = 1L, par_static = NULL, par_link = NULL,
-  par_init = NULL, coef_fix_value = NULL, coef_fix_other = NULL,
-  coef_fix_special = NULL, coef_bound_lower = NULL,
-  coef_bound_upper = NULL, coef_est = NULL, coef_vcov = NULL)
+gas_filter(
+  gas_object = NULL,
+  method = "simulated_coefs",
+  coef_set = NULL,
+  rep_gen = 1000L,
+  t_ahead = 0L,
+  x_ahead = NULL,
+  rep_ahead = 1000L,
+  quant = c(0.025, 0.975),
+  y = NULL,
+  x = NULL,
+  distr = NULL,
+  param = NULL,
+  scaling = "unit",
+  regress = "joint",
+  p = 1L,
+  q = 1L,
+  par_static = NULL,
+  par_link = NULL,
+  par_init = NULL,
+  coef_fix_value = NULL,
+  coef_fix_other = NULL,
+  coef_fix_special = NULL,
+  coef_bound_lower = NULL,
+  coef_bound_upper = NULL,
+  coef_est = NULL,
+  coef_vcov = NULL
+)
 }
 \arguments{
 \item{gas_object}{An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.}
@@ -30,41 +50,7 @@ gas_filter(gas_object = NULL, method = "simulated_coefs",
 
 \item{quant}{A numeric vector of probabilities determining quantiles.}
 
-\item{y}{A time series. For univariate time series, a numeric vector or a matrix with a single column. For multivariate times series, a numeric matrix with observations in rows.}
-
-\item{x}{Optional exogenous variables. For a single variable common for all time-varying parameters, a numeric vector. For multiple variables common for all time-varying parameters, a numeric matrix with observations in rows. For individual variables for each time-varying parameter, a list of numeric vectors or matrices in the above form. The number of observation must be equal to the number of observations of \code{y}.}
-
-\item{distr}{A conditional distribution. See \code{\link[gasmodel:distr]{distr()}} for available distributions.}
-
-\item{param}{A parametrization of the conditional distribution. If \code{NULL}, default parametrization is used. See \code{\link[gasmodel:distr]{distr()}} for available parametrizations.}
-
-\item{scaling}{A scaling function for the score. The supported scaling functions are the unit scaling (\code{scaling = "unit"}), the inverse of the Fisher information matrix scaling (\code{scaling = "fisher_inv"}), and the inverse square root of the Fisher information matrix scaling (\code{scaling = "fisher_inv_sqrt"}). The latter two scalings use the Fisher information for the time-varying parameters only. For the full Fisher information matrix for both time-varying and static parameters, there are the \code{"full_fisher_inv"} and \code{"full_fisher_inv_sqrt"} scalings. For the individual Fisher information for each parameter, there are the \code{"diag_fisher_inv"} and \code{"diag_fisher_inv_sqrt"} scalings. Note that when the parametrization is orthogonal (see \code{\link[gasmodel:distr]{distr()}}), there are no differences between these scaling variants.}
-
-\item{regress}{A specification of the regression and dynamic equation with regard to exogenous variables. The supported specifications are exogenous variables and dynamics within the same equation (\code{regress = "joint"}) and separate equations for exogenous variables and dynamics in the fashion of regression models with dynamic errors (\code{regress = "sep"}). In a stationary model without exogenous variables, the two specifications are equivalent, although with differently parametrized intercept.}
-
-\item{p}{A score order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
-
-\item{q}{An autoregressive order. For order common for all parameters, a numeric vector of length 1. For individual order for each parameter, a numeric vector of length equal to the number of parameters. Defaults to \code{1L}.}
-
-\item{par_static}{An optional logical vector indicating static parameters. Overrides \code{x}, \code{p}, and \code{q}.}
-
-\item{par_link}{An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.}
-
-\item{par_init}{An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{regress = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.}
-
-\item{coef_fix_value}{An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent coefficients to be estimated.}
-
-\item{coef_fix_other}{An optional square numeric matrix of multiples of the estimated coefficients, which are to be added to the fixed coefficients. This allows the fixed coefficients to be linear combinations of the estimated coefficients. A coefficient given by row is fixed on coefficient given by column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Furthermore, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.}
-
-\item{coef_fix_special}{An optional character vector of predefined structures of \code{coef_fix_value} and \code{coef_fix_other}. Useful mainly for multidimensional models. Value \code{"panel_structure"} forces all regression, autoregression, and score coefficients to be the same for all time-varying parameters within their group. Value \code{"zero_sum_intercept"} forces all constant parameters to sum up to zero within their group. Value \code{"random_walk"} forces all autoregressive coefficients to be equal to one (should be used with caution due to nonstationarity; \code{par_init} must be specified). Multiple predefined structures can be used together. Also can be used in combination with custom \code{coef_fix_value} and \code{coef_fix_other}.}
-
-\item{coef_bound_lower}{An optional numeric vector of lower bounds on coefficients.}
-
-\item{coef_bound_upper}{An optional numeric vector of upper bounds on coefficients.}
-
-\item{coef_est}{A numeric vector of estimated coefficients.}
-
-\item{coef_vcov}{A numeric matrix of estimated covariances between coefficients.}
+\item{y, x, distr, param, scaling, regress, p, q, par_static, par_link, par_init, coef_fix_value, coef_fix_other, coef_fix_special, coef_bound_lower, coef_bound_upper, coef_est, coef_vcov}{When \code{gas_object} is not supplied, the estimated model can be specified using these individual arguments. See the arguments and value of the \code{\link[gasmodel:gas]{gas()}} function for more details.}
 }
 \value{
 A \code{list} of S3 class \code{gas_filter} with components:

@@ -9,13 +9,10 @@
 #' A function for simulation of generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013).
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 #'
-#' @inheritParams gas
-#'
 #' @param gas_object An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.
 #' @param t_sim A number of observations to simulate.
 #' @param x_sim Exogenous variables used for simulations. For a single variable common for all time-varying parameters, a numeric vector. For multiple variables common for all time-varying parameters, a numeric matrix with observations in rows. For individual variables for each time-varying parameter, a list of numeric vectors or matrices in the above form. The number of observation must be equal to \code{t_sim}.
-#' @param n A dimension of the model. Required only for multivariate models.
-#' @param coef_est A numeric vector of estimated coefficients.
+#' @param distr,param,scaling,regress,n,p,q,par_static,par_link,par_init,coef_est When \code{gas_object} is not supplied, the estimated model can be specified using these individual arguments. See the arguments and value of the \code{\link[gasmodel:gas]{gas()}} function for more details.
 #'
 #' @return A \code{list} of S3 class \code{gas_simulate} with components:
 #' \item{data$x_sim}{The exogenous variables used in simulation.}

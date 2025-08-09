@@ -23,17 +23,8 @@
 #' @param par_link An optional logical vector indicating whether the logarithmic/logistic link should be applied to restricted parameters in order to obtain unrestricted values. Defaults to applying the logarithmic/logistic link for time-varying parameters and keeping the original link for constant parameters.
 #' @param par_init An optional numeric vector of initial values of time-varying parameters. For \code{NA} values or when \code{NULL}, set initial values to unconditional values of time-varying parameters. For example, in the case of GAS(1,1) model with \code{regress = "joint"}, to \code{omega / (1 - phi1)}. Not to be confused with starting values for the optimization \code{coef_start}.
 #' @param lik_skip A numeric value specifying the number of skipped observations at the beginning of the time series or after \code{NA} values in the likelihood computation. Defaults to \code{0L}, i.e. the full likelihood. If \code{NULL}, it is selected as \code{max(p,q)}, i.e. the conditional likelihood.
-#' @param coef_fix_value An optional numeric vector of values to which coefficients are to be fixed. \code{NA} values represent coefficients to be estimated.
-#' @param coef_fix_other An optional square numeric matrix of multiples of the estimated coefficients, which are to be added to the fixed coefficients. This allows the fixed coefficients to be linear combinations of the estimated coefficients. A coefficient given by row is fixed on coefficient given by column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Furthermore, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.
-#' @param coef_fix_special An optional character vector of predefined structures of \code{coef_fix_value} and \code{coef_fix_other}. Useful mainly for multidimensional models. Value \code{"panel_structure"} forces all regression, autoregression, and score coefficients to be the same for all time-varying parameters within their group. Value \code{"zero_sum_intercept"} forces all constant parameters to sum up to zero within their group. Value \code{"random_walk"} forces all autoregressive coefficients to be equal to one (should be used with caution due to nonstationarity; \code{par_init} must be specified). Multiple predefined structures can be used together. Also can be used in combination with custom \code{coef_fix_value} and \code{coef_fix_other}.
-#' @param coef_bound_lower An optional numeric vector of lower bounds on coefficients.
-#' @param coef_bound_upper An optional numeric vector of upper bounds on coefficients.
-#' @param coef_start An optional numeric vector of starting values for the optimization. If not supplied, starting values are selected from a small grid of values.
-#' @param optim_function An optimization function. For suitable wrappers of common R optimization functions, see \code{\link[gasmodel:wrappers_optim]{wrappers_optim}}. Can be set to \code{NULL} if the optimal solution should not be computed, which can be useful if the goal is only to evaluate the fit for the coefficients specified in argument \code{coef_start}.
-#' @param optim_arguments An optional list of arguments to be passed to the optimization function.
-#' @param hessian_function A Hessian function. For suitable wrappers of common R Hessian functions, see \code{\link[gasmodel:wrappers_hessian]{wrappers_hessian}}. Can be set to \code{NULL} if the Hessian matrix should not be computed, which can speed up computations when asymptotic inference is not desired.
-#' @param hessian_arguments An optional list of arguments to be passed to the Hessian function.
-#' @param print_progress A logical value indicating whether to progressively print a detailed report on computation.
+#' @param coef_fix_value,coef_fix_other,coef_fix_special,coef_bound_lower,coef_bound_upper Restrictions on the coefficients, see the section \emph{Restricting the Coefficients} below for more details.
+#' @param coef_start,optim_function,optim_arguments,hessian_function,hessian_arguments,print_progress Controls for numerical procedures; see the section \emph{Controlling Numerical Procedures} below for more details.
 #'
 #' @details
 #' The generalized autoregressive score (GAS) models of Creal et al. (2013) and Harvey (2013), also known as dynamic conditional score (DCS) models or score-driven (SD) models, have established themselves as a useful modern framework for time series modeling.
@@ -64,6 +55,26 @@
 #' For an overview of various GAS models, see Harvey (2022).
 #'
 #' The extensive GAS literature is listed on \href{https://www.gasmodel.com}{www.gasmodel.com}.
+#'
+#' @section Restricting the Coefficients:
+#'
+#' The coefficients can be restricted in several ways during estimation. They can be set to specific values using a numeric vector supplied via \code{coef_fix_value}. \code{NA} values indicate coefficients to be estimated.
+#'
+#' Furthermore, the fixed coefficients can be expressed as linear combinations of the estimated coefficients using an optional square numeric matrix of multiples of the estimated coefficients, supplied via \code{coef_fix_other}. A coefficient given by a row is fixed on the coefficient given by a column. By this logic, all rows corresponding to the estimated coefficients should contain only \code{NA} values. Likewise, all columns corresponding to the fixed coefficients should also contain only \code{NA} values.
+#'
+#' For convenience, there are several predefined structures for \code{coef_fix_value} and \code{coef_fix_other}, which can be specified as a character vector supplied via \code{coef_fix_special}. This is useful mainly for multidimensional models. The value \code{"panel_structure"} forces all regression, autoregression, and score coefficients to be the same for all time-varying parameters within their group. The value \code{"zero_sum_intercept"} forces all constant parameters to sum to zero within their group. The value \code{"random_walk"} forces all autoregressive coefficients to be equal to one (should be used with caution due to nonstationarity; \code{par_init} must be specified). Multiple predefined structures can be used together and can also be combined with custom \code{coef_fix_value} and \code{coef_fix_other}.
+#'
+#' Finally, instead of fixing the coefficients, they can be bounded. Lower bounds can be set using a numeric vector supplied via \code{coef_bound_lower}, while upper bounds can be set in a smilar way via \code{coef_bound_upper}. For example, the autoregressive coefficient can be bounded above by 1.
+#'
+#' @section Controlling Numerical Procedures:
+#'
+#' Starting values for the optimization can be supplied as a numeric vector via \code{coef_start}. If not supplied, starting values are selected from a small grid of values.
+#'
+#' A custom optimizer can be supplied as a function via \code{optim_function}. For suitable wrappers of common R optimization functions, see \code{\link[gasmodel:wrappers_optim]{wrappers_optim}}. Can be set to \code{NULL} if the optimal solution should not be computed, which can be useful if the goal is only to evaluate the fit for the coefficients specified in argument \code{coef_start}. An optional list of arguments to be passed to the optimization function can be supplied via \code{optim_arguments}.
+#'
+#' A custom Hessian computation can be supplied as a function via \code{hessian_function}. For suitable wrappers of common R Hessian functions, see \code{\link[gasmodel:wrappers_hessian]{wrappers_hessian}}. Can be set to \code{NULL} if the Hessian matrix should not be computed, which can speed up computations when asymptotic inference is not desired. An optional list of arguments to be passed to the Hessian function can be supplied via \code{hessian_arguments}.
+#'
+#' Setting \code{print_progress = TRUE} enables a detailed computation report that is printed progressively.
 #'
 #' @return A \code{list} of S3 class \code{gas} with components:
 #' \item{data$y}{The time series.}

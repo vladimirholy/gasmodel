@@ -11,14 +11,13 @@
 #' Method \code{"simulated_paths"} repeatedly simulates time series, simultaneously filters time-varying parameters, and then estimates mean, standard deviation, and quantiles (see Blasques et al., 2016).
 #' Instead of supplying arguments about the model, the function can be applied to the \code{gas} object obtained by the \code{\link[gasmodel:gas]{gas()}} function.
 #'
-#' @inheritParams gas
-#' @inheritParams gas_simulate
-#'
+#' @param gas_object An optional GAS estimate, i.e. a list of S3 class \code{gas} returned by function \code{\link[gasmodel:gas]{gas()}}.
 #' @param method  A method used for forecasting. Supported methods are \code{"mean_path"} and \code{"simulated_paths"}.
 #' @param t_ahead A number of observations to forecast.
 #' @param x_ahead Out-of-sample exogenous variables. For a single variable common for all time-varying parameters, a numeric vector. For multiple variables common for all time-varying parameters, a numeric matrix with observations in rows. For individual variables for each time-varying parameter, a list of numeric vectors or matrices in the above form. The number of observation must be equal to \code{t_ahead}.
 #' @param rep_ahead A number of simulation repetitions for \code{method = "simulated_paths"}.
 #' @param quant A numeric vector of probabilities determining quantiles for \code{method = "simulated_paths"}.
+#' @param y,x,distr,param,scaling,regress,p,q,par_static,par_link,par_init,coef_est When \code{gas_object} is not supplied, the estimated model can be specified using these individual arguments. See the arguments and value of the \code{\link[gasmodel:gas]{gas()}} function for more details.
 #'
 #' @return A \code{list} of S3 class \code{gas_forecast} with components:
 #' \item{data$y}{The time series.}

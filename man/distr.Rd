@@ -4,8 +4,14 @@
 \alias{distr}
 \title{Get the Table of Supported Distributions}
 \usage{
-distr(filter_distr = NULL, filter_param = NULL, filter_type = NULL,
-  filter_dim = NULL, filter_orthog = NULL, filter_default = NULL)
+distr(
+  filter_distr = NULL,
+  filter_param = NULL,
+  filter_type = NULL,
+  filter_dim = NULL,
+  filter_orthog = NULL,
+  filter_default = NULL
+)
 }
 \arguments{
 \item{filter_distr}{An optional vector of distributions by which the output is filtered.}
