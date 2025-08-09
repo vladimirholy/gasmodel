@@ -1,3 +1,6 @@
+# gasmodel (development version)
+* Added the generalized error distribution.
+
 # gasmodel 0.6.1
 * Modified code for the von Mises distribution.
 

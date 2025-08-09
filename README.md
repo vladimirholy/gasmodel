@@ -120,7 +120,7 @@ the following case studies in the form of vignettes:
 
 ## Supported Distributions
 
-Currently, there are 44 distributions available.
+Currently, there are 36 distributions available.
 
 The list of supported distribution can be obtained by the `distr()`
 function:
@@ -138,16 +138,10 @@ function:
 | exp | Exponential | Univariate | Duration | scale, rate |
 | explog | Exponential-Logarithmic | Univariate | Duration | rate |
 | fisk | Fisk | Univariate | Duration | scale |
-| frechet | Fréchet | Univariate | Duration | scale |
 | gamma | Gamma | Univariate | Duration | scale, rate |
+| ged | Generalized Error | Univariate | Real | meanscale |
 | gengamma | Generalized Gamma | Univariate | Duration | scale, rate |
 | geom | Geometric | Univariate | Count | mean, prob |
-| gev | Generalized Extreme Value | Univariate | Real | meanscale |
-| gumbel | Gumbel | Univariate | Real | meanscale |
-| inorm | Integer Normal | Univariate | Real | meanvar |
-| inorm2 | Integer Normal | Univariate | Real | meanvar |
-| it | Integer Student’s t | Univariate | Integer | meanvar |
-| it2 | Integer Student’s t | Univariate | Integer | meanvar |
 | kuma | Kumaraswamy | Univariate | Interval | conc |
 | laplace | Laplace | Univariate | Real | meanscale |
 | logistic | Logistic | Univariate | Real | meanscale |
@@ -163,8 +157,6 @@ function:
 | rayleigh | Rayleigh | Univariate | Duration | scale |
 | skellam | Skellam | Univariate | Integer | meanvar, diff, meandisp |
 | t | Student’s t | Univariate | Real | meanvar |
-| tskellam | Theta Skellam | Univariate | Integer | meandisp |
-| tziskellam | Theta Zero-Inflated Skellam | Univariate | Integer | meandisp, meanvar |
 | vonmises | von Mises | Univariate | Circular | meanconc |
 | weibull | Weibull | Univariate | Duration | scale, rate |
 | zigeom | Zero-Inflated Geometric | Univariate | Count | mean |
