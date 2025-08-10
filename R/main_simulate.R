@@ -59,55 +59,14 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
-    model <- list()
-    model$distr <- check_my_distr(distr = distr)
-    model$param <- check_my_param(param = param, distr = model$distr)
-    model$scaling <- check_my_scaling(scaling = scaling)
-    model$regress <- check_my_regress(regress = regress)
-    info_distr <- info_distribution(distr = model$distr, param = model$param)
-    model$t_sim <- check_my_t(t = t_sim)
-    model$n <- check_my_n(n = n, dim = info_distr$dim)
-    info_par <- info_parameters(distr = model$distr, param = model$param, n = model$n)
-    data <- list()
-    data$x_sim <- check_my_x(x = x_sim, t = model$t_sim, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$m <- check_my_m(x = data$x_sim)
-    model$p <- check_my_p(p = p, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$q <- check_my_q(q = q, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$par_static <- check_my_par_static(par_static = par_static, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$par_static[model$m == 0L & model$p == 0L & model$q == 0L] <- TRUE
-    data$x_sim[model$par_static] <- list(matrix(NA_real_, nrow = model$t, ncol = 0L))
-    model$m[model$par_static] <- 0L
-    model$p[model$par_static] <- 0L
-    model$q[model$par_static] <- 0L
-    model$par_link <- check_my_par_link(par_link = par_link, par_static = model$par_static, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    info_par <- info_linked_parameters(info_par = info_par, par_link = model$par_link)
-    model$m <- name_vector(model$m, info_par$par_names)
-    model$p <- name_vector(model$p, info_par$par_names)
-    model$q <- name_vector(model$q, info_par$par_names)
-    model$par_static <- name_vector(model$par_static, info_par$par_names)
-    model$par_link <- name_vector(model$par_link, info_par$par_names)
-    model$par_init <- name_vector(check_my_par_init(par_init = par_init, par_num = info_par$par_num), info_par$par_names)
-    info_coef <- info_coefficients(m = model$m, p = model$p, q = model$q, par_static = model$par_static, par_names = info_par$par_names, par_num = info_par$par_num, group_names = info_par$group_names, group_of_par_names = info_par$group_of_par_names)
-    model$coef_est <- name_vector(check_my_coef_est(coef_est = coef_est, coef_num = info_coef$coef_num), info_coef$coef_names)
-    fun <- list()
-    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = model$par_static)
-    fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-    comp <- list()
-    comp$pre_num <- max(c(model$p, model$q, 1L))
-    comp$burn_num <- 10L + max(model$p) + max(model$q)
-    comp$full_num <- comp$pre_num + comp$burn_num + model$t_sim
-    comp$average_x <- lapply(1:info_par$par_num, function(i) { colMeans(data$x_sim[[i]], na.rm = TRUE) })
-    comp$y <- matrix(NA_real_, nrow = comp$full_num, ncol = model$n)
-    comp$x <- lapply(1:info_par$par_num, function(i) { rbind(matrix(NA_real_, nrow = comp$pre_num, ncol = model$m[i]), matrix(comp$average_x[[i]], nrow = comp$burn_num, ncol = model$m[i], byrow = TRUE), data$x_sim[[i]]) })
-    comp$par_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
-    comp$score_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
-    comp$idx_na <- which(rowSums(sapply(comp$x, function(e) { rowSums(is.na(e)) })) > 0L | c(rep(TRUE, times = comp$pre_num), rep(FALSE, times = comp$burn_num + model$t_sim)))
-    comp$idx_ok <- which(!((1:comp$full_num) %in% comp$idx_na))
-    comp$struc <- convert_coef_vector_to_struc_list(coef_vec = model$coef_est, m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names)
-    comp$omega_vector <- sapply(comp$struc, function(e) { e$omega })
-    comp$beta_list <- lapply(comp$struc, function(e) { e$beta })
-    comp$alpha_list <- lapply(comp$struc, function(e) { e$alpha })
-    comp$phi_list <- lapply(comp$struc, function(e) { e$phi })
+    load <- load_simulate(t_sim = t_sim, x_sim = x_sim, distr = distr, param = param, scaling = scaling, regress = regress, n = n, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, coef_est = coef_est)
+    data <- load$data
+    model <- load$model
+    fun <- load$fun
+    info_distr <- load$info_distr
+    info_par <- load$info_par
+    info_coef <- load$info_coef
+    comp <- load$comp
     if (all(model$p + model$q == 0L)) {
       comp$par_init <- model$par_init
       if (any(is.na(model$par_init))) {

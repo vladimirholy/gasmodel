@@ -99,53 +99,16 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
-    model <- list()
-    model$distr <- check_my_distr(distr = distr)
-    model$param <- check_my_param(param = param, distr = model$distr)
-    model$scaling <- check_my_scaling(scaling = scaling)
-    model$regress <- check_my_regress(regress = regress)
-    info_distr <- info_distribution(distr = model$distr, param = model$param)
-    data <- list()
-    data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
-    model$t <- check_my_t(y = data$y)
-    model$t_ahead <- check_my_t(t = t_ahead, positive = FALSE)
-    model$n <- check_my_n(y = data$y)
-    info_par <- info_parameters(distr = model$distr, param = model$param, n = model$n)
-    data$x <- check_my_x(x = x, t = model$t, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$m <- check_my_m(x = data$x)
-    data$x_ahead <- check_my_x(x = x_ahead, t = model$t_ahead, m = model$m, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$p <- check_my_p(p = p, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$q <- check_my_q(q = q, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$par_static <- check_my_par_static(par_static = par_static, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    model$par_static[model$m == 0L & model$p == 0L & model$q == 0L] <- TRUE
-    data$x[model$par_static] <- list(matrix(NA_real_, nrow = model$t, ncol = 0L))
-    model$m[model$par_static] <- 0L
-    model$p[model$par_static] <- 0L
-    model$q[model$par_static] <- 0L
-    model$par_link <- check_my_par_link(par_link = par_link, par_static = model$par_static, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-    info_par <- info_linked_parameters(info_par = info_par, par_link = model$par_link)
-    model$m <- name_vector(model$m, info_par$par_names)
-    model$p <- name_vector(model$p, info_par$par_names)
-    model$q <- name_vector(model$q, info_par$par_names)
-    model$par_static <- name_vector(model$par_static, info_par$par_names)
-    model$par_link <- name_vector(model$par_link, info_par$par_names)
-    model$par_init <- name_vector(check_my_par_init(par_init = par_init, par_num = info_par$par_num), info_par$par_names)
-    info_coef <- info_coefficients(m = model$m, p = model$p, q = model$q, par_static = model$par_static, par_names = info_par$par_names, par_num = info_par$par_num, group_names = info_par$group_names, group_of_par_names = info_par$group_of_par_names)
-    model$coef_fix_value <- check_my_coef_fix_value(coef_fix_value = coef_fix_value, coef_num = info_coef$coef_num)
-    model$coef_fix_other <- check_my_coef_fix_other(coef_fix_other = coef_fix_other, coef_fix_value = model$coef_fix_value, coef_num = info_coef$coef_num)
-    model$coef_fix_special <- check_my_coef_fix_special(coef_fix_special = coef_fix_special)
-    model[c("coef_fix_value", "coef_fix_other")] <- fixed_coefficients(model = model, info_par = info_par, info_coef = info_coef)
-    model$coef_bound_lower <- name_vector(check_my_coef_bound_lower(coef_bound_lower = coef_bound_lower, par_static = model$par_static, par_support = info_par$par_support, par_num = info_par$par_num, coef_in_par_num = info_coef$coef_in_par_num, coef_num = info_coef$coef_num), info_coef$coef_names)
-    model$coef_bound_upper <- name_vector(check_my_coef_bound_upper(coef_bound_upper = coef_bound_upper, coef_bound_lower = model$coef_bound_lower, par_static = model$par_static, par_support = info_par$par_support, par_num = info_par$par_num, coef_in_par_num = info_coef$coef_in_par_num, coef_num = info_coef$coef_num), info_coef$coef_names)
-    info_theta <- info_thetas(coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other, coef_names = info_coef$coef_names)
-    fun <- list()
-    fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = model$par_static)
-    fun$random <- setup_fun_random(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-    filter <- list()
-    filter$method <- check_my_method(method = method, values = c("given_coefs", "simulated_coefs"))
-    comp <- list()
-    comp$rep_ahead <- check_generic_positive_integer_scalar(arg = rep_ahead, arg_name = "rep_ahead")
-    comp$quant <- check_generic_probability_vector(arg = quant, arg_name = "quant")
+    load <- load_filter(method = method, coef_set = coef_set, rep_gen = rep_gen, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = y, x = x, distr = distr, param = param, scaling = scaling, regress = regress, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, coef_fix_value = coef_fix_value, coef_fix_other = coef_fix_other, coef_fix_special = coef_fix_special, coef_bound_lower = coef_bound_lower, coef_bound_upper = coef_bound_upper, coef_est = coef_est, coef_vcov = coef_vcov)
+    data <- load$data
+    model <- load$model
+    fun <- load$fun
+    info_distr <- load$info_distr
+    info_par <- load$info_par
+    info_coef <- load$info_coef
+    info_theta <- load$info_theta
+    comp <- load$comp
+    filter <- load$filter
     if (filter$method == "given_coefs") {
       model$coef_set <- name_matrix(check_my_coef_set(coef_set = coef_set, coef_num = info_coef$coef_num), paste0("coef", 1:nrow(coef_set)), info_coef$coef_names)
       comp$rep_gen <- nrow(model$coef_set)

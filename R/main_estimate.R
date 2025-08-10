@@ -203,76 +203,16 @@
 #'
 #' @export
 gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
-  model <- list()
-  model$distr <- check_my_distr(distr = distr)
-  model$param <- check_my_param(param = param, distr = model$distr)
-  model$scaling <- check_my_scaling(scaling = scaling)
-  model$regress <- check_my_regress(regress = regress)
-  info_distr <- info_distribution(distr = model$distr, param = model$param)
-  data <- list()
-  data$y <- check_my_y(y = y, dim = info_distr$dim, type = info_distr$type)
-  model$t <- check_my_t(y = data$y)
-  model$n <- check_my_n(y = data$y)
-  info_par <- info_parameters(distr = model$distr, param = model$param, n = model$n)
-  data$x <- check_my_x(x = x, t = model$t, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-  model$m <- check_my_m(x = data$x)
-  model$p <- check_my_p(p = p, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-  model$q <- check_my_q(q = q, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-  model$par_static <- check_my_par_static(par_static = par_static, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-  model$par_static[model$m == 0L & model$p == 0L & model$q == 0L] <- TRUE
-  data$x[model$par_static] <- list(matrix(NA_real_, nrow = model$t, ncol = 0L))
-  model$m[model$par_static] <- 0L
-  model$p[model$par_static] <- 0L
-  model$q[model$par_static] <- 0L
-  model$par_link <- check_my_par_link(par_link = par_link, par_static = model$par_static, par_num = info_par$par_num, group_num = info_par$group_num, par_in_group_num = info_par$par_in_group_num)
-  info_par <- info_linked_parameters(info_par = info_par, par_link = model$par_link)
-  model$m <- name_vector(model$m, info_par$par_names)
-  model$p <- name_vector(model$p, info_par$par_names)
-  model$q <- name_vector(model$q, info_par$par_names)
-  model$par_static <- name_vector(model$par_static, info_par$par_names)
-  model$par_link <- name_vector(model$par_link, info_par$par_names)
-  model$par_init <- name_vector(check_my_par_init(par_init = par_init, par_num = info_par$par_num), info_par$par_names)
-  model$lik_skip <- check_my_lik_skip(lik_skip = lik_skip, t = model$t, p = model$p, q = model$q)
-  info_coef <- info_coefficients(m = model$m, p = model$p, q = model$q, par_static = model$par_static, par_names = info_par$par_names, par_num = info_par$par_num, group_names = info_par$group_names, group_of_par_names = info_par$group_of_par_names)
-  model$coef_fix_value <- check_my_coef_fix_value(coef_fix_value = coef_fix_value, coef_num = info_coef$coef_num)
-  model$coef_fix_other <- check_my_coef_fix_other(coef_fix_other = coef_fix_other, coef_fix_value = model$coef_fix_value, coef_num = info_coef$coef_num)
-  model$coef_fix_special <- check_my_coef_fix_special(coef_fix_special = coef_fix_special)
-  model[c("coef_fix_value", "coef_fix_other")] <- fixed_coefficients(model = model, info_par = info_par, info_coef = info_coef)
-  model$coef_bound_lower <- name_vector(check_my_coef_bound_lower(coef_bound_lower = coef_bound_lower, par_static = model$par_static, par_support = info_par$par_support, par_num = info_par$par_num, coef_in_par_num = info_coef$coef_in_par_num, coef_num = info_coef$coef_num), info_coef$coef_names)
-  model$coef_bound_upper <- name_vector(check_my_coef_bound_upper(coef_bound_upper = coef_bound_upper, coef_bound_lower = model$coef_bound_lower, par_static = model$par_static, par_support = info_par$par_support, par_num = info_par$par_num, coef_in_par_num = info_coef$coef_in_par_num, coef_num = info_coef$coef_num), info_coef$coef_names)
-  info_theta <- info_thetas(coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other, coef_names = info_coef$coef_names)
-  fun <- list()
-  fun$loglik <- setup_fun_loglik(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-  fun$mean <- setup_fun_mean(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-  fun$var <- setup_fun_var(distr = model$distr, param = model$param, par_trans = info_par$par_trans)
-  fun$score <- setup_fun_score(distr = model$distr, param = model$param, scaling = model$scaling, orthog = info_distr$orthog, par_trans = info_par$par_trans, par_static = model$par_static)
-  comp <- list()
-  comp$coef_start <- check_my_coef_start(coef_start = coef_start, coef_bound_lower = model$coef_bound_lower, coef_bound_upper = model$coef_bound_upper, coef_num = info_coef$coef_num)
-  comp$theta_start <- convert_coef_vector_to_theta_vector(comp$coef_start, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
-  comp$theta_bound_lower <- convert_coef_vector_to_theta_vector(model$coef_bound_lower, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
-  comp$theta_bound_upper <- convert_coef_vector_to_theta_vector(model$coef_bound_upper, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
-  comp$compute_start <- any(is.na(comp$theta_start))
-  control <- list()
-  if (is.null(optim_function)) {
-    comp$compute_optim <- FALSE
-    control['optim_function'] <- list(NULL)
-    control['optim_arguments'] <- list(NULL)
-  } else {
-    comp$compute_optim <- TRUE
-    control$optim_function <- check_generic_function(arg = optim_function, arg_name = "optim_function")
-    control$optim_arguments <- check_generic_list(arg = optim_arguments, arg_name = "optim_arguments")
-  }
-  if (is.null(hessian_function)) {
-    comp$compute_hessian <- FALSE
-    control['hessian_function'] <- list(NULL)
-    control['hessian_arguments'] <- list(NULL)
-  } else {
-    comp$compute_hessian <- TRUE
-    control$hessian_function <- check_generic_function(arg = hessian_function, arg_name = "hessian_function")
-    control$hessian_arguments <- check_generic_list(arg = hessian_arguments, arg_name = "hessian_arguments")
-  }
-  comp$print_progress <- check_generic_logical_scalar(arg = print_progress, arg_name = "print_progress")
-  comp$est_details <- list(data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, print_progress = comp$print_progress)
+  load <- load_estimate(y = y, x = x, distr = distr, param = param, scaling = scaling, regress = regress, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, lik_skip = lik_skip, coef_fix_value = coef_fix_value, coef_fix_other = coef_fix_other, coef_fix_special = coef_fix_special, coef_bound_lower = coef_bound_lower, coef_bound_upper = coef_bound_upper, coef_start = coef_start, optim_function = optim_function, optim_arguments = optim_arguments, hessian_function = hessian_function, hessian_arguments = hessian_arguments, print_progress = print_progress)
+  data <- load$data
+  model <- load$model
+  control <- load$control
+  fun <- load$fun
+  info_distr <- load$info_distr
+  info_par <- load$info_par
+  info_coef <- load$info_coef
+  info_theta <- load$info_theta
+  comp <- load$comp
   solution <- list()
   if (comp$compute_start) {
     if (comp$print_progress) { message("Computing a starting solution...") }
