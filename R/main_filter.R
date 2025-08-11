@@ -99,6 +99,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
+    # Load auxiliary variables:
     load <- load_filter(method = method, coef_set = coef_set, rep_gen = rep_gen, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = y, x = x, distr = distr, param = param, scaling = scaling, regress = regress, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, coef_fix_value = coef_fix_value, coef_fix_other = coef_fix_other, coef_fix_special = coef_fix_special, coef_bound_lower = coef_bound_lower, coef_bound_upper = coef_bound_upper, coef_est = coef_est, coef_vcov = coef_vcov)
     data <- load$data
     model <- load$model
@@ -109,9 +110,11 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
     info_theta <- load$info_theta
     comp <- load$comp
     filter <- load$filter
+    # Prepare coefficients from supplied set:
     if (filter$method == "given_coefs") {
       model$coef_set <- name_matrix(check_my_coef_set(coef_set = coef_set, coef_num = info_coef$coef_num), paste0("coef", 1:nrow(coef_set)), info_coef$coef_names)
       comp$rep_gen <- nrow(model$coef_set)
+    # Simulate coefficients:
     } else if (method == "simulated_coefs") {
       comp$rep_gen <- check_generic_positive_integer_scalar(arg = rep_gen, arg_name = "rep_gen")
       comp$coef_est <- check_my_coef_est(coef_est = coef_est, coef_num = info_coef$coef_num)
@@ -126,6 +129,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
         model$coef_set[i, ] <- convert_theta_vector_to_coef_vector(pmax(pmin(comp$theta_set[i, ], comp$theta_bound_upper), comp$theta_bound_lower), coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
       }
     }
+    # Initialize paths:
     comp$pre_num <- max(c(model$p, model$q, 1L))
     comp$full_num <- comp$pre_num + model$t + model$t_ahead
     comp$average_x <- lapply(1:info_par$par_num, function(i) { colMeans(data$x[[i]], na.rm = TRUE) })
@@ -142,12 +146,14 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
     comp$par_tv_ahead_path <- array(NA_real_, dim = c(comp$rep_gen * comp$rep_ahead, model$t_ahead, info_par$par_num))
     comp$score_tv_path <- array(NA_real_, dim = c(comp$rep_gen, model$t, info_par$par_num))
     comp$score_tv_ahead_path <- array(NA_real_, dim = c(comp$rep_gen * comp$rep_ahead, model$t_ahead, info_par$par_num))
+    # Loop through bootstrap samples:
     for (b in 1:comp$rep_gen) {
       comp$struc <- convert_coef_vector_to_struc_list(coef_vec = model$coef_set[b, ], m = model$m, p = model$p, q = model$q, par_names = info_par$par_names, par_of_coef_names = info_coef$par_of_coef_names)
       comp$omega_vector <- sapply(comp$struc, function(e) { e$omega })
       comp$beta_list <- lapply(comp$struc, function(e) { e$beta })
       comp$alpha_list <- lapply(comp$struc, function(e) { e$alpha })
       comp$phi_list <- lapply(comp$struc, function(e) { e$phi })
+      # Compute path for static model:
       if (all(model$p + model$q == 0L)) {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
@@ -180,6 +186,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
             comp$score_tv_ahead_path[(b - 1L) * comp$rep_ahead + a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
           }
         }
+      # Compute path for dynamic joint model:
       } else if (model$regress == "joint") {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
@@ -222,6 +229,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
             comp$score_tv_ahead_path[(b - 1L) * comp$rep_ahead + a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
           }
         }
+      # Compute path for dynamic separate model:
       } else if (model$regress == "sep") {
         comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
         comp$err_init <- model$par_init
@@ -274,6 +282,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
       comp$par_tv_path[b, , ] <- comp$par_tv[(comp$pre_num + 1L):(comp$pre_num + model$t), ]
       comp$score_tv_path[b, , ] <- comp$score_tv[(comp$pre_num + 1L):(comp$pre_num + model$t), ]
     }
+    # Format results:
     info_data <- info_data(y = data$y, x = data$x)
     data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
     data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
@@ -299,6 +308,7 @@ gas_filter <- function(gas_object = NULL, method = "simulated_coefs", coef_set =
       data$x_ahead <- NULL
       model$t_ahead <- NULL
     }
+    # Report results:
     report <- list(data = data, model = model, filter = filter)
     class(report) <- "gas_filter"
     return(report)

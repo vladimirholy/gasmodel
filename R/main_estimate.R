@@ -203,6 +203,7 @@
 #'
 #' @export
 gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "joint", p = 1L, q = 1L, par_static = NULL, par_link = NULL, par_init = NULL, lik_skip = 0L, coef_fix_value = NULL, coef_fix_other = NULL, coef_fix_special = NULL, coef_bound_lower = NULL, coef_bound_upper = NULL, coef_start = NULL, optim_function = wrapper_optim_nloptr, optim_arguments = list(opts = list(algorithm = 'NLOPT_LN_NELDERMEAD', xtol_rel = 0, maxeval = 1e6)), hessian_function = wrapper_hessian_stats, hessian_arguments = list(), print_progress = FALSE) {
+  # Load auxiliary variables:
   load <- load_estimate(y = y, x = x, distr = distr, param = param, scaling = scaling, regress = regress, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, lik_skip = lik_skip, coef_fix_value = coef_fix_value, coef_fix_other = coef_fix_other, coef_fix_special = coef_fix_special, coef_bound_lower = coef_bound_lower, coef_bound_upper = coef_bound_upper, coef_start = coef_start, optim_function = optim_function, optim_arguments = optim_arguments, hessian_function = hessian_function, hessian_arguments = hessian_arguments, print_progress = print_progress)
   data <- load$data
   model <- load$model
@@ -214,6 +215,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
   info_theta <- load$info_theta
   comp <- load$comp
   solution <- list()
+  # Compute starting solution:
   if (comp$compute_start) {
     if (comp$print_progress) { message("Computing a starting solution...") }
     comp$result_start <- starting_theta(theta_start = solution$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, data = data, model = model, fun = fun, info_distr = info_distr, info_par = info_par, info_coef = info_coef, info_theta = info_theta, print_progress = comp$print_progress)
@@ -226,6 +228,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
     solution$status_start <- "starting_values_supplied"
     solution$theta_start <- name_vector(comp$theta_start, info_theta$theta_names)
   }
+  # Compute optimal solution:
   if (comp$compute_optim) {
     if (comp$print_progress) { message("Computing the optimal solution...") }
     comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = solution$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
@@ -238,6 +241,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
     solution$status_optim <- "computation_skipped"
     solution$theta_optim <- solution$theta_start
   }
+  # Compute Hessian matrix:
   if (comp$compute_hessian) {
     if (comp$print_progress) { message("Computing the Hessian matrix...") }
     comp$result_hessian <- do.call(control$hessian_function, args = c(list(obj_fun = likelihood_objective, theta_optim = solution$theta_optim, est_details = comp$est_details), control$hessian_arguments))
@@ -250,6 +254,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
     solution$status_hessian <- "computation_skipped"
     solution$theta_hessian <- name_matrix(matrix(NA_real_, nrow = info_theta$theta_num, ncol = info_theta$theta_num), info_theta$theta_names, info_theta$theta_names)
   }
+  # Compute inference:
   fit <- list()
   fit$coef_est <- name_vector(convert_theta_vector_to_coef_vector(solution$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other), info_coef$coef_names)
   comp$eval_tv <- be_silent(likelihood_evaluate(coef = fit$coef_est, data = data, model = model, fun = fun, info_par = info_par, info_coef = info_coef))
@@ -266,21 +271,25 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
   } else if (model$regress == "sep") {
     fit$par_unc <- sapply(1:info_par$par_num, function(i) { comp$struc[[i]]$omega + colMeans(data$x[[i]], na.rm = TRUE) %*% comp$struc[[i]]$beta })
   }
+  # Format data:
   info_data <- info_data(y = data$y, x = data$x)
   data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
   data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
+  # Format time-varying quantities:
   fit$par_tv <- name_matrix(comp$eval_tv$par, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$score_tv <- name_matrix(comp$eval_tv$score, info_data$index_time, info_par$par_names, drop = c(FALSE, TRUE))
   fit$mean_tv <- name_matrix(fun$mean(comp$eval_tv$par), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
   fit$var_tv <- name_matrix(convert_varcov_array_to_var_matrix(fun$var(comp$eval_tv$par)), info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
   fit$resid_tv <- (data$y - fit$mean_tv) / sqrt(fit$var_tv)
   fit$loglik_tv <- name_vector(comp$eval_tv$lik, info_data$index_time)
+  # Determine fit:
   fit$loglik_sum <- sum(fit$loglik_tv, na.rm = TRUE)
   fit$aic <- 2 * model$num_coef - 2 * fit$loglik_sum
   fit$bic <- log(model$num_obs) * model$num_coef - 2 * fit$loglik_sum
   if (mean(fit$loglik_tv, na.rm = TRUE) <= -1e100) {
     warning("The likelihood function has zero value. The results are not reliable.")
   }
+  # Return results:
   report <- list(data = data, model = model, control = control, solution = solution, fit = fit)
   class(report) <- "gas"
   return(report)

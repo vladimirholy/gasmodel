@@ -59,6 +59,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
+    # Load auxiliary variables:
     load <- load_simulate(t_sim = t_sim, x_sim = x_sim, distr = distr, param = param, scaling = scaling, regress = regress, n = n, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, coef_est = coef_est)
     data <- load$data
     model <- load$model
@@ -67,6 +68,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
     info_par <- load$info_par
     info_coef <- load$info_coef
     comp <- load$comp
+    # Simulate from static model:
     if (all(model$p + model$q == 0L)) {
       comp$par_init <- model$par_init
       if (any(is.na(model$par_init))) {
@@ -87,6 +89,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
       for (j in comp$idx_ok) {
         comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
       }
+    # Simulate from dynamic joint model:
     } else if (model$regress == "joint") {
       comp$par_init <- model$par_init
       if (any(is.na(comp$par_init))) {
@@ -110,6 +113,7 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
         comp$y[j, ] <- fun$random(t = 1L, f = comp$par_tv[j, , drop = FALSE])
         comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
       }
+    # Simulate from dynamic separate model:
     } else if (model$regress == "sep") {
       comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
       comp$err_init <- model$par_init
@@ -139,12 +143,14 @@ gas_simulate <- function(gas_object = NULL, t_sim = 1L, x_sim = NULL, distr = NU
         comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
       }
     }
+    # Format results:
     info_data_sim <- info_data(y = matrix(nrow = model$t_sim, ncol = model$n), x = data$x_sim)
     data$x_sim <- name_list_of_matrices(data$x_sim, info_par$par_names, info_data_sim$index_time_list, info_data_sim$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
     simulation <- list()
     simulation$y_sim <- name_matrix(comp$y[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE], info_data_sim$index_time, info_data_sim$index_series, drop = c(FALSE, TRUE))
     simulation$par_tv_sim <- name_matrix(comp$par_tv[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE], info_data_sim$index_time, info_par$par_names, drop = c(FALSE, TRUE))
     simulation$score_tv_sim <- name_matrix(comp$score_tv[(comp$pre_num + comp$burn_num + 1L):comp$full_num, , drop = FALSE], info_data_sim$index_time, info_par$par_names, drop = c(FALSE, TRUE))
+    # Return results:
     report <- list(data = data, model = model, simulation = simulation)
     class(report) <- "gas_simulate"
     return(report)

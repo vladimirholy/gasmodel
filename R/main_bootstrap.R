@@ -89,6 +89,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
+    # Load auxiliary variables:
     load <- load_bootstrap(method = method, rep_boot = rep_boot, block_length = block_length, quant = quant, y = y, x = x, distr = distr, param = param, scaling = scaling, regress = regress, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, lik_skip = lik_skip, coef_fix_value = coef_fix_value, coef_fix_other = coef_fix_other, coef_fix_special = coef_fix_special, coef_bound_lower = coef_bound_lower, coef_bound_upper = coef_bound_upper, coef_est = coef_est, optim_function = optim_function, optim_arguments = optim_arguments, parallel_function = parallel_function, parallel_arguments = parallel_arguments)
     data <- load$data
     model <- load$model
@@ -100,6 +101,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     info_theta <- load$info_theta
     comp <- load$comp
     bootstrap <- load$bootstrap
+    # Compute parameteric bootstrap for static model:
     if (bootstrap$method == "parametric" && all(model$p + model$q == 0L)) {
       comp$run_details <- list(data = data, model = model, control = control, info_distr = info_distr, info_par = info_par, info_coef = info_coef, comp = comp)
       comp$run_fun <- function(id, run_details) {
@@ -147,6 +149,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
+    # Compute parameteric bootstrap for dynamic joint model:
     } else if (bootstrap$method == "parametric" && model$regress == "joint") {
       comp$run_details <- list(data = data, model = model, control = control, info_distr = info_distr, info_par = info_par, info_coef = info_coef, comp = comp)
       comp$run_fun <- function(id, run_details) {
@@ -199,6 +202,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
+    # Compute parameteric bootstrap for dynamic separate model:
     } else if (bootstrap$method == "parametric" && model$regress == "sep") {
       comp$run_details <- list(data = data, model = model, control = control, info_distr = info_distr, info_par = info_par, info_coef = info_coef, comp = comp)
       comp$run_fun <- function(id, run_details) {
@@ -256,6 +260,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
+    # Compute simple block bootstrap:
     } else if (bootstrap$method == "simple_block") {
       bootstrap$block_length <- check_my_block_length(block_length = block_length, t = model$t)
       comp$run_details <- list(data = data, model = model, control = control, bootstrap = bootstrap, comp = comp)
@@ -284,6 +289,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
+    # Compute moving block bootstrap:
     } else if (bootstrap$method == "moving_block") {
       bootstrap$block_length <- check_my_block_length(block_length = block_length, t = model$t)
       comp$run_details <- list(data = data, model = model, control = control, bootstrap = bootstrap, comp = comp)
@@ -312,6 +318,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
+    # Compute stationary block bootstrap:
     } else if (bootstrap$method == "stationary_block") {
       bootstrap$block_length <- check_my_block_length(block_length = block_length, t = model$t)
       comp$run_details <- list(data = data, model = model, control = control, bootstrap = bootstrap, comp = comp)
@@ -337,6 +344,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         return(coef_set)
       }
     }
+    # Format results:
     comp$coef_list <- do.call(control$parallel_function, args = c(list(run_num = comp$rep_boot, run_fun = comp$run_fun, run_details = comp$run_details), control$parallel_arguments))
     bootstrap$coef_set <- name_matrix(matrix(unlist(comp$coef_list), nrow = comp$rep_boot, byrow = TRUE), paste0("s", 1:comp$rep_boot), info_coef$coef_names, drop = c(FALSE, FALSE))
     info_data <- info_data(y = data$y, x = data$x)
@@ -347,6 +355,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
     bootstrap$coef_sd <-  name_vector(sqrt(diag(bootstrap$coef_vcov)), info_coef$coef_names)
     bootstrap$coef_pval <-  name_vector(apply(bootstrap$coef_set, MARGIN = 2, FUN = function(x) { 1 - 2 * abs(mean(x >= 0) - 0.5) }), info_coef$coef_names)
     bootstrap$coef_quant <- name_matrix(t(matrix(apply(bootstrap$coef_set, 2, stats::quantile, probs = comp$quant), ncol = info_coef$coef_num)), info_coef$coef_names, paste0(comp$quant * 100, "%"), drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
+    # Return results:
     report <- list(data = data, model = model, bootstrap = bootstrap)
     class(report) <- "gas_bootstrap"
     return(report)

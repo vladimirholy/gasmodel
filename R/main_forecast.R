@@ -86,6 +86,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
   } else if (!is.null(gas_object)) {
     stop("Unsupported class of gas_object.")
   } else {
+    # Load auxiliary variables:
     load <- load_forecast(method = method, t_ahead = t_ahead, x_ahead = x_ahead, rep_ahead = rep_ahead, quant = quant, y = y, x = x, distr = distr, param = param, scaling = scaling, regress = regress, p = p, q = q, par_static = par_static, par_link = par_link, par_init = par_init, coef_est = coef_est)
     data <- load$data
     model <- load$model
@@ -95,7 +96,9 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
     info_coef <- load$info_coef
     comp <- load$comp
     forecast <- load$forecast
+    # Forecast using mean path method:
     if (forecast$method == "mean_path") {
+      # Compute path for static model:
       if (all(model$p + model$q == 0L)) {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
@@ -114,6 +117,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$score_tv[j, ] <- fun$score(y = comp$y[j, , drop = FALSE], f = comp$par_tv[j, , drop = FALSE])
         }
         comp$score_tv[comp$idx_ok_ahead, ] <- 0
+      # Compute path for dynamic joint model:
       } else if (model$regress == "joint") {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
@@ -143,6 +147,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           }
           comp$par_tv[j, ] <- comp$par_tv[j, ] + cur_e
         }
+      # Compute path for dynamic separate model:
       } else if (model$regress == "sep") {
         comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
         comp$err_init <- model$par_init
@@ -179,6 +184,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
         }
         comp$par_tv[comp$idx_ok_ahead, ] <- comp$par_tv[comp$idx_ok_ahead, ] + comp$err_tv[comp$idx_ok_ahead, ]
       }
+      # Format results:
       comp$y[comp$idx_ok_ahead, ] <- fun$mean(f = comp$par_tv[comp$idx_ok_ahead, , drop = FALSE])
       info_data <- info_data(y = data$y, x = data$x)
       data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
@@ -188,12 +194,14 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
       forecast$y_ahead_mean <- name_matrix(comp$y[(comp$pre_num + model$t + 1L):comp$full_num, , drop = FALSE], info_data_ahead$index_time, info_data_ahead$index_series, drop = c(FALSE, TRUE))
       forecast$par_tv_ahead_mean <- name_matrix(comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, , drop = FALSE], info_data_ahead$index_time, info_par$par_names, drop = c(FALSE, TRUE))
       forecast$score_tv_ahead_mean <- name_matrix(comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, , drop = FALSE], info_data_ahead$index_time, info_par$par_names, drop = c(FALSE, TRUE))
+    # Forecast using simulated path method:
     } else if (forecast$method == "simulated_paths") {
       comp$rep_ahead <- check_generic_positive_integer_scalar(arg = rep_ahead, arg_name = "rep_ahead")
       comp$quant <- check_generic_probability_vector(arg = quant, arg_name = "quant")
       comp$y_ahead_path <- array(NA_real_, dim = c(comp$rep_ahead, model$t_ahead, model$n))
       comp$par_tv_ahead_path <- array(NA_real_, dim = c(comp$rep_ahead, model$t_ahead, info_par$par_num))
       comp$score_tv_ahead_path <- array(NA_real_, dim = c(comp$rep_ahead, model$t_ahead, info_par$par_num))
+      # Compute path for static model:
       if (all(model$p + model$q == 0L)) {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
@@ -220,6 +228,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
           comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
         }
+      # Compute path for dynamic joint model:
       } else if (model$regress == "joint") {
         comp$par_init <- model$par_init
         if (any(is.na(comp$par_init))) {
@@ -260,6 +269,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$par_tv_ahead_path[a, , ] <- comp$par_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
           comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
         }
+      # Compute path for dynamic separate model:
       } else if (model$regress == "sep") {
         comp$err_tv <- matrix(NA_real_, nrow = comp$full_num, ncol = info_par$par_num)
         comp$err_init <- model$par_init
@@ -307,6 +317,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
           comp$score_tv_ahead_path[a, , ] <- comp$score_tv[(comp$pre_num + model$t + 1L):comp$full_num, ]
         }
       }
+      # Format results:
       info_data <- info_data(y = data$y, x = data$x)
       data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))
       data$x <- name_list_of_matrices(data$x, info_par$par_names, info_data$index_time_list, info_data$index_vars_list, drop = c(FALSE, TRUE), zero = c(FALSE, TRUE))
@@ -322,6 +333,7 @@ gas_forecast <- function(gas_object = NULL, method = "mean_path", t_ahead = 1L, 
       forecast$score_tv_ahead_sd <- name_matrix(apply(comp$score_tv_ahead_path, 2:3, stats::sd, na.rm = TRUE), info_data_ahead$index_time, info_par$par_names, drop = c(FALSE, TRUE))
       forecast$score_tv_ahead_quant <- name_3d_array(aperm(array(apply(comp$score_tv_ahead_path, 2:3, stats::quantile, probs = comp$quant, na.rm = TRUE), dim = c(length(comp$quant), model$t_ahead, info_par$par_num)), c(2, 3, 1)), info_data_ahead$index_time, info_par$par_names, paste0(comp$quant * 100, "%"), drop = c(FALSE, TRUE, TRUE), zero = c(FALSE, FALSE, TRUE))
     }
+    # Report results
     report <- list(data = data, model = model, forecast = forecast)
     class(report) <- "gas_forecast"
     return(report)
