@@ -145,7 +145,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           score_tv[j, ] <- fun$score(y = y[j, , drop = FALSE], f = par_tv[j, , drop = FALSE])
         }
         comp$est_details$data$y <- y[(pre_num + burn_num + 1L):full_num, , drop = FALSE]
-        result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+        result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
@@ -198,7 +198,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           score_tv[j, ] <- fun$score(y = y[j, , drop = FALSE], f = par_tv[j, , drop = FALSE])
         }
         comp$est_details$data$y <- y[(pre_num + burn_num + 1L):full_num, , drop = FALSE]
-        result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+        result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
@@ -256,7 +256,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
           score_tv[j, ] <- fun$score(y = y[j, , drop = FALSE], f = par_tv[j, , drop = FALSE])
         }
         comp$est_details$data$y <- y[(pre_num + burn_num + 1L):full_num, , drop = FALSE]
-        result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+        result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
@@ -285,7 +285,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         idx <- circle[unlist(lapply(1:block_num, FUN = function(i) { block_start[i]:block_end[i] }))]
         comp$est_details$data$y <- data$y[idx, , drop = FALSE]
         comp$est_details$data$x <- lapply(data$x, function(xx) { xx[idx, , drop = FALSE] })
-        result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+        result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
@@ -314,7 +314,7 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         idx <- circle[unlist(lapply(1:block_num, FUN = function(i) { block_start[i]:block_end[i] }))]
         comp$est_details$data$y <- data$y[idx, , drop = FALSE]
         comp$est_details$data$x <- lapply(data$x, function(xx) { xx[idx, , drop = FALSE] })
-        result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+        result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
@@ -339,13 +339,14 @@ gas_bootstrap <- function(gas_object = NULL, method = "parametric", rep_boot = 1
         idx <- circle[unlist(lapply(1:block_num, FUN = function(i) { block_start[i]:block_end[i] }))]
         comp$est_details$data$y <- data$y[idx, , drop = FALSE]
         comp$est_details$data$x <- lapply(data$x, function(xx) { xx[idx, , drop = FALSE] })
-        result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+        result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = comp$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
         coef_set <- convert_theta_vector_to_coef_vector(result_optim$theta_optim, coef_fix_value = model$coef_fix_value, coef_fix_other = model$coef_fix_other)
         return(coef_set)
       }
     }
-    # Format results:
+    # Parallelize computation:
     comp$coef_list <- do.call(control$parallel_function, args = c(list(run_num = comp$rep_boot, run_fun = comp$run_fun, run_details = comp$run_details), control$parallel_arguments))
+    # Format results:
     bootstrap$coef_set <- name_matrix(matrix(unlist(comp$coef_list), nrow = comp$rep_boot, byrow = TRUE), paste0("s", 1:comp$rep_boot), info_coef$coef_names, drop = c(FALSE, FALSE))
     info_data <- info_data(y = data$y, x = data$x)
     data$y <- name_matrix(data$y, info_data$index_time, info_data$index_series, drop = c(FALSE, TRUE))

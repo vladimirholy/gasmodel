@@ -231,7 +231,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
   # Compute optimal solution:
   if (comp$compute_optim) {
     if (comp$print_progress) { message("Computing the optimal solution...") }
-    comp$result_optim <- do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = solution$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments))
+    comp$result_optim <- be_silent_but_theta(do.call(control$optim_function, args = c(list(obj_fun = likelihood_objective, theta_start = solution$theta_start, theta_bound_lower = comp$theta_bound_lower, theta_bound_upper = comp$theta_bound_upper, est_details = comp$est_details), control$optim_arguments)))
     solution$status_optim <- comp$result_optim$status_optim
     solution$theta_optim <- name_vector(comp$result_optim$theta_optim, info_theta$theta_names)
     if (!(solution$status_optim %in% c("success", "objective_tolerance_reached", "desired_objective_reached", "variables_tolerance_reached"))) {
@@ -244,7 +244,7 @@ gas <- function(y, x = NULL, distr, param = NULL, scaling = "unit", regress = "j
   # Compute Hessian matrix:
   if (comp$compute_hessian) {
     if (comp$print_progress) { message("Computing the Hessian matrix...") }
-    comp$result_hessian <- do.call(control$hessian_function, args = c(list(obj_fun = likelihood_objective, theta_optim = solution$theta_optim, est_details = comp$est_details), control$hessian_arguments))
+    comp$result_hessian <- be_silent_but_theta(do.call(control$hessian_function, args = c(list(obj_fun = likelihood_objective, theta_optim = solution$theta_optim, est_details = comp$est_details), control$hessian_arguments)))
     solution$status_hessian <- comp$result_hessian$status_hessian
     solution$theta_hessian <- name_matrix(comp$result_hessian$theta_hessian, info_theta$theta_names, info_theta$theta_names)
     if (solution$status_hessian != "success") {
