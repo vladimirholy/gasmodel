@@ -1,0 +1,55 @@
+---
+title: "Limitations and Customization"
+author: "Vladimír Holý"
+date: "`r Sys.Date()`"
+bibliography: library.bib
+link-citations: yes
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Limitations and Customization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Adding a New Distribution
+
+Despite providing a reasonable range of distributions, the current version of the \CRANpkg{gasmodel} package does not include certain distributions found in the GAS literature. Notable examples are copula models [@DeLiraSalvatierra2015; @Koopman2018], matrix models [@Hansen2016a; @Opschoor2018], and censoring models [@Harvey2020; @Harvey2023].
+
+Users are encouraged to customize the package by adding new distributions. To incorporate a new distribution into the package, please follow these steps:
+
+1. Choose a name for the distribution and parametrization, such as `newdistr` and `newparam`, respectively.
+2. Create an R file in the `R` directory, such as `R/distr_newdist_newparam.R`, which will contain all the necessary functions for the new distribution.
+3. Implement the following functions in the R file, adhering to the structure used for other distributions in the package:
+
+    + `distr_newdistr_newparam_parameters()` listing the parameters,
+    + `distr_newdistr_newparam_density()` computing the density,
+    + `distr_newdistr_newparam_loglik()` computing the log-likelihood,
+    + `distr_newdistr_newparam_mean()` computing the mean,
+    + `distr_newdistr_newparam_var()` computing the variance,
+    + `distr_newdistr_newparam_score()` computing the score,
+    + `distr_newdistr_newparam_fisher()` computing the Fisher information,
+    + `distr_newdistr_newparam_random()` generating random variables,
+    + `distr_newdistr_newparam_start()` estimating starting values of the parameters.
+  
+4. Update the `distr_table.xlsx` file located in the `data-raw` directory by adding a new row to the table that includes the names of the distribution and parametrization.
+5. Run the `distr_table.R` script located in the `data-raw` directory. This script saves the content of the `distr_table.xlsx` table to the `distr_table` dataset in the package.
+
+By following these steps, users will be able to add a novel distribution to the package, integrating it with the existing framework.
+
+## Interaction Between Parameters and Non-Linear Dependence
+
+The dynamics are implemented in the standard form of @Creal2013, which has been further extended to include exogenous variables. However, it is worth noting that existing literature includes models with interactions between different time-varying parameters or nonlinear forms of dependence on past values [@Harvey2014; @Holy2022b]. Incorporating such complex dynamics would significantly complicate the interface of the functions, so we have opted to keep the dynamics simple for ease of use.
+
+Nevertheless, the source code can be modified to accommodate specific cases. This can be achieved by using a placeholder exogenous variable and making a manual adjustment within the `likelihood_evaluate()` function in the `helper_likelihood.R` file. Specifically, the value of the placeholder variable can be can hard-coded to a desirable transformation of any concurrent or lagged parameter.
+
+## Non-Standard Structure of Time Series
+
+The package focuses on the standard form of time series. However, certain applications, such as those in the field of sports statistics, may require a specialized structure for modeling time series data. In these cases, the individual matches between teams or players in a specific league are often modeled using distributions like Bernoulli, Skellam, or bivariate Poisson [@Gorgi2019; @Koopman2019]. Time series should therefore represent the outcomes of matches. However, at each observation, different teams may be participating. This unique characteristic cannot be adequately captured by the standard form of univariate (or bivariate) time series, and a more sophisticated data structure is required to account for the varying teams involved.
+
+To address this limitation, an R package that specifically caters to the use of score-driven models in sports statistics is currently being developed. This specialized package will provide the necessary tools and data structures to effectively model and analyze the unique dynamics present in these applications. However, there are other options beyond R that already exist. Notably, GAS pairwise comparison models can be estimated using the PyFlux package in Python [@Taylor2017], as well as through the stand-alone GUI application Time Series Lab [@Lit2021].
+
+## Other Dynamic Models Using Score
+
+In the literature on GAS models, the score has been employed in a wide range of dynamic models. Some of these models fall outside the scope of this package. Examples of such models include semiparametric models [@Blasques2016b; @Patton2019], Markov regime switching models [@Bazzi2017; @Blazsek2022], and spatio-temporal models [@Catania2017; @Gasperoni2023].
+
+## References
