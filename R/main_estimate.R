@@ -51,7 +51,7 @@
 #' For a comparison of the GAS models to alternative models, see Koopman et al. (2016) and Blazsek and Licht (2020).
 #'
 #' The GAS class includes many well-known econometric models, such as the generalized autoregressive conditional heteroskedasticity (GARCH) model of Bollerslev (1986), the autoregressive conditional duration (ACD) model of Engle and Russel (1998), and the Poisson count model of Davis et al. (2003).
-#' More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the circular model of Harvey (2019), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2022).
+#' More recently, a variety of novel score-driven models has been proposed, such as the Beta-t-(E)GARCH model of Harvey and Chakravarty (2008), the discrete price changes model of Koopman et al. (2018), the circular model of Harvey et al. (2024), the bivariate Poisson model of Koopman and Lit (2019), and the ranking model of Holý and Zouhar (2022).
 #' For an overview of various GAS models, see Harvey (2022).
 #'
 #' The extensive GAS literature is listed on \href{https://www.gasmodel.com}{www.gasmodel.com}.
@@ -155,7 +155,7 @@
 #'
 #' Harvey, A. C. and Chakravarty, T. (2008). Beta-t-(E)GARCH. \emph{Cambridge Working Papers in Economics}, CWPE 0840. \doi{10.17863/cam.5286}.
 #'
-#' Harvey, A., Hurn, S., and Thiele, S. (2019). Modeling Directional (Circular) Time Series. \emph{Cambridge Working Papers in Economics}, CWPE 1971. \doi{10.17863/cam.43915}.
+#' Harvey, A., Hurn, S., Palumbo, D., and Thiele, S. (2024). Modelling Circular Time Series. \emph{Journal of Econometrics}, \strong{239}(1), 105450. \doi{10.1016/j.jeconom.2023.02.016}.
 #'
 #' Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), \strong{71}(5). \doi{10.1111/rssc.12584}.
 #'
