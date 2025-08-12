@@ -2,6 +2,8 @@
 title: "Comparison with the GAS Package"
 author: "Vladimír Holý"
 date: "`r Sys.Date()`"
+bibliography: library.bib
+link-citations: yes
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Comparison with the GAS Package}
@@ -31,11 +33,11 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
 ## Introduction
 
-We compare the **gasmodel** package with the **GAS** package developed by Ardia et al. (2019). The **GAS** package provides functionality for both univariate and multivariate GAS models. The current version, 0.3.4, supports 16 distributions. However, the model specification in the **GAS** package is somewhat limited, only allowing for basic dynamics without the inclusion of exogenous variables. Additionally, this package lacks distributions for certain more specialized data types, such as circular, compositional, and ranking data. The package thus supports only a limited selection of GAS models found in the literature.
+We compare the **gasmodel** package with the **GAS** package developed by @Ardia2019. The **GAS** package provides functionality for both univariate and multivariate GAS models. The current version, 0.3.4, supports 16 distributions. However, the model specification in the **GAS** package is somewhat limited, only allowing for basic dynamics without the inclusion of exogenous variables. Additionally, this package lacks distributions for certain more specialized data types, such as circular, compositional, and ranking data. The package thus supports only a limited selection of GAS models found in the literature.
 
 ## The Bookshop Orders Case Study
 
-First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on Tomanová and Holý (2021) using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. Specifically, We analyze durations adjusted for the diurnal pattern.
+First, let us attempt to replicate the results from the Bookshop Orders case study in the `case_durations` vignette based on @Tomanova2021 using the **GAS** package. This case study focuses on modeling the durations between orders from a Czech antiquarian bookshop. Specifically, We analyze durations adjusted for the diurnal pattern.
 
 ``` {r durations_data_diurnal, results = "hide", message = FALSE, warning = FALSE}
 library("dplyr")
@@ -109,7 +111,7 @@ After performing parameter estimation for the Weibull and generalized gamma dist
 
 ## The Ice Hockey Rankings Case Study
 
-The Ice Hockey Rankings case study in the `case_rankings` vignette based on Holý and Zouhar (2022) is not replicable at all using the **GAS** package due to its lack of support for the Plackett--Luce distribution or any distribution based on rankings. Furthermore, the **GAS** package does not facilitate the imposition of constraints on coefficients, which is useful, for instance, in creating random walk models or multivariate models with a panel structure. In the same case study, the process of forecasting and deriving confidence bands on time-varying parameters is illustrated. Similar functionality is also offered by the **GAS** package.
+The Ice Hockey Rankings case study in the `case_rankings` vignette based on @Holy2022f is not replicable at all using the **GAS** package due to its lack of support for the Plackett--Luce distribution or any distribution based on rankings. Furthermore, the **GAS** package does not facilitate the imposition of constraints on coefficients, which is useful, for instance, in creating random walk models or multivariate models with a panel structure. In the same case study, the process of forecasting and deriving confidence bands on time-varying parameters is illustrated. Similar functionality is also offered by the **GAS** package.
 
 
 ## Comparison of Supported Distributions and Functionalities
@@ -127,9 +129,3 @@ knitr::kable(table_fun, align = c("l", "c", "c"), caption = "List of the availab
 ```
 
 ## References
-
-Ardia, D., Boudt, K, and Catania, L. (2019). Generalized Autoregressive Score Models in R: The GAS Package. *Journal of Statistical Software*, **88**(6), 1–28. doi: [10.18637/jss.v088.i06](https://doi.org/10.18637/jss.v088.i06).
-
-Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), **71**(5), 1427–1450. doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
-
-Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).

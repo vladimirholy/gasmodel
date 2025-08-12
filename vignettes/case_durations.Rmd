@@ -2,6 +2,8 @@
 title: "Case Study: Bookshop Orders"
 author: "Vladimír Holý & Petra Tomanová"
 date: "2024-02-01"
+bibliography: library.bib
+link-citations: yes
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Bookshop Orders}
@@ -13,9 +15,9 @@ vignette: >
 
 ## Introduction
 
-We loosely follow Tomanová and Holý (2021) and analyze the timing of orders from a Czech antiquarian bookshop. Besides seasonality and diurnal patterns, one would expect the times of orders to be independent of each other. However, this is not the case and we use a GAS model to capture dependence between the times of orders.
+We loosely follow @Tomanova2021 and analyze the timing of orders from a Czech antiquarian bookshop. Besides seasonality and diurnal patterns, one would expect the times of orders to be independent of each other. However, this is not the case and we use a GAS model to capture dependence between the times of orders.
 
-A strand of financial econometrics is devoted to analyzing the timing of transactions by the so-called autoregressive conditional duration (ACD) model introduced by Engle and Russell (1998). For a textbook treatment of such financial point processes, see e.g. Hautsch (2012).
+A strand of financial econometrics is devoted to analyzing the timing of transactions by the so-called autoregressive conditional duration (ACD) model introduced by @Engle1998. For a textbook treatment of such financial point processes, see e.g. @Hautsch2012.
 
 ## Data Preparation
 
@@ -339,13 +341,6 @@ plot(sim_gengamma_tr)
 <p class="caption">Simulated time series based on the generalized gamma model with trend.</p>
 </div>
 
-The simulated time series can be employed, for example, to assess the impact of order arrivals on queuing systems, as demonstrated by Tomanová and Holý (2021).
+The simulated time series can be employed, for example, to assess the impact of order arrivals on queuing systems, as demonstrated by @Tomanova2021.
 
 ## References
-
-Engle, R. F. and Russell, J. R. (1998). Autoregressive Conditional Duration: A New Model for Irregularly Spaced Transaction Data. *Econometrica*, **66**(5), 1127–1162. doi: [10.2307/2999632](https://doi.org/10.2307/2999632).
-
-Hautsch, N. (2012). *Econometrics of Financial High-Frequency Data*. Springer. doi: [10.1007/978-3-642-21925-2](https://doi.org/10.1007/978-3-642-21925-2).
-
-Tomanová, P. and Holý, V. (2021). Clustering of Arrivals in Queueing Systems: Autoregressive Conditional Duration Approach. *Central European Journal of Operations Research*, **29**(3), 859–874. doi: [10.1007/s10100-021-00744-7](https://doi.org/10.1007/s10100-021-00744-7).
-

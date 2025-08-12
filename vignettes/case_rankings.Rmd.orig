@@ -2,6 +2,8 @@
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
 date: "`r Sys.Date()`"
+bibliography: library.bib
+link-citations: yes
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
@@ -31,11 +33,11 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
 ## Introduction
 
-We present the empirical study of Holý and Zouhar (2022) which analyzes the results of the Ice Hockey World Championships. Our main object of interest is the annual ranking of 16 teams participating in the championships. While there exists a comprehensive statistical toolkit for ranking data, as described e.g. by Alvo and Yu (2014), it is worth noting that the time perspective is often overlooked in the ranking literature, as highlighted by Yu et al. (2019)}. This is precisely where the GAS model emerges as a valuable tool in our analysis.
+We present the empirical study of @Holy2022f which analyzes the results of the Ice Hockey World Championships. This study is further extended by @Holy2025a. Our main object of interest is the annual ranking of 16 teams participating in the championships. While there exists a comprehensive statistical toolkit for ranking data, as described e.g. by @Alvo2014, it is worth noting that the time perspective is often overlooked in the ranking literature, as highlighted by @Yu2019. This is precisely where the GAS model emerges as a valuable tool in our analysis.
 
 ## Data Preparation
 
-Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as Holý and Zouhar (2022). In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was canceled due to Covid-19 pandemic. We start by creating two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
+Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as @Holy2022f. In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was canceled due to Covid-19 pandemic. We start by creating two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
 
 ``` {r rankings_data, results = "hide", message = FALSE, warning = FALSE}
 library("dplyr")
@@ -81,7 +83,7 @@ The `gasmodel` package provides a single distribution on rankings -- the Placket
 distr(filter_type = "ranking")
 ```
 
-It is a convenient and simple probability distribution on rankings utilizing a worth parameter for each item to be ranked. It originates from Luce’s choice axiom and is also related to the Thurstone’s theory of comparative judgment, see Luce (1977) and Yellott (1977). For more details on this distribution, see Plackett (1975), Stern (1990), and Critchlow et al. (1991).
+It is a convenient and simple probability distribution on rankings utilizing a worth parameter for each item to be ranked. It originates from Luce’s choice axiom and is also related to the Thurstone’s theory of comparative judgment, see @Luce1977 and @Yellott1977. For more details on this distribution, see @Plackett1975, @Stern1990, and @Critchlow1991.
 
 We consider three different model specifications. We incorporate `x` as an explanatory variable in our model to capture possible home advantage. For each model specification, we assume a panel-like structure where each worth parameter has its own intercept, while the regression and dynamics parameters remain the same for all worth parameters. In the `gasmodel` package, this structure can be achieved using the `coef_fix_value` and `coef_fix_other` arguments. Alternatively, for convenience, the value `panel_structure` can be included in the `coef_fix_special` argument. It is important to note that the worth parameters in the Plackett--Luce distribution are not identifiable, and it is common practice to impose a standardizing condition. In our model, we enforce the condition that the sum of all $\omega_i$ is 0. This can be accomplished by including the value `zero_sum_intercept` in the `coef_fix_special` argument.
 
@@ -188,21 +190,3 @@ plot(fcst_stnry, which = 3)
 ```
 
 ## References
-
-Alvo, M. and Yu, P. L. H. (2014). *Statistical Methods for Ranking Data*. Springer. doi: [10.1007/978-1-4939-1471-5](https://doi.org/10.1007/978-1-4939-1471-5).
-
-Critchlow, D. E., Fligner, M. A., and Verducci, J. S. (1991). Probability Models on Rankings. *Journal of Mathematical Psychology*, **35**(3), 294–318. doi: [10.1016/0022-2496(91)90050-4](https://doi.org/10.1016/0022-2496(91)90050-4).
-
-Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), **71**(5), 1427–1450. doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
-
-Luce, R. D. (1977). The Choice Axiom after Twenty Years. *Journal of Mathematical Psychology*, **15**(3), 215–233. doi: [10.1016/0022-2496(77)90032-3](https://doi.org/10.1016/0022-2496(77)90032-3).
-
-Plackett, R. L. (1975). The Analysis of Permutations. *Journal of the Royal Statistical Society: Series C (Applied Statistics)*, **24**(2), 193–202. doi: [10.2307/2346567](https://doi.org/10.2307/2346567).
-
-Stern, H. (1990). Models for Distributions on Permutations. *Journal of the American Statistical Association*, **85**(410), 558–564. doi: [10.1080/01621459.1990.10476235](https://doi.org/10.1080/01621459.1990.10476235).
-
-Yellott, J. I. (1977). The Relationship Between Luce’s Choice Axiom, Thurstone’s Theory of Comparative Judgment, and the Double Exponential Distribution. *Journal of Mathematical Psychology*, **15**(2), 109–144. doi: [10.1016/0022-2496(77)90026-8](https://doi.org/10.1016/0022-2496(77)90026-8).
-
-Yu, P. L. H., Gu, J., and Xu, H. (2019). Analysis of Ranking Data. *Wiley Interdisciplinary Reviews: Computational Statistics*, **11**(6), e1483, 1–26. doi: [10.1002/wics.1483](https://doi.org/10.1002/wics.1483).
-
-

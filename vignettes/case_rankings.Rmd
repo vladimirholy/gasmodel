@@ -1,7 +1,9 @@
 ---
 title: "Case Study: Ice Hockey Rankings"
 author: "Vladimír Holý & Jan Zouhar"
-date: "2024-02-01"
+date: "2025-08-13"
+bibliography: library.bib
+link-citations: yes
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Case Study: Ice Hockey Rankings}
@@ -13,14 +15,14 @@ vignette: >
 
 ## Introduction
 
-We present the empirical study of Holý and Zouhar (2022) which analyzes the results of the Ice Hockey World Championships. Our main object of interest is the annual ranking of 16 teams participating in the championships. While there exists a comprehensive statistical toolkit for ranking data, as described e.g. by Alvo and Yu (2014), it is worth noting that the time perspective is often overlooked in the ranking literature, as highlighted by Yu et al. (2019)}. This is precisely where the GAS model emerges as a valuable tool in our analysis.
+We present the empirical study of @Holy2022f which analyzes the results of the Ice Hockey World Championships. This study is further extended by @Holy2025a. Our main object of interest is the annual ranking of 16 teams participating in the championships. While there exists a comprehensive statistical toolkit for ranking data, as described e.g. by @Alvo2014, it is worth noting that the time perspective is often overlooked in the ranking literature, as highlighted by @Yu2019. This is precisely where the GAS model emerges as a valuable tool in our analysis.
 
 ## Data Preparation
 
-Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as Holý and Zouhar (2022). In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was canceled due to Covid-19 pandemic. We start by creating two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
+Our analyzed data are supplied in the `ice_hockey_championships` dataset. We restrict ourselves to years 1998--2019 just as @Holy2022f. In 1998, the number of teams in the tournament increased from 12 to 16. In 2020, the championship was canceled due to Covid-19 pandemic. We start by creating two variables -- the final ranking of 16 participating teams in each year `y` and the dummy variable indicating which country (or countries) hosted the championship in each year `x`.
 
 
-```r
+``` r
 library("dplyr")
 library("ggplot2")
 library("gasmodel")
@@ -38,7 +40,7 @@ x <- setNames(lapply(1:n, function(i) { ice_hockey_championships$host[1:t, i] })
 We look at some basic statistics. In our sample, nine countries have participated each year.
 
 
-```r
+``` r
 participate <- colSums(is.finite(y))
 names(participate)[participate == t]
 #> [1] "CAN" "CHE" "CZE" "FIN" "LVA" "RUS" "SVK" "SWE" "USA"
@@ -47,17 +49,17 @@ names(participate)[participate == t]
 The following countries hosted the championships, some of them multiple times.
 
 
-```r
+``` r
 host <- sapply(x, FUN = sum)
 host[host > 0L]
-#> AUT BLR CAN CHE CZE DEU FIN FRA LVA NOR RUS SVK SWE 
-#>   1   1   1   2   2   3   3   1   1   1   3   2   3
+#> AUT BLR CAN CHE CZE DEU DNK FIN FRA LVA NOR RUS SVK SWE 
+#>   1   1   1   2   2   3   1   3   1   1   1   3   2   3
 ```
 
 In the years under analysis, the gold medals were awarded to the following countries.
 
 
-```r
+``` r
 gold <- colSums(y == 1L)
 gold[gold > 0L]
 #> CAN CZE FIN RUS SVK SWE 
@@ -69,20 +71,20 @@ gold[gold > 0L]
 The `gasmodel` package provides a single distribution on rankings -- the Plackett--Luce distribution.
 
 
-```r
+``` r
 distr(filter_type = "ranking")
 #>      distr_title param_title distr param    type   dim orthog default
-#> 32 Plackett-Luce       Worth pluce worth ranking multi  FALSE    TRUE
+#> 39 Plackett-Luce       Worth pluce worth ranking multi  FALSE    TRUE
 ```
 
-It is a convenient and simple probability distribution on rankings utilizing a worth parameter for each item to be ranked. It originates from Luce’s choice axiom and is also related to the Thurstone’s theory of comparative judgment, see Luce (1977) and Yellott (1977). For more details on this distribution, see Plackett (1975), Stern (1990), and Critchlow et al. (1991).
+It is a convenient and simple probability distribution on rankings utilizing a worth parameter for each item to be ranked. It originates from Luce’s choice axiom and is also related to the Thurstone’s theory of comparative judgment, see @Luce1977 and @Yellott1977. For more details on this distribution, see @Plackett1975, @Stern1990, and @Critchlow1991.
 
 We consider three different model specifications. We incorporate `x` as an explanatory variable in our model to capture possible home advantage. For each model specification, we assume a panel-like structure where each worth parameter has its own intercept, while the regression and dynamics parameters remain the same for all worth parameters. In the `gasmodel` package, this structure can be achieved using the `coef_fix_value` and `coef_fix_other` arguments. Alternatively, for convenience, the value `panel_structure` can be included in the `coef_fix_special` argument. It is important to note that the worth parameters in the Plackett--Luce distribution are not identifiable, and it is common practice to impose a standardizing condition. In our model, we enforce the condition that the sum of all $\omega_i$ is 0. This can be accomplished by including the value `zero_sum_intercept` in the `coef_fix_special` argument.
 
 First, we estimate the static model where there are no dynamics involved. In this case, we set both the autoregressive and score orders to zero. Either a single integer can be provided to determine the order for all parameters, or a vector of integers can be supplied to specify the order for individual parameters.
 
 
-```r
+``` r
 est_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
   coef_fix_special = c("zero_sum_intercept", "panel_structure"))
 ```
@@ -90,7 +92,7 @@ est_static <- gas(y = y, x = x, distr = "pluce", p = 0, q = 0,
 Second, we estimate the standard mean-reverting GAS model of order one. In order to expedite the numerical optimization process, we incorporate starting values based on the static model.
 
 
-```r
+``` r
 est_stnry <- gas(y = y, x = x, distr = "pluce",
   coef_fix_special = c("zero_sum_intercept", "panel_structure"),
   coef_start = as.vector(rbind(est_static$fit$par_unc / 2, 0, 0.5, 0.5)))
@@ -99,7 +101,7 @@ est_stnry <- gas(y = y, x = x, distr = "pluce",
 Third, we estimate the random walk model. In other words, we set the autoregressive coefficient to 1. The easiest way to specify this is by including the value `random_walk` in the `coef_fix_special` argument. In our random walk model, we consider the initial values of the worth parameters to be parameters to be estimated. While the `par_init` argument does not directly support this, we can set `regress = "sep"` and use cumulative sums of exogenous variables to achieve this initialization for this particular model. However, it is generally not recommended to estimate initial parameter values as it introduces additional variables, lacks reasonable asymptotics, and can lead to overfitting in finite samples. It is important to approach the random walk model with caution, as it is not stationary and the standard maximum likelihood asymptotics are not valid.
 
 
-```r
+``` r
 est_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", regress = "sep",
   coef_fix_special = c("zero_sum_intercept", "panel_structure", "random_walk"),
   coef_start = as.vector(rbind(est_static$fit$par_unc, 0, 0.5, 1)))
@@ -108,38 +110,38 @@ est_walk <- gas(y = y, x = lapply(x, cumsum), distr = "pluce", regress = "sep",
 To avoid redundancy, we will omit the output of the `gas()` function, which contains rows for each coefficient of each worth parameter. Since most coefficients are the same due to the assumed panel structure, it is unnecessary to display them all. Instead, we print only one set of the home advantage and dynamics coefficients.
 
 
-```r
+``` r
 cbind(est_static = c("beta1" = unname(coef(est_static)[2]), "alpha1" = 0, "phi1" = 0),
   est_stnry = coef(est_stnry)[2:4],
   est_walk = coef(est_walk)[2:4])
-#>        est_static est_stnry   est_walk
-#> beta1   0.1707329 0.2274380 0.09873333
-#> alpha1  0.0000000 0.3919431 0.34300134
-#> phi1    0.0000000 0.5062478 1.00000000
+#>        est_static est_stnry  est_walk
+#> beta1   0.2114721 0.2577624 0.1185097
+#> alpha1  0.0000000 0.3901028 0.3422258
+#> phi1    0.0000000 0.5092100 1.0000000
 ```
 
 In all three models, coefficient $\alpha_1$ representing the home advantage is positive but not significant.
 
 
-```r
+``` r
 cbind(est_static = c("beta1" = unname(est_static$fit$coef_pval)[2], "alpha1" = 0, "phi1" = 0),
       est_stnry = est_stnry$fit$coef_pval[2:4],
       est_walk = est_walk$fit$coef_pval[2:4])
 #>        est_static    est_stnry     est_walk
-#> beta1    0.514887 3.772811e-01 5.995826e-01
-#> alpha1   0.000000 2.141363e-06 2.634614e-09
-#> phi1     0.000000 6.463390e-04 0.000000e+00
+#> beta1    0.409659 3.049226e-01 5.274823e-01
+#> alpha1   0.000000 2.237061e-06 2.823357e-09
+#> phi1     0.000000 4.295727e-04 0.000000e+00
 ```
 
 We compare the models using the Akaike information criterion (AIC). The `gas` class allows for generic function `AIC()`. In terms of AIC, the mean-reverting model outperformed the remaining two by a wide margin.
 
 
-```r
+``` r
 AIC(est_static, est_stnry, est_walk)
 #>            df      AIC
-#> est_static 24 1299.600
-#> est_stnry  26 1274.391
-#> est_walk   25 1300.851
+#> est_static 24 1299.354
+#> est_stnry  26 1274.135
+#> est_walk   25 1300.728
 ```
 
 ## Who Is the Best?
@@ -147,7 +149,7 @@ AIC(est_static, est_stnry, est_walk)
 Our models enable us to construct the ‘ultimate’ or long-run ranking. The rankings produced by both models are in agreement for all but the first three positions. However, the long-term strength estimates for these three teams are very close to each other, making the final ranking less clear-cut.
 
 
-```r
+``` r
 tibble(team = colnames(y)) %>%
   mutate(stnry_strength = est_stnry$fit$par_unc) %>%
   mutate(stnry_rank = rank(-stnry_strength)) %>%
@@ -158,27 +160,27 @@ tibble(team = colnames(y)) %>%
 #>    team  stnry_strength stnry_rank static_strength static_rank
 #>    <chr>          <dbl>      <dbl>           <dbl>       <dbl>
 #>  1 FIN           3.76            1          3.69             3
-#>  2 CAN           3.74            2          3.72             2
-#>  3 SWE           3.71            3          3.86             1
+#>  2 CAN           3.74            2          3.73             2
+#>  3 SWE           3.72            3          3.87             1
 #>  4 CZE           3.51            4          3.42             4
 #>  5 RUS           3.31            5          3.19             5
 #>  6 USA           1.83            6          2.18             6
 #>  7 CHE           1.72            7          1.78             7
-#>  8 SVK           1.69            8          1.56             8
-#>  9 LVA           0.883           9          0.830            9
-#> 10 DEU           0.343          10          0.334           10
-#> 11 BLR           0.275          11          0.116           11
-#> 12 NOR           0.0544         12         -0.0665          12
-#> 13 DNK          -0.0732         13         -0.175           13
-#> 14 FRA          -0.384          14         -0.501           14
-#> 15 AUT          -0.812          15         -0.878           15
+#>  8 SVK           1.70            8          1.57             8
+#>  9 LVA           0.887           9          0.832            9
+#> 10 DEU           0.352          10          0.341           10
+#> 11 BLR           0.279          11          0.119           11
+#> 12 NOR           0.0604         12         -0.0647          12
+#> 13 DNK          -0.0656         13         -0.168           13
+#> 14 FRA          -0.379          14         -0.498           14
+#> 15 AUT          -0.809          15         -0.878           15
 #> 16 ITA          -1.02           16         -1.10            16
 #> 17 UKR          -1.34           17         -1.52            17
 #> 18 SVN          -1.75           18         -1.64            18
 #> 19 KAZ          -1.83           19         -1.78            19
 #> 20 JPN          -1.99           20         -1.94            20
 #> 21 HUN          -3.28           21         -3.20            21
-#> 22 GBR          -3.92           22         -3.89            22
+#> 22 GBR          -3.91           22         -3.88            22
 #> 23 POL          -3.95           23         -3.90            23
 #> 24 KOR          -3.96           24         -3.91            24
 ```
@@ -188,7 +190,7 @@ tibble(team = colnames(y)) %>%
 Additionally, we can examine the evolution of the worth parameters for individual teams over the years. The point estimates of time-varying parameter values can be directly obtained from the `gas()` function. Using the generic `plot()` function allows us to visualize the time-varying parameters of individual models. When multiple parameters are time-varying, as in our scenario, the function plots them in sequence. For the purpose of this document, we will only display figures specific to the Canada team.
 
 
-```r
+``` r
 plot(est_static, which = 3)
 ```
 
@@ -197,7 +199,7 @@ plot(est_static, which = 3)
 <p class="caption">Time-varying parameters of the Canada team based on the static model.</p>
 </div>
 
-```r
+``` r
 plot(est_stnry, which = 3)
 ```
 
@@ -206,7 +208,7 @@ plot(est_stnry, which = 3)
 <p class="caption">Time-varying parameters of the Canada team based on the stationary model.</p>
 </div>
 
-```r
+``` r
 plot(est_walk, which = 3)
 ```
 
@@ -218,7 +220,7 @@ plot(est_walk, which = 3)
 However, it is important to note that these estimates are subject to uncertainty. To capture the uncertainty, we can utilize simulations by leveraging the `gas_filter()` function, which accepts the output of the `gas()` function as an argument. This allows us to obtain the standard deviations and quantiles for the worth parameter estimates, providing a more comprehensive understanding of the parameter dynamics over time.
 
 
-```r
+``` r
 set.seed(42)
 flt_stnry <- gas_filter(est_stnry)
 ```
@@ -226,7 +228,7 @@ flt_stnry <- gas_filter(est_stnry)
 To visualize time-varying parameters with confidence band, we can use the `plot()` on the `gas_filter` object.
 
 
-```r
+``` r
 plot(flt_stnry, which = 3)
 ```
 
@@ -240,7 +242,7 @@ plot(flt_stnry, which = 3)
 Finally, we perform one-year-ahead forecasts. We use the `gas_forecast()` function, which can again take the estimated model as an argument.
 
 
-```r
+``` r
 fcst_stnry <- gas_forecast(est_stnry, t_ahead = 1, x_ahead = 0)
 
 tibble(team = colnames(y)) %>%
@@ -252,36 +254,36 @@ tibble(team = colnames(y)) %>%
 #> # A tibble: 24 × 5
 #>    team  fcst_strength fcst_gold fcst_rank real_rank
 #>    <chr>         <dbl>     <dbl>     <dbl>     <dbl>
-#>  1 CAN           3.97  0.234             2         1
-#>  2 FIN           3.97  0.235             1         2
-#>  3 USA           2.09  0.0356            6         3
-#>  4 DEU           0.742 0.00929          10         4
-#>  5 RUS           3.43  0.137             3         5
-#>  6 CHE           1.82  0.0272            7         6
+#>  1 CAN           3.97  0.234             1         1
+#>  2 FIN           3.97  0.234             2         2
+#>  3 USA           2.09  0.0359            6         3
+#>  4 DEU           0.748 0.00935          10         4
+#>  5 RUS           3.43  0.136             3         5
+#>  6 CHE           1.82  0.0273            7         6
 #>  7 CZE           3.41  0.134             4         7
-#>  8 SVK           1.58  0.0214            8         8
+#>  8 SVK           1.58  0.0216            8         8
 #>  9 SWE           3.40  0.133             5         9
-#> 10 KAZ          -2.05  0.000569         19        10
-#> 11 LVA           0.978 0.0117            9        11
-#> 12 DNK           0.229 0.00556          11        12
-#> 13 NOR           0.125 0.00501          12        13
+#> 10 KAZ          -2.05  0.000571         19        10
+#> 11 LVA           0.985 0.0118            9        11
+#> 12 DNK           0.244 0.00565          11        12
+#> 13 NOR           0.133 0.00505          12        13
 #> 14 GBR          -3.55  0.000127         22        14
-#> 15 BLR          -0.704 0.00219          14        15
-#> 16 ITA          -0.957 0.00170          16        16
-#> 17 AUT          -0.832 0.00192          15       Inf
-#> 18 FRA          -0.490 0.00271          13       Inf
+#> 15 BLR          -0.697 0.00220          14        15
+#> 16 ITA          -0.954 0.00170          16        16
+#> 17 AUT          -0.828 0.00193          15       Inf
+#> 18 FRA          -0.481 0.00273          13       Inf
 #> 19 HUN          -3.31  0.000162         21       Inf
-#> 20 JPN          -2.21  0.000486         20       Inf
-#> 21 KOR          -3.81  0.0000982        23       Inf
-#> 22 POL          -3.99  0.0000821        24       Inf
-#> 23 SVN          -1.95  0.000631         18       Inf
-#> 24 UKR          -1.69  0.000813         17       Inf
+#> 20 JPN          -2.20  0.000489         20       Inf
+#> 21 KOR          -3.80  0.0000986        23       Inf
+#> 22 POL          -3.98  0.0000823        24       Inf
+#> 23 SVN          -1.94  0.000634         18       Inf
+#> 24 UKR          -1.69  0.000816         17       Inf
 ```
 
 The forecasted values can be displayed using the generic `plot()` function.
 
 
-```r
+``` r
 plot(fcst_stnry, which = 3)
 ```
 
@@ -291,21 +293,3 @@ plot(fcst_stnry, which = 3)
 </div>
 
 ## References
-
-Alvo, M. and Yu, P. L. H. (2014). *Statistical Methods for Ranking Data*. Springer. doi: [10.1007/978-1-4939-1471-5](https://doi.org/10.1007/978-1-4939-1471-5).
-
-Critchlow, D. E., Fligner, M. A., and Verducci, J. S. (1991). Probability Models on Rankings. *Journal of Mathematical Psychology*, **35**(3), 294–318. doi: [10.1016/0022-2496(91)90050-4](https://doi.org/10.1016/0022-2496(91)90050-4).
-
-Holý, V. and Zouhar, J. (2022). Modelling Time-Varying Rankings with Autoregressive and Score-Driven Dynamics. Journal of the Royal Statistical Society: Series C (Applied Statistics), **71**(5), 1427–1450. doi: [10.1111/rssc.12584](https://doi.org/10.1111/rssc.12584).
-
-Luce, R. D. (1977). The Choice Axiom after Twenty Years. *Journal of Mathematical Psychology*, **15**(3), 215–233. doi: [10.1016/0022-2496(77)90032-3](https://doi.org/10.1016/0022-2496(77)90032-3).
-
-Plackett, R. L. (1975). The Analysis of Permutations. *Journal of the Royal Statistical Society: Series C (Applied Statistics)*, **24**(2), 193–202. doi: [10.2307/2346567](https://doi.org/10.2307/2346567).
-
-Stern, H. (1990). Models for Distributions on Permutations. *Journal of the American Statistical Association*, **85**(410), 558–564. doi: [10.1080/01621459.1990.10476235](https://doi.org/10.1080/01621459.1990.10476235).
-
-Yellott, J. I. (1977). The Relationship Between Luce’s Choice Axiom, Thurstone’s Theory of Comparative Judgment, and the Double Exponential Distribution. *Journal of Mathematical Psychology*, **15**(2), 109–144. doi: [10.1016/0022-2496(77)90026-8](https://doi.org/10.1016/0022-2496(77)90026-8).
-
-Yu, P. L. H., Gu, J., and Xu, H. (2019). Analysis of Ranking Data. *Wiley Interdisciplinary Reviews: Computational Statistics*, **11**(6), e1483, 1–26. doi: [10.1002/wics.1483](https://doi.org/10.1002/wics.1483).
-
-
