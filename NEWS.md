@@ -1,4 +1,4 @@
-# gasmodel (development version)
+# gasmodel 0.6.2
 * Added the generalized error distribution.
 * Added the customization vignette.
 * Improved documentation and reorganized code.
