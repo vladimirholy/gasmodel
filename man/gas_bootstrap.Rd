@@ -30,7 +30,7 @@ gas_bootstrap(
   coef_est = NULL,
   optim_function = wrapper_optim_nloptr,
   optim_arguments = list(opts = list(algorithm = "NLOPT_LN_NELDERMEAD", xtol_rel = 0,
-    maxeval = 1e+06)),
+    maxeval = 10000)),
   parallel_function = NULL,
   parallel_arguments = list()
 )
